@@ -4,7 +4,12 @@ import logging
 from typing import Literal
 
 import httpx
-from tenacity import retry, stop_after_attempt, wait_exponential
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +21,11 @@ class VoyageClient:
         self._api_key = api_key
         self._model = model
 
-    @retry(stop=stop_after_attempt(4), wait=wait_exponential(multiplier=1, min=2, max=30))
+    @retry(
+        stop=stop_after_attempt(8),
+        wait=wait_exponential(multiplier=2, min=5, max=120),
+        retry=retry_if_exception_type(httpx.HTTPStatusError),
+    )
     async def embed(
         self,
         texts: list[str],
