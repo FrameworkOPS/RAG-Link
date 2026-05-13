@@ -29,5 +29,8 @@ class Settings(BaseSettings):
     retrieval_match_count: int = 8
     retrieval_threshold: float = 0.4
 
+    # MCP
+    mcp_auth_token: str = ""
+
 
 settings = Settings()
