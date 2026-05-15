@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Readiness Assessment — Framework OPS Demo</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#090d17;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+  .demo-banner{background:#10B981;color:#000;text-align:center;padding:8px 16px;font-size:13px;font-weight:600;letter-spacing:.3px}
+  .header{background:#0f1623;border-bottom:1px solid #1e293b;padding:20px 32px;display:flex;align-items:center;gap:16px}
+  .logo{font-family:'JetBrains Mono',monospace;font-size:14px;color:#10B981;font-weight:700;letter-spacing:1px}
+  .header-title{font-size:18px;font-weight:700;color:#f1f5f9}
+  .header-sub{font-size:13px;color:#64748b;margin-top:2px}
+  .header-badge{margin-left:auto;background:#1e293b;border:1px solid #10B981;color:#10B981;font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px}
+  .client-info{background:#0f1623;border-bottom:1px solid #1e293b;padding:12px 32px;display:flex;gap:32px;font-size:13px;color:#94a3b8}
+  .client-info span{color:#f1f5f9;font-weight:600}
+  .tabs{display:flex;gap:0;border-bottom:1px solid #1e293b;background:#0f1623;padding:0 32px}
+  .tab{padding:14px 20px;cursor:pointer;font-size:13px;font-weight:500;color:#64748b;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+  .tab:hover{color:#cbd5e1}
+  .tab.active{color:#10B981;border-bottom-color:#10B981}
+  .content{padding:32px;max-width:1100px;margin:0 auto}
+  .section-title{font-size:20px;font-weight:700;color:#f1f5f9;margin-bottom:6px}
+  .section-sub{font-size:14px;color:#64748b;margin-bottom:24px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .card{background:#0f1623;border:1px solid #1e293b;border-radius:10px;padding:20px}
+  .card-title{font-size:13px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}
+  .score-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1a2332}
+  .score-row:last-child{border-bottom:none}
+  .score-label{font-size:14px;color:#cbd5e1}
+  .score-bar-wrap{flex:1;margin:0 16px;height:6px;background:#1e293b;border-radius:3px;overflow:hidden}
+  .score-bar{height:100%;border-radius:3px;transition:width .6s ease}
+  .score-val{font-size:14px;font-weight:700;width:36px;text-align:right}
+  .summary-score{text-align:center;padding:24px 20px}
+  .big-score{font-size:64px;font-weight:800;line-height:1}
+  .big-score-label{font-size:13px;color:#64748b;margin-top:6px}
+  .score-desc{font-size:13px;color:#94a3b8;margin-top:12px;line-height:1.6}
+  .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+  .badge-critical{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+  .badge-high{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3)}
+  .badge-medium{background:rgba(59,130,246,.15);color:#3b82f6;border:1px solid rgba(59,130,246,.3)}
+  .badge-low{background:rgba(16,185,129,.15);color:#10B981;border:1px solid rgba(16,185,129,.3)}
+  .opp-table{width:100%;border-collapse:collapse}
+  .opp-table th{text-align:left;padding:10px 12px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid #1e293b}
+  .opp-table td{padding:14px 12px;font-size:13px;border-bottom:1px solid #1a2332;color:#cbd5e1;vertical-align:top}
+  .opp-table tr:last-child td{border-bottom:none}
+  .opp-table tr:hover td{background:rgba(16,185,129,.03)}
+  .opp-name{color:#f1f5f9;font-weight:600;font-size:14px}
+  .opp-desc{font-size:12px;color:#64748b;margin-top:3px}
+  .impact-pill{display:inline-flex;align-items:center;gap:5px;background:#1e293b;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600}
+  .impact-high{color:#10B981}
+  .impact-med{color:#f59e0b}
+  .impact-low{color:#64748b}
+  .effort-dots{display:flex;gap:3px;align-items:center}
+  .dot{width:8px;height:8px;border-radius:50%}
+  .dot-filled{background:#3b82f6}
+  .dot-empty{background:#1e293b}
+  .timeline-wrap{display:flex;flex-direction:column;gap:0}
+  .phase{display:flex;gap:20px;position:relative}
+  .phase-line{display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0}
+  .phase-dot{width:14px;height:14px;border-radius:50%;background:#10B981;border:2px solid #090d17;flex-shrink:0;margin-top:2px}
+  .phase-connector{flex:1;width:2px;background:#1e293b;margin-top:4px}
+  .phase:last-child .phase-connector{display:none}
+  .phase-content{padding-bottom:28px;flex:1}
+  .phase-label{font-size:11px;font-weight:700;color:#10B981;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+  .phase-title{font-size:16px;font-weight:700;color:#f1f5f9;margin-bottom:8px}
+  .phase-items{display:flex;flex-direction:column;gap:6px}
+  .phase-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#94a3b8}
+  .phase-item::before{content:'→';color:#10B981;flex-shrink:0;margin-top:1px}
+  .stat-card{background:#0f1623;border:1px solid #1e293b;border-radius:10px;padding:20px;text-align:center}
+  .stat-val{font-size:32px;font-weight:800;color:#10B981;line-height:1}
+  .stat-label{font-size:12px;color:#64748b;margin-top:6px}
+  .outcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+  .outcome-card{background:#0f1623;border:1px solid #1e293b;border-radius:10px;padding:18px}
+  .outcome-icon{font-size:24px;margin-bottom:10px}
+  .outcome-title{font-size:14px;font-weight:700;color:#f1f5f9;margin-bottom:6px}
+  .outcome-text{font-size:13px;color:#94a3b8;line-height:1.6}
+  .readiness-ring-wrap{display:flex;flex-direction:column;align-items:center;padding:16px}
+  .ring-label{font-size:13px;font-weight:600;color:#94a3b8;margin-top:10px;text-align:center}
+  .ring-sublabel{font-size:11px;color:#475569;margin-top:2px}
+  .finding-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #1a2332}
+  .finding-row:last-child{border-bottom:none}
+  .finding-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:1px}
+  .icon-warn{background:rgba(245,158,11,.15)}
+  .icon-ok{background:rgba(16,185,129,.15)}
+  .icon-bad{background:rgba(239,68,68,.15)}
+  .finding-content{flex:1}
+  .finding-title{font-size:14px;font-weight:600;color:#f1f5f9}
+  .finding-detail{font-size:12px;color:#64748b;margin-top:3px;line-height:1.5}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+  @media(max-width:700px){.grid-2,.grid-3,.outcome-grid{grid-template-columns:1fr}.tabs{overflow-x:auto}.content{padding:20px}}
+</style>
+</head>
+<body>
+
+<div class="demo-banner">Demo environment — populated with sample roofing company data · Not a real client assessment</div>
+
+<div class="header">
+  <div>
+    <div class="logo">FRAMEWORK OPS</div>
+  </div>
+  <div style="width:1px;height:36px;background:#1e293b;margin:0 8px"></div>
+  <div>
+    <div class="header-title">AI Readiness Assessment</div>
+    <div class="header-sub">Delivered deliverable — example output</div>
+  </div>
+  <div class="header-badge">$297 Entry Product</div>
+</div>
+
+<div class="client-info">
+  <div>Company: <span>Summit Roofing &amp; Gutters</span></div>
+  <div>Revenue: <span>~$4.2M TTM</span></div>
+  <div>Trade: <span>Roofing</span></div>
+  <div>Employees: <span>22</span></div>
+  <div>Assessment Date: <span>April 2025</span></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('summary',this)">Assessment Summary</div>
+  <div class="tab" onclick="showTab('matrix',this)">Opportunity Matrix</div>
+  <div class="tab" onclick="showTab('roadmap',this)">Implementation Roadmap</div>
+  <div class="tab" onclick="showTab('outcomes',this)">Expected Outcomes</div>
+</div>
+
+<!-- SUMMARY TAB -->
+<div id="tab-summary" class="tab-panel active">
+<div class="content">
+  <div class="section-title">AI Readiness Assessment Summary</div>
+  <div class="section-sub">Scored across 5 dimensions. Score reflects current infrastructure and process maturity — not a judgment on the team.</div>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="summary-score">
+        <div class="big-score" style="color:#f59e0b">38</div>
+        <div class="big-score-label">Overall AI Readiness Score</div>
+        <div class="score-desc">Summit Roofing is in the <strong style="color:#f59e0b">Early Stage</strong> band. Core manual processes exist but are not documented or digitized in a way that supports automation. Significant upside available — the bottleneck is data and process consistency, not budget or willingness.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Dimension Scores</div>
+      <div class="score-row">
+        <div class="score-label">Data Infrastructure</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:25%;background:#ef4444"></div></div>
+        <div class="score-val" style="color:#ef4444">25</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Process Documentation</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:30%;background:#f59e0b"></div></div>
+        <div class="score-val" style="color:#f59e0b">30</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Tech Stack Maturity</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:45%;background:#f59e0b"></div></div>
+        <div class="score-val" style="color:#f59e0b">45</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Team Adoption Capacity</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:55%;background:#3b82f6"></div></div>
+        <div class="score-val" style="color:#3b82f6">55</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Leadership Alignment</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:60%;background:#10B981"></div></div>
+        <div class="score-val" style="color:#10B981">60</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title">Key Findings</div>
+      <div class="finding-row">
+        <div class="finding-icon icon-bad">🚫</div>
+        <div class="finding-content">
+          <div class="finding-title">No centralized job data</div>
+          <div class="finding-detail">Job costing, scheduling, and production notes live in 3 separate systems with no sync. Automation cannot run on fragmented data.</div>
+        </div>
+      </div>
+      <div class="finding-row">
+        <div class="finding-icon icon-warn">⚠️</div>
+        <div class="finding-content">
+          <div class="finding-title">Inconsistent lead follow-up</div>
+          <div class="finding-detail">CRM (JobNimbus) is used for estimates but follow-up cadence is manual and owner-dependent. 22% of leads get no follow-up after Day 3.</div>
+        </div>
+      </div>
+      <div class="finding-row">
+        <div class="finding-icon icon-warn">⚠️</div>
+        <div class="finding-content">
+          <div class="finding-title">Reporting is manual weekly</div>
+          <div class="finding-detail">Owner builds revenue and job status report in Excel every Monday morning. Estimated 2.5 hrs/week. Automatable within 30 days.</div>
+        </div>
+      </div>
+      <div class="finding-row">
+        <div class="finding-icon icon-ok">✅</div>
+        <div class="finding-content">
+          <div class="finding-title">QuickBooks Online active</div>
+          <div class="finding-detail">QBO is live with invoicing and expense tracking. Strong foundation for financial automation and cash flow reporting.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Current Tech Stack (Assessed)</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#f1f5f9">JobNimbus</div>
+            <div style="font-size:11px;color:#64748b">CRM / Estimates</div>
+          </div>
+          <span class="badge badge-medium">Underutilized</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#f1f5f9">QuickBooks Online</div>
+            <div style="font-size:11px;color:#64748b">Accounting</div>
+          </div>
+          <span class="badge badge-low">Active</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#f1f5f9">Google Sheets</div>
+            <div style="font-size:11px;color:#64748b">Scheduling / Ops reporting</div>
+          </div>
+          <span class="badge badge-high">Bottleneck</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#f1f5f9">Gmail / Text</div>
+            <div style="font-size:11px;color:#64748b">Customer comms</div>
+          </div>
+          <span class="badge badge-high">Untracked</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#f1f5f9">No FSM platform</div>
+            <div style="font-size:11px;color:#64748b">Field Service Mgmt</div>
+          </div>
+          <span class="badge badge-critical">Gap</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Quick Stats</div>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+        <div>
+          <div style="font-size:24px;font-weight:800;color:#ef4444">~8 hrs/wk</div>
+          <div style="font-size:12px;color:#64748b">Owner time on manual reporting tasks</div>
+        </div>
+        <div>
+          <div style="font-size:24px;font-weight:800;color:#f59e0b">6 tools</div>
+          <div style="font-size:12px;color:#64748b">In active use, zero API connections between them</div>
+        </div>
+        <div>
+          <div style="font-size:24px;font-weight:800;color:#10B981">5 wins</div>
+          <div style="font-size:12px;color:#64748b">High-impact automations ready to build now</div>
+        </div>
+        <div>
+          <div style="font-size:24px;font-weight:800;color:#3b82f6">~$31K</div>
+          <div style="font-size:12px;color:#64748b">Conservative annual value of identified automations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- MATRIX TAB -->
+<div id="tab-matrix" class="tab-panel">
+<div class="content">
+  <div class="section-title">Automation Opportunity Matrix</div>
+  <div class="section-sub">6 identified opportunities ranked by ROI and implementation complexity. Conservative value estimates only.</div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="opp-table">
+      <thead>
+        <tr>
+          <th>Opportunity</th>
+          <th>Current State</th>
+          <th>Automation Approach</th>
+          <th>Annual Value</th>
+          <th>Effort</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="opp-name">Weekly Ops Report</div>
+            <div class="opp-desc">JobNimbus + QBO → formatted summary</div>
+          </td>
+          <td><span style="color:#94a3b8">2.5 hrs/wk, manual Excel build</span></td>
+          <td><span style="color:#94a3b8">Make.com pulls job + invoice data, formats report, sends to owner every Monday 7am</span></td>
+          <td>
+            <div class="impact-pill impact-high">$6,500/yr</div>
+            <div style="font-size:11px;color:#475569;margin-top:4px">Owner time @ $125/hr</div>
+          </td>
+          <td>
+            <div class="effort-dots">
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-empty"></div>
+              <div class="dot dot-empty"></div>
+            </div>
+            <div style="font-size:11px;color:#64748b;margin-top:4px">Low · 1–2 days</div>
+          </td>
+          <td><span class="badge badge-critical">Build First</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="opp-name">Lead Follow-Up Sequence</div>
+            <div class="opp-desc">Post-estimate nurture automation</div>
+          </td>
+          <td><span style="color:#94a3b8">22% of leads get no follow-up after Day 3</span></td>
+          <td><span style="color:#94a3b8">JobNimbus trigger → 3-touch SMS/email sequence at Day 1, 3, 7 post-estimate</span></td>
+          <td>
+            <div class="impact-pill impact-high">$9,200/yr</div>
+            <div style="font-size:11px;color:#475569;margin-top:4px">Est. 4 recovered jobs/yr @ $2,300 avg</div>
+          </td>
+          <td>
+            <div class="effort-dots">
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-empty"></div>
+              <div class="dot dot-empty"></div>
+            </div>
+            <div style="font-size:11px;color:#64748b;margin-top:4px">Low · 2–3 days</div>
+          </td>
+          <td><span class="badge badge-critical">Build First</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="opp-name">Customer Review Request</div>
+            <div class="opp-desc">Post-job Google review automation</div>
+          </td>
+          <td><span style="color:#94a3b8">Reviews requested manually, inconsistently. 4.1★ avg.</span></td>
+          <td><span style="color:#94a3b8">Job closed in JobNimbus → 24hr delay → SMS review link. Filter by job type.</span></td>
+          <td>
+            <div class="impact-pill impact-med">$4,800/yr</div>
+            <div style="font-size:11px;color:#475569;margin-top:4px">Lead quality uplift + admin time saved</div>
+          </td>
+          <td>
+            <div class="effort-dots">
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-empty"></div>
+              <div class="dot dot-empty"></div>
+              <div class="dot dot-empty"></div>
+            </div>
+            <div style="font-size:11px;color:#64748b;margin-top:4px">Very Low · 1 day</div>
+          </td>
+          <td><span class="badge badge-high">High Priority</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="opp-name">Invoice → Payment Follow-Up</div>
+            <div class="opp-desc">AR aging automation</div>
+          </td>
+          <td><span style="color:#94a3b8">DSO averaging 38 days. Manual follow-up only when owner notices.</span></td>
+          <td><span style="color:#94a3b8">QBO invoice aging → Day 7, 14, 21 automated email/text with pay link</span></td>
+          <td>
+            <div class="impact-pill impact-high">$7,400/yr</div>
+            <div style="font-size:11px;color:#475569;margin-top:4px">Float cost + admin time @ avg $560K AR balance</div>
+          </td>
+          <td>
+            <div class="effort-dots">
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-empty"></div>
+              <div class="dot dot-empty"></div>
+            </div>
+            <div style="font-size:11px;color:#64748b;margin-top:4px">Low · 1–2 days</div>
+          </td>
+          <td><span class="badge badge-high">High Priority</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="opp-name">Job Scheduling Notifications</div>
+            <div class="opp-desc">Crew + homeowner day-before alerts</div>
+          </td>
+          <td><span style="color:#94a3b8">Office staff manually texts crew lead and homeowner the night before. 45 min/day.</span></td>
+          <td><span style="color:#94a3b8">Scheduling update in JobNimbus → automated SMS to homeowner + crew with job details</span></td>
+          <td>
+            <div class="impact-pill impact-med">$3,100/yr</div>
+            <div style="font-size:11px;color:#475569;margin-top:4px">Staff time savings</div>
+          </td>
+          <td>
+            <div class="effort-dots">
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-empty"></div>
+              <div class="dot dot-empty"></div>
+            </div>
+            <div style="font-size:11px;color:#64748b;margin-top:4px">Low · 2 days</div>
+          </td>
+          <td><span class="badge badge-medium">Phase 2</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="opp-name">Material Order Tracking</div>
+            <div class="opp-desc">Supplier → job cost reconciliation</div>
+          </td>
+          <td><span style="color:#94a3b8">Material costs entered in QBO manually from supplier invoices. Lag is 3–7 days.</span></td>
+          <td><span style="color:#94a3b8">Supplier PDF invoice → parsed via Make/Zapier → line item entry in QBO against job</span></td>
+          <td>
+            <div class="impact-pill impact-low">~$2,400/yr</div>
+            <div style="font-size:11px;color:#475569;margin-top:4px">Data entry time + costing accuracy</div>
+          </td>
+          <td>
+            <div class="effort-dots">
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-filled"></div>
+              <div class="dot dot-empty"></div>
+            </div>
+            <div style="font-size:11px;color:#64748b;margin-top:4px">Medium · 1–2 wks</div>
+          </td>
+          <td><span class="badge badge-low">Phase 3</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+    <div>
+      <div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.8px;font-weight:600">Conservative Annual Total</div>
+      <div style="font-size:32px;font-weight:800;color:#10B981;margin-top:4px">$33,400</div>
+    </div>
+    <div style="width:1px;height:50px;background:#1e293b"></div>
+    <div>
+      <div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.8px;font-weight:600">Assessment Cost</div>
+      <div style="font-size:32px;font-weight:800;color:#f1f5f9;margin-top:4px">$297</div>
+    </div>
+    <div style="width:1px;height:50px;background:#1e293b"></div>
+    <div>
+      <div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.8px;font-weight:600">ROI on Assessment</div>
+      <div style="font-size:32px;font-weight:800;color:#10B981;margin-top:4px">112×</div>
+    </div>
+    <div style="flex:1;min-width:200px">
+      <div style="font-size:12px;color:#64748b;line-height:1.6">Value estimates assume 60–70% implementation rate and conservative job recovery figures. Not all opportunities will be built — Phase 1 alone covers $23,100.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ROADMAP TAB -->
+<div id="tab-roadmap" class="tab-panel">
+<div class="content">
+  <div class="section-title">Implementation Roadmap</div>
+  <div class="section-sub">Three phases. Each phase builds on the last. None require new software purchases in Phase 1.</div>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div>
+      <div class="timeline-wrap">
+        <div class="phase">
+          <div class="phase-line">
+            <div class="phase-dot"></div>
+            <div class="phase-connector"></div>
+          </div>
+          <div class="phase-content">
+            <div class="phase-label">Phase 1 · Days 1–30</div>
+            <div class="phase-title">Quick Wins — Zero New Tools</div>
+            <div class="phase-items">
+              <div class="phase-item">Weekly Ops Report automation (Make.com + JobNimbus + QBO)</div>
+              <div class="phase-item">Lead follow-up SMS/email sequence in JobNimbus</div>
+              <div class="phase-item">Post-job Google review request trigger</div>
+              <div class="phase-item">Prerequisite: Connect JobNimbus API to Make.com, verify QBO data integrity</div>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+              <span class="badge badge-low">Est. $19,700 annual value</span>
+              <span class="badge badge-medium">~$800–$1,200 build cost</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-line">
+            <div class="phase-dot" style="background:#3b82f6"></div>
+            <div class="phase-connector"></div>
+          </div>
+          <div class="phase-content">
+            <div class="phase-label" style="color:#3b82f6">Phase 2 · Days 31–60</div>
+            <div class="phase-title">AR + Scheduling Automation</div>
+            <div class="phase-items">
+              <div class="phase-item">Invoice follow-up sequence via QBO aging + Make.com</div>
+              <div class="phase-item">Crew + homeowner scheduling notifications</div>
+              <div class="phase-item">Prerequisite: QBO payment link active, scheduling workflow documented</div>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+              <span class="badge badge-low">Est. $10,500 annual value</span>
+              <span class="badge badge-medium">~$500–$800 build cost</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-line">
+            <div class="phase-dot" style="background:#64748b"></div>
+            <div class="phase-connector"></div>
+          </div>
+          <div class="phase-content">
+            <div class="phase-label" style="color:#64748b">Phase 3 · Days 61–90</div>
+            <div class="phase-title">Data Infrastructure + Job Costing</div>
+            <div class="phase-items">
+              <div class="phase-item">Material invoice parsing → QBO job cost entries</div>
+              <div class="phase-item">Evaluate FSM platform (ServiceTitan or Jobber) as consolidation layer</div>
+              <div class="phase-item">Prerequisite: Phase 1–2 stable, COGs tracking consistent for 30+ days</div>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+              <span class="badge badge-low">Est. $3,200 annual value</span>
+              <span class="badge badge-medium">Longer build · platform eval needed</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-line">
+            <div class="phase-dot" style="background:#8b5cf6"></div>
+          </div>
+          <div class="phase-content">
+            <div class="phase-label" style="color:#8b5cf6">Beyond 90 Days</div>
+            <div class="phase-title">AI-Augmented Ops</div>
+            <div class="phase-items">
+              <div class="phase-item">AI call scoring for inbound leads (when call volume &gt; 15/day)</div>
+              <div class="phase-item">Predictive scheduling based on weather + crew availability</div>
+              <div class="phase-item">AI estimate assistant for complex commercial jobs</div>
+              <div class="phase-item">These require Phase 1–3 data infrastructure to be valuable</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div class="card-title">Prerequisites Before Any Build</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:20px;height:20px;border-radius:4px;background:rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px">✗</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#f1f5f9">JobNimbus data hygiene</div>
+              <div style="font-size:12px;color:#64748b">Job stages are inconsistently labeled. Need standardized pipeline before automation triggers reliably.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:20px;height:20px;border-radius:4px;background:rgba(245,158,11,.15);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px">~</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#f1f5f9">QBO chart of accounts</div>
+              <div style="font-size:12px;color:#64748b">Partially usable. Need labor vs. material split in COGS for job costing to work.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:20px;height:20px;border-radius:4px;background:rgba(16,185,129,.15);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px">✓</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#f1f5f9">Make.com account</div>
+              <div style="font-size:12px;color:#64748b">Already subscribed. Has sufficient operations for all Phase 1 automations.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:20px;height:20px;border-radius:4px;background:rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px">✗</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#f1f5f9">Documented trigger conditions</div>
+              <div style="font-size:12px;color:#64748b">No written definitions for what "job closed" or "estimate sent" means consistently across the team.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Recommended Next Step</div>
+        <div style="font-size:14px;color:#f1f5f9;line-height:1.7;margin-bottom:12px">
+          This assessment credits toward an <strong style="color:#10B981">Automation Build Sprint ($1,500–$2,000)</strong> if signed within 30 days. Phase 1 can be fully delivered in that sprint.
+        </div>
+        <div style="background:#0a1628;border:1px solid #10B981;border-radius:8px;padding:14px">
+          <div style="font-size:12px;color:#10B981;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Automation Build Sprint</div>
+          <div style="font-size:13px;color:#94a3b8;line-height:1.6">Builds all Phase 1 automations. Includes documentation, team walkthrough, and 30-day monitoring. Delivered in 2–3 weeks.</div>
+          <div style="font-size:22px;font-weight:800;color:#f1f5f9;margin-top:8px">$2,000 <span style="font-size:13px;color:#64748b;font-weight:400">flat, no retainer required</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- OUTCOMES TAB -->
+<div id="tab-outcomes" class="tab-panel">
+<div class="content">
+  <div class="section-title">Expected Outcomes</div>
+  <div class="section-sub">Projected at 60% implementation rate. Not a guarantee — results depend on data quality and team adoption.</div>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="stat-card">
+      <div class="stat-val">6–8 hrs</div>
+      <div class="stat-label">Owner time recovered per week<br><span style="color:#475569">Currently spent on manual reporting + follow-up</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">$23K+</div>
+      <div class="stat-label">Conservative Year 1 value<br><span style="color:#475569">Phase 1–2 automations combined</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">30 days</div>
+      <div class="stat-label">To first automation live<br><span style="color:#475569">Phase 1 with data cleanup complete</span></div>
+    </div>
+  </div>
+
+  <div class="outcome-grid">
+    <div class="outcome-card">
+      <div class="outcome-icon">📊</div>
+      <div class="outcome-title">Weekly reporting on autopilot</div>
+      <div class="outcome-text">The Monday morning Excel build disappears. Owner receives a formatted summary with job status, revenue pacing, and open AR every week at 7am without touching a spreadsheet. Data is accurate as of the night before.</div>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-icon">💬</div>
+      <div class="outcome-title">Zero leads dropped after estimate</div>
+      <div class="outcome-text">Every estimate triggers a 3-touch follow-up sequence automatically. The sales cycle doesn't die when the owner gets busy on a job. Conservative estimate: 4 additional closes per year at current average ticket.</div>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-icon">⭐</div>
+      <div class="outcome-title">Review volume increases 2–3×</div>
+      <div class="outcome-text">Consistent post-job review requests go out 24 hours after job close. Currently reviews happen when someone remembers. Industry benchmark for automated review systems: 60–75% delivery rate vs. 15–20% manual.</div>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-icon">💵</div>
+      <div class="outcome-title">DSO drops from 38 to under 25 days</div>
+      <div class="outcome-text">Automated AR follow-up removes the awkward manual call. Most homeowners pay faster when reminders are consistent and professional. At $560K average AR balance, each 10-day improvement is roughly $1,500 in freed float.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-title">What This Assessment Does NOT Cover</div>
+    <div style="font-size:14px;color:#94a3b8;line-height:1.8">
+      This assessment identifies <strong style="color:#f1f5f9">where automation can help</strong>, not <strong style="color:#f1f5f9">why the underlying operations are struggling</strong>. If job costing is inaccurate, automating reporting surfaces bad numbers faster. If the close rate problem is pricing or rep performance, a follow-up sequence won't fix it. AI and automation are force multipliers — they amplify whatever process is already there, good or bad. If you need a full operational diagnosis (people, process, financial, and tech), that's the OPS Assessment ($997).
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>

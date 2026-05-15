@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Ops Report Automation — Framework OPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#090d17;--bg2:#0f1623;--bg3:#141e2e;--bg4:#1a2535;
+    --accent:#10B981;--accent2:#0d9668;--warn:#f59e0b;--danger:#ef4444;
+    --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;
+    --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+  nav{background:var(--bg2);border-bottom:1px solid var(--border2);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+  .nav-logo{font-size:.85rem;font-weight:800;letter-spacing:.06em;color:var(--accent);text-decoration:none;}
+  .nav-badge{font-family:var(--mono);font-size:.7rem;background:rgba(16,185,129,.12);color:var(--accent);border:1px solid rgba(16,185,129,.25);padding:.25rem .65rem;border-radius:4px;}
+
+  .page{max-width:1000px;margin:0 auto;padding:3rem 1.5rem 5rem;}
+  .page-eyebrow{font-family:var(--mono);font-size:.68rem;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem;}
+  .page-title{font-size:1.9rem;font-weight:800;letter-spacing:-.025em;margin-bottom:.5rem;}
+  .page-sub{color:var(--text2);font-size:.95rem;line-height:1.7;max-width:580px;margin-bottom:2.5rem;}
+
+  /* FLOW DIAGRAM */
+  .flow{display:flex;align-items:center;gap:0;margin-bottom:3rem;flex-wrap:wrap;gap:.5rem;}
+  .flow-node{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:.875rem 1.1rem;text-align:center;min-width:130px;flex:1;}
+  .flow-node.active{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.07);}
+  .flow-icon{font-size:1.25rem;margin-bottom:.4rem;}
+  .flow-name{font-size:.78rem;font-weight:700;margin-bottom:.2rem;}
+  .flow-detail{font-size:.65rem;color:var(--text3);font-family:var(--mono);}
+  .flow-arrow{color:var(--accent);font-size:1.1rem;flex-shrink:0;opacity:.6;}
+
+  /* RUN BUTTON */
+  .run-wrap{text-align:center;margin-bottom:3rem;}
+  #run-btn{background:var(--accent);color:#fff;border:none;padding:.875rem 2.5rem;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;letter-spacing:-.01em;transition:opacity .2s;}
+  #run-btn:hover{opacity:.85;}
+  #run-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+  /* LOG */
+  .log-wrap{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:1.25rem 1.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.9;margin-bottom:2.5rem;min-height:160px;}
+  .log-line{color:var(--text3);}
+  .log-line.ok{color:var(--accent);}
+  .log-line.info{color:var(--text2);}
+  .log-line.head{color:var(--text);font-weight:700;}
+
+  /* REPORT CARD */
+  #report{display:none;animation:fadeIn .4s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .report-card{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;overflow:hidden;}
+  .report-header{background:var(--bg3);border-bottom:1px solid var(--border2);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:start;}
+  .rh-left{}
+  .rh-tag{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.375rem;}
+  .rh-title{font-size:1.2rem;font-weight:800;letter-spacing:-.02em;}
+  .rh-sub{font-size:.78rem;color:var(--text3);margin-top:.2rem;}
+  .rh-right{text-align:right;}
+  .rh-date{font-family:var(--mono);font-size:.72rem;color:var(--text3);}
+  .rh-co{font-size:.82rem;font-weight:600;color:var(--text2);}
+
+  .report-body{padding:1.75rem 2rem;}
+
+  /* METRIC GRID */
+  .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+  .metric{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;}
+  .metric-label{font-family:var(--mono);font-size:.6rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;}
+  .metric-val{font-size:1.5rem;font-weight:800;letter-spacing:-.03em;line-height:1;}
+  .metric-val.up{color:var(--accent);}
+  .metric-val.down{color:var(--danger);}
+  .metric-val.neutral{color:var(--text);}
+  .metric-delta{font-size:.7rem;margin-top:.35rem;}
+  .delta-up{color:var(--accent);}
+  .delta-down{color:var(--danger);}
+  .delta-flat{color:var(--text3);}
+
+  /* SECTIONS */
+  .r-section{margin-bottom:1.75rem;}
+  .r-section-title{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+  .r-section-title::after{content:'';flex:1;height:1px;background:var(--border2);}
+
+  /* ALERTS */
+  .alerts{display:flex;flex-direction:column;gap:.625rem;}
+  .alert{display:flex;align-items:start;gap:.875rem;padding:.875rem 1rem;border-radius:8px;border:1px solid;}
+  .alert.red{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.2);}
+  .alert.yellow{background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.2);}
+  .alert.green{background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.2);}
+  .alert-icon{font-size:.9rem;flex-shrink:0;margin-top:.1rem;}
+  .alert-text p{font-size:.82rem;line-height:1.55;color:var(--text2);}
+  .alert-text strong{color:var(--text);}
+
+  /* MINI TABLE */
+  .mini-table{width:100%;border-collapse:collapse;font-size:.8rem;}
+  .mini-table th{text-align:left;font-family:var(--mono);font-size:.6rem;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);padding:.45rem .75rem;border-bottom:1px solid var(--border2);}
+  .mini-table td{padding:.6rem .75rem;border-bottom:1px solid var(--border);color:var(--text2);}
+  .mini-table td:first-child{font-weight:600;color:var(--text);}
+  .pill{display:inline-block;font-family:var(--mono);font-size:.6rem;padding:.15rem .45rem;border-radius:3px;font-weight:600;}
+  .pill.g{background:rgba(16,185,129,.15);color:var(--accent);}
+  .pill.y{background:rgba(245,158,11,.15);color:var(--warn);}
+  .pill.r{background:rgba(239,68,68,.15);color:var(--danger);}
+
+  /* ACTIONS */
+  .action-list{display:flex;flex-direction:column;gap:.5rem;}
+  .action-item{display:flex;align-items:center;gap:.75rem;padding:.7rem 1rem;background:var(--bg3);border:1px solid var(--border);border-radius:7px;}
+  .action-num{font-family:var(--mono);font-size:.65rem;color:var(--accent);font-weight:700;flex-shrink:0;}
+  .action-item p{font-size:.82rem;color:var(--text2);line-height:1.4;}
+  .action-item strong{color:var(--text);}
+  .action-own{margin-left:auto;font-family:var(--mono);font-size:.65rem;color:var(--text3);white-space:nowrap;padding-left:.75rem;}
+
+  .report-footer{background:var(--bg3);border-top:1px solid var(--border2);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+  .report-footer span{font-family:var(--mono);font-size:.68rem;color:var(--text3);}
+
+  .back-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--accent);text-decoration:none;font-weight:600;margin-top:2.5rem;}
+
+  @media(max-width:700px){
+    .metric-grid{grid-template-columns:repeat(2,1fr);}
+    .flow{flex-direction:column;}
+    .flow-arrow{transform:rotate(90deg);}
+    .report-header{flex-direction:column;gap:.75rem;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">framework/ops</a>
+  <span class="nav-badge">AUTOMATION BUILD · LIVE DEMO</span>
+</nav>
+
+<div class="page">
+  <div class="page-eyebrow">Automation Build Sprint</div>
+  <div class="page-title">Weekly Ops Report — Auto-Generated</div>
+  <div class="page-sub">Every Monday at 6:00 AM, this report is automatically pulled from your FSM + accounting tools, formatted, and delivered to the owner's inbox. No manual work. Click Run Report to see it generate.</div>
+
+  <!-- FLOW DIAGRAM -->
+  <div class="flow">
+    <div class="flow-node active">
+      <div class="flow-icon">⏰</div>
+      <div class="flow-name">Monday 6AM</div>
+      <div class="flow-detail">Cron trigger</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node active">
+      <div class="flow-icon">📊</div>
+      <div class="flow-name">FSM Pull</div>
+      <div class="flow-detail">Jobs / Revenue</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node active">
+      <div class="flow-icon">💰</div>
+      <div class="flow-name">QBO Pull</div>
+      <div class="flow-detail">P&L / Cash</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node active">
+      <div class="flow-icon">⚙️</div>
+      <div class="flow-name">n8n Formats</div>
+      <div class="flow-detail">Calc + alerts</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node active">
+      <div class="flow-icon">📧</div>
+      <div class="flow-name">Owner Inbox</div>
+      <div class="flow-detail">6:05 AM delivery</div>
+    </div>
+  </div>
+
+  <!-- RUN BUTTON -->
+  <div class="run-wrap">
+    <button id="run-btn" onclick="runReport()">▶ Run Report</button>
+  </div>
+
+  <!-- LOG -->
+  <div class="log-wrap" id="log">
+    <div class="log-line">Ready. Press Run Report to generate this week's ops summary.</div>
+  </div>
+
+  <!-- REPORT OUTPUT -->
+  <div id="report">
+    <div class="report-card">
+      <div class="report-header">
+        <div class="rh-left">
+          <div class="rh-tag">Auto-generated · Weekly Ops Report</div>
+          <div class="rh-title">Week of May 5 – May 11, 2026</div>
+          <div class="rh-sub">Delivered Monday May 12 · 6:04 AM</div>
+        </div>
+        <div class="rh-right">
+          <div class="rh-co">Smith Roofing LLC</div>
+          <div class="rh-date">Generated via n8n + ServiceTitan + QBO</div>
+        </div>
+      </div>
+
+      <div class="report-body">
+
+        <!-- METRICS -->
+        <div class="r-section">
+          <div class="r-section-title">Weekly Metrics</div>
+          <div class="metric-grid">
+            <div class="metric">
+              <div class="metric-label">Revenue</div>
+              <div class="metric-val up">$87,400</div>
+              <div class="metric-delta delta-up">↑ 12% vs prior week</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Gross Margin</div>
+              <div class="metric-val down">34.1%</div>
+              <div class="metric-delta delta-down">↓ 4.2 pts — below 38% target</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Jobs Completed</div>
+              <div class="metric-val neutral">14</div>
+              <div class="metric-delta delta-up">↑ 2 vs prior week</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Close Rate</div>
+              <div class="metric-val up">51%</div>
+              <div class="metric-delta delta-up">↑ 6 pts vs 30-day avg</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Estimates Sent</div>
+              <div class="metric-val neutral">27</div>
+              <div class="metric-delta delta-flat">— flat vs prior week</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Callbacks</div>
+              <div class="metric-val down">6</div>
+              <div class="metric-delta delta-down">↑ 3 vs prior week — review</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Cash Position</div>
+              <div class="metric-val neutral">$94,200</div>
+              <div class="metric-delta delta-flat">Payroll due Fri: $41k</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">AR Aging &gt;30d</div>
+              <div class="metric-val down">$28,400</div>
+              <div class="metric-delta delta-down">↑ $6k — 3 invoices outstanding</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALERTS -->
+        <div class="r-section">
+          <div class="r-section-title">Flags Requiring Attention</div>
+          <div class="alerts">
+            <div class="alert red">
+              <div class="alert-icon">🔴</div>
+              <div class="alert-text"><p><strong>Gross margin dropped 4.2 pts this week (34.1% vs 38.3% prior).</strong> 3 jobs flagged with material overage — J-2847, J-2851, J-2863. Review job cost reports before Tuesday standup. Likely cause: dumpster overages on J-2847 not captured at quote.</p></div>
+            </div>
+            <div class="alert yellow">
+              <div class="alert-icon">🟡</div>
+              <div class="alert-text"><p><strong>6 callbacks logged this week vs 3 average.</strong> 4 of 6 are routed back to same crew (Crew B). Escalate to production manager to review pre-flight checklist compliance.</p></div>
+            </div>
+            <div class="alert yellow">
+              <div class="alert-icon">🟡</div>
+              <div class="alert-text"><p><strong>AR aging over 30 days increased to $28,400.</strong> Invoice #4412 ($11,200 — Johnson residence) is 42 days outstanding. Rep assigned: Mike D. Follow-up call required this week.</p></div>
+            </div>
+            <div class="alert green">
+              <div class="alert-icon">🟢</div>
+              <div class="alert-text"><p><strong>Close rate hit 51% this week</strong> — strongest in 90 days. Correlates with same-day estimate presentation on 18 of 27 leads. System is working where the process is followed.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JOB TABLE -->
+        <div class="r-section">
+          <div class="r-section-title">Completed Jobs — Week Summary</div>
+          <table class="mini-table">
+            <thead><tr><th>Job</th><th>Type</th><th>Revenue</th><th>Cost</th><th>Margin</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>J-2840</td><td>Residential Replace</td><td>$9,200</td><td>$5,520</td><td><span class="pill g">40.0%</span></td><td><span class="pill g">Closed</span></td></tr>
+              <tr><td>J-2841</td><td>Residential Replace</td><td>$7,800</td><td>$4,836</td><td><span class="pill g">38.0%</span></td><td><span class="pill g">Closed</span></td></tr>
+              <tr><td>J-2843</td><td>Repair</td><td>$1,400</td><td>$910</td><td><span class="pill y">35.0%</span></td><td><span class="pill g">Closed</span></td></tr>
+              <tr><td>J-2847</td><td>Residential Replace</td><td>$11,600</td><td>$8,236</td><td><span class="pill r">29.0%</span></td><td><span class="pill y">Review</span></td></tr>
+              <tr><td>J-2851</td><td>Residential Replace</td><td>$8,400</td><td>$5,796</td><td><span class="pill r">31.0%</span></td><td><span class="pill y">Review</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="r-section">
+          <div class="r-section-title">Owner Action Items This Week</div>
+          <div class="action-list">
+            <div class="action-item">
+              <div class="action-num">01</div>
+              <p>Review job cost on <strong>J-2847, J-2851, J-2863</strong> before Tuesday standup — identify overage source and update estimate template if systemic.</p>
+              <div class="action-own">Owner · Tue</div>
+            </div>
+            <div class="action-item">
+              <div class="action-num">02</div>
+              <p>Production manager to <strong>audit Crew B pre-flight checklist compliance</strong> — 4 of 6 callbacks traced to same crew this week.</p>
+              <div class="action-own">Prod. Mgr · Wed</div>
+            </div>
+            <div class="action-item">
+              <div class="action-num">03</div>
+              <p><strong>Call Johnson residence</strong> (Invoice #4412, $11,200) — 42 days outstanding. Escalate to collections if no payment arrangement by Friday.</p>
+              <div class="action-own">Mike D. · Fri</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="report-footer">
+        <span>Auto-generated · Framework OPS Weekly Report · n8n + ServiceTitan + QBO</span>
+        <span>Next report: Mon May 19 · 6:00 AM</span>
+      </div>
+    </div>
+  </div>
+
+  <a href="index.html" class="back-link">← Back to frameworkops.com</a>
+</div>
+
+<script>
+const logs = [
+  [200,  'head', '▶ Trigger fired — Monday 06:00:00 AM'],
+  [600,  'info', '→ Connecting to ServiceTitan API...'],
+  [1200, 'ok',   '✓ ServiceTitan: 14 jobs pulled (May 5–11)'],
+  [1600, 'info', '→ Calculating revenue, margins, callbacks...'],
+  [2100, 'ok',   '✓ FSM metrics compiled'],
+  [2400, 'info', '→ Connecting to QuickBooks Online...'],
+  [2900, 'ok',   '✓ QBO: P&L + cash position synced'],
+  [3100, 'info', '→ Running alert logic...'],
+  [3500, 'ok',   '⚠ FLAG: Gross margin 34.1% — below 38% threshold'],
+  [3800, 'ok',   '⚠ FLAG: Callbacks +3 vs avg — Crew B pattern detected'],
+  [4100, 'ok',   '⚠ FLAG: AR aging $28,400 over 30 days'],
+  [4400, 'info', '→ Formatting report...'],
+  [4900, 'ok',   '✓ Report formatted (8 metrics, 3 flags, 3 action items)'],
+  [5200, 'info', '→ Delivering to owner inbox...'],
+  [5700, 'ok',   '✓ Email delivered — chance@smithroofing.com · 06:04 AM'],
+  [5900, 'head', '— Done. Total runtime: 4.1 seconds —'],
+];
+
+function runReport() {
+  const btn = document.getElementById('run-btn');
+  const logEl = document.getElementById('log');
+  const reportEl = document.getElementById('report');
+  btn.disabled = true;
+  logEl.innerHTML = '';
+  reportEl.style.display = 'none';
+
+  logs.forEach(([delay, cls, text]) => {
+    setTimeout(() => {
+      const line = document.createElement('div');
+      line.className = 'log-line ' + cls;
+      line.textContent = text;
+      logEl.appendChild(line);
+      logEl.scrollTop = logEl.scrollHeight;
+    }, delay);
+  });
+
+  setTimeout(() => {
+    reportEl.style.display = 'block';
+    reportEl.scrollIntoView({behavior:'smooth', block:'start'});
+    setTimeout(() => { btn.disabled = false; btn.textContent = '↺ Run Again'; }, 800);
+  }, 6200);
+}
+</script>
+</body>
+</html>

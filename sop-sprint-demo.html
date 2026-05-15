@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOP Sprint Deliverable — Framework OPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#090d17; --bg2:#0f1623; --bg3:#141e2e; --bg4:#1a2535;
+  --accent:#10B981; --accent-dim:rgba(16,185,129,.12); --accent-border:rgba(16,185,129,.28);
+  --warn:#f59e0b; --danger:#ef4444; --info:#3b82f6;
+  --text:#f1f5f9; --text2:#94a3b8; --text3:#64748b;
+  --border:rgba(255,255,255,.07); --border2:rgba(255,255,255,.13);
+  --mono:'JetBrains Mono',monospace;
+  --radius:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;}
+
+/* ─── NAV ─── */
+.top-nav{background:var(--bg2);border-bottom:1px solid var(--border2);padding:.875rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.nav-logo{font-size:.85rem;font-weight:800;letter-spacing:.06em;color:var(--accent);text-decoration:none;}
+.nav-right{display:flex;align-items:center;gap:1rem;}
+.nav-badge{font-family:var(--mono);font-size:.65rem;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);padding:.25rem .65rem;border-radius:4px;letter-spacing:.05em;}
+.nav-back{font-size:.78rem;color:var(--text3);text-decoration:none;font-weight:500;}
+.nav-back:hover{color:var(--accent);}
+
+/* ─── LAYOUT ─── */
+.shell{display:flex;flex:1;min-height:0;}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:260px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border2);display:flex;flex-direction:column;position:sticky;top:48px;height:calc(100vh - 48px);overflow-y:auto;}
+.sb-section{padding:1.25rem 1.25rem .5rem;}
+.sb-label{font-family:var(--mono);font-size:.6rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem;}
+.sb-item{display:flex;align-items:center;gap:.75rem;padding:.625rem .875rem;border-radius:7px;cursor:pointer;margin-bottom:.25rem;transition:background .15s;}
+.sb-item:hover{background:var(--bg3);}
+.sb-item.active{background:var(--accent-dim);border:1px solid var(--accent-border);}
+.sb-item.active .sb-num{color:var(--accent);}
+.sb-item.active .sb-name{color:var(--text);}
+.sb-num{font-family:var(--mono);font-size:.65rem;color:var(--text3);width:1.5rem;flex-shrink:0;}
+.sb-name{font-size:.82rem;font-weight:600;color:var(--text2);}
+.sb-tag{margin-left:auto;font-family:var(--mono);font-size:.55rem;background:rgba(16,185,129,.1);color:var(--accent);border:1px solid var(--accent-border);padding:.1rem .35rem;border-radius:3px;}
+.sb-divider{border:none;border-top:1px solid var(--border);margin:.75rem 1.25rem;}
+.sb-meta{padding:.75rem 1.25rem 1.25rem;}
+.sb-meta-row{display:flex;justify-content:space-between;align-items:center;padding:.375rem 0;border-bottom:1px solid var(--border);}
+.sb-meta-row:last-child{border:none;}
+.sb-meta-label{font-family:var(--mono);font-size:.6rem;color:var(--text3);}
+.sb-meta-val{font-size:.72rem;font-weight:600;color:var(--text2);}
+
+/* ─── MAIN CONTENT ─── */
+.main{flex:1;overflow-y:auto;padding:2.5rem 2.5rem 4rem;}
+
+/* ─── COVER PAGE ─── */
+.cover{display:none;}
+.cover.active{display:block;}
+.cover-header{background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:2.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden;}
+.cover-header::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(16,185,129,.08) 0%,transparent 70%);pointer-events:none;}
+.cover-eyebrow{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.875rem;}
+.cover-title{font-size:2rem;font-weight:900;letter-spacing:-.03em;line-height:1.2;margin-bottom:.5rem;}
+.cover-sub{color:var(--text2);font-size:.95rem;line-height:1.6;max-width:560px;margin-bottom:1.75rem;}
+.cover-chips{display:flex;flex-wrap:wrap;gap:.5rem;}
+.chip{font-family:var(--mono);font-size:.65rem;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);padding:.3rem .75rem;border-radius:4px;}
+.chip.accent{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent);}
+
+.cover-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;}
+.cover-stat{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.25rem;}
+.cs-val{font-size:1.75rem;font-weight:900;color:var(--accent);letter-spacing:-.03em;line-height:1;}
+.cs-label{font-size:.75rem;color:var(--text3);margin-top:.35rem;}
+
+.sop-index{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;overflow:hidden;}
+.si-header{background:var(--bg3);padding:1rem 1.5rem;border-bottom:1px solid var(--border2);}
+.si-header h3{font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text2);}
+.si-row{display:grid;grid-template-columns:2rem 1fr auto auto;align-items:center;gap:1rem;padding:.875rem 1.5rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.si-row:hover{background:var(--bg3);}
+.si-row:last-child{border:none;}
+.si-num{font-family:var(--mono);font-size:.65rem;color:var(--text3);}
+.si-name{font-size:.875rem;font-weight:600;}
+.si-owner{font-family:var(--mono);font-size:.65rem;color:var(--text3);}
+.si-status{font-family:var(--mono);font-size:.6rem;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);padding:.2rem .5rem;border-radius:3px;}
+
+/* ─── SOP PAGE ─── */
+.sop-page{display:none;}
+.sop-page.active{display:block;}
+.sop-doc-header{background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:1.75rem 2rem;margin-bottom:1.25rem;}
+.sdh-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:1.25rem;}
+.sdh-code{font-family:var(--mono);font-size:.65rem;color:var(--text3);margin-bottom:.375rem;}
+.sdh-title{font-size:1.5rem;font-weight:800;letter-spacing:-.025em;}
+.sdh-sub{font-size:.85rem;color:var(--text2);margin-top:.25rem;}
+.sdh-badges{display:flex;flex-direction:column;gap:.375rem;align-items:flex-end;}
+.badge-sm{font-family:var(--mono);font-size:.6rem;padding:.25rem .6rem;border-radius:4px;border:1px solid;}
+.badge-sm.g{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent);}
+.badge-sm.y{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.25);color:var(--warn);}
+.sdh-meta{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;padding-top:1.25rem;border-top:1px solid var(--border);}
+.meta-cell label{font-family:var(--mono);font-size:.55rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:.25rem;}
+.meta-cell span{font-size:.8rem;font-weight:600;}
+
+/* ─── PROCESS FLOW ─── */
+.flow-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1.25rem;}
+.flow-label{font-family:var(--mono);font-size:.6rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.25rem;}
+.flow-nodes{display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:.5rem;}
+.flow-node{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:.75rem 1rem;min-width:110px;flex-shrink:0;text-align:center;}
+.flow-node.trigger{border-color:rgba(59,130,246,.35);background:rgba(59,130,246,.07);}
+.flow-node.action{border-color:var(--accent-border);background:var(--accent-dim);}
+.flow-node.check{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.07);}
+.flow-node.end{border-color:rgba(16,185,129,.5);background:rgba(16,185,129,.15);}
+.fn-icon{font-size:1rem;margin-bottom:.3rem;}
+.fn-name{font-size:.7rem;font-weight:700;line-height:1.3;}
+.fn-sla{font-family:var(--mono);font-size:.55rem;color:var(--text3);margin-top:.25rem;}
+.flow-arr{color:var(--text3);font-size:1rem;flex-shrink:0;padding:0 .25rem;}
+
+/* ─── STEPS ─── */
+.steps-wrap{margin-bottom:1.25rem;}
+.step-card{display:grid;grid-template-columns:3rem 1fr;gap:1.25rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:.75rem;transition:border-color .2s;}
+.step-card:hover{border-color:var(--border2);}
+.step-card.critical{border-left:3px solid var(--accent);}
+.step-card.warn{border-left:3px solid var(--warn);}
+.step-left{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.step-num{width:2.25rem;height:2.25rem;border-radius:7px;background:var(--accent-dim);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--accent);flex-shrink:0;}
+.step-line{width:1px;flex:1;background:var(--border2);min-height:20px;}
+.step-body h4{font-size:.9rem;font-weight:700;margin-bottom:.4rem;letter-spacing:-.01em;}
+.step-body p{font-size:.82rem;color:var(--text2);line-height:1.65;margin-bottom:.75rem;}
+.step-footer{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;}
+.tag{font-family:var(--mono);font-size:.6rem;padding:.2rem .55rem;border-radius:4px;border:1px solid;}
+.tag.owner{background:rgba(255,255,255,.04);border-color:var(--border2);color:var(--text3);}
+.tag.sla{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent);}
+.tag.warn{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.25);color:var(--warn);}
+.tag.tool{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.2);color:#93c5fd;}
+.step-note{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:.625rem .875rem;font-size:.78rem;color:var(--text2);margin-top:.625rem;line-height:1.5;}
+.step-note strong{color:var(--warn);}
+
+/* ─── KPI PANEL ─── */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.875rem;margin-bottom:1.25rem;}
+.kpi-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;}
+.kpi-label{font-family:var(--mono);font-size:.58rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;}
+.kpi-target{font-size:1.35rem;font-weight:800;letter-spacing:-.025em;color:var(--accent);}
+.kpi-bench{font-size:.7rem;color:var(--text3);margin-top:.25rem;}
+.kpi-bench span{color:var(--text2);}
+
+/* ─── TWO-COL ─── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;}
+
+/* ─── EXCEPTIONS ─── */
+.exc-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;}
+.exc-title{font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
+.exc-item{display:flex;gap:.875rem;padding:.75rem 0;border-bottom:1px solid var(--border);}
+.exc-item:last-child{border:none;padding-bottom:0;}
+.exc-icon{font-size:.85rem;flex-shrink:0;margin-top:.1rem;}
+.exc-body p{font-size:.8rem;color:var(--text2);line-height:1.55;}
+.exc-body strong{color:var(--text);}
+.exc-response{font-size:.75rem;color:var(--text3);margin-top:.35rem;padding-left:.875rem;border-left:2px solid var(--border2);}
+.exc-response strong{color:var(--accent);}
+
+/* ─── TRAINING ─── */
+.training-card{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;overflow:hidden;margin-bottom:1.25rem;}
+.tc-head{background:var(--bg3);padding:.875rem 1.5rem;border-bottom:1px solid var(--border2);display:flex;justify-content:space-between;align-items:center;}
+.tc-head h4{font-size:.8rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text2);}
+.tc-body{padding:1.25rem 1.5rem;}
+.checklist{display:flex;flex-direction:column;gap:.5rem;}
+.chk-item{display:flex;align-items:start;gap:.75rem;padding:.5rem 0;border-bottom:1px solid var(--border);}
+.chk-item:last-child{border:none;}
+.chk-box{width:1.1rem;height:1.1rem;border:1.5px solid var(--accent-border);border-radius:3px;background:var(--accent-dim);flex-shrink:0;margin-top:.1rem;display:flex;align-items:center;justify-content:center;}
+.chk-check{color:var(--accent);font-size:.7rem;}
+.chk-text{font-size:.82rem;color:var(--text2);line-height:1.5;}
+.chk-text strong{color:var(--text);}
+
+/* ─── ROLLOUT ─── */
+.rollout-timeline{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.25rem;}
+.rt-row{display:grid;grid-template-columns:90px 1fr;gap:1.25rem;align-items:start;}
+.rt-week{font-family:var(--mono);font-size:.65rem;font-weight:700;color:var(--accent);padding:.3rem .65rem;background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:4px;text-align:center;}
+.rt-body{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.875rem 1.1rem;}
+.rt-body h5{font-size:.82rem;font-weight:700;margin-bottom:.375rem;}
+.rt-body p{font-size:.78rem;color:var(--text2);line-height:1.55;}
+.rt-tasks{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.5rem;}
+.rt-task{font-family:var(--mono);font-size:.6rem;background:var(--bg4);border:1px solid var(--border2);color:var(--text3);padding:.15rem .5rem;border-radius:3px;}
+
+/* ─── SECTION BLOCK ─── */
+.section-block{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1.25rem;}
+.sb-head{font-family:var(--mono);font-size:.6rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.875rem;}
+.sb-head.accent{color:var(--accent);}
+.section-block p{font-size:.85rem;color:var(--text2);line-height:1.7;}
+.section-block p+p{margin-top:.625rem;}
+
+/* ─── FOOTER ─── */
+.doc-footer{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.doc-footer span{font-family:var(--mono);font-size:.65rem;color:var(--text3);}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .shell{flex-direction:column;}
+  .sidebar{width:100%;height:auto;position:relative;top:0;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .sdh-meta{grid-template-columns:repeat(3,1fr);}
+  .cover-grid{grid-template-columns:repeat(2,1fr);}
+  .two-col{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .main{padding:1.5rem 1rem 3rem;}
+  .kpi-grid{grid-template-columns:1fr 1fr;}
+  .sdh-top{flex-direction:column;gap:.75rem;}
+  .sdh-meta{grid-template-columns:repeat(2,1fr);}
+  .rt-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">framework/ops</a>
+  <div class="nav-right">
+    <span class="nav-badge">SOP SPRINT · SAMPLE DELIVERABLE</span>
+    <a href="index.html" class="nav-back">← Back to site</a>
+  </div>
+</nav>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">Sprint Contents</div>
+      <div class="sb-item active" onclick="show('cover')">
+        <span class="sb-num">—</span>
+        <span class="sb-name">Sprint Summary</span>
+      </div>
+    </div>
+    <hr class="sb-divider">
+    <div class="sb-section">
+      <div class="sb-label">Delivered SOPs</div>
+      <div class="sb-item" onclick="show('sop1')">
+        <span class="sb-num">01</span>
+        <span class="sb-name">Estimate to Close</span>
+        <span class="sb-tag">Sales</span>
+      </div>
+      <div class="sb-item" onclick="show('sop2')">
+        <span class="sb-num">02</span>
+        <span class="sb-name">Job Closeout</span>
+        <span class="sb-tag">Ops</span>
+      </div>
+      <div class="sb-item" onclick="show('sop3')">
+        <span class="sb-num">03</span>
+        <span class="sb-name">Dispatch & Scheduling</span>
+        <span class="sb-tag">Ops</span>
+      </div>
+      <div class="sb-item" onclick="show('sop4')">
+        <span class="sb-num">04</span>
+        <span class="sb-name">New Employee Onboarding</span>
+        <span class="sb-tag">HR</span>
+      </div>
+      <div class="sb-item" onclick="show('sop5')">
+        <span class="sb-num">05</span>
+        <span class="sb-name">Customer Complaint Handling</span>
+        <span class="sb-tag">CX</span>
+      </div>
+    </div>
+    <hr class="sb-divider">
+    <div class="sb-section">
+      <div class="sb-label">Rollout Plan</div>
+      <div class="sb-item" onclick="show('rollout')">
+        <span class="sb-num">—</span>
+        <span class="sb-name">30-Day Rollout</span>
+      </div>
+    </div>
+    <hr class="sb-divider">
+    <div class="sb-meta">
+      <div class="sb-meta-row"><span class="sb-meta-label">Client</span><span class="sb-meta-val">Smith Roofing</span></div>
+      <div class="sb-meta-row"><span class="sb-meta-label">Sprint</span><span class="sb-meta-val">3 weeks</span></div>
+      <div class="sb-meta-row"><span class="sb-meta-label">Delivered</span><span class="sb-meta-val">Apr 2026</span></div>
+      <div class="sb-meta-row"><span class="sb-meta-label">Version</span><span class="sb-meta-val">v1.0</span></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ── COVER ── -->
+    <section id="cover" class="cover active">
+      <div class="cover-header">
+        <div class="cover-eyebrow">Framework OPS · SOP Sprint Deliverable</div>
+        <div class="cover-title">Operations SOP Package<br>Smith Roofing LLC</div>
+        <div class="cover-sub">5 standard operating procedures covering Sales, Field Operations, Dispatch, HR, and Customer Experience. Each SOP includes a process flow, step-by-step instructions with owners and SLAs, KPIs to track, exception handling, and a training checklist.</div>
+        <div class="cover-chips">
+          <span class="chip accent">5 SOPs Delivered</span>
+          <span class="chip">3-Week Sprint</span>
+          <span class="chip">ServiceTitan</span>
+          <span class="chip">QBO</span>
+          <span class="chip">30-Day Rollout Plan</span>
+          <span class="chip">Training Guides Included</span>
+        </div>
+      </div>
+
+      <div class="cover-grid">
+        <div class="cover-stat">
+          <div class="cs-val">5</div>
+          <div class="cs-label">SOPs documented &amp; formatted</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cs-val">23</div>
+          <div class="cs-label">Process steps mapped with owners</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cs-val">18</div>
+          <div class="cs-label">Training checklist items</div>
+        </div>
+      </div>
+
+      <div class="sop-index">
+        <div class="si-header"><h3>Delivered Documents</h3></div>
+        <div class="si-row" onclick="show('sop1')">
+          <span class="si-num">01</span>
+          <span class="si-name">Residential Estimate-to-Close Process</span>
+          <span class="si-owner">Sales Manager</span>
+          <span class="si-status">DELIVERED</span>
+        </div>
+        <div class="si-row" onclick="show('sop2')">
+          <span class="si-num">02</span>
+          <span class="si-name">Job Closeout &amp; Production Handoff</span>
+          <span class="si-owner">Production Coordinator</span>
+          <span class="si-status">DELIVERED</span>
+        </div>
+        <div class="si-row" onclick="show('sop3')">
+          <span class="si-num">03</span>
+          <span class="si-name">Dispatch &amp; Daily Scheduling Protocol</span>
+          <span class="si-owner">Dispatcher</span>
+          <span class="si-status">DELIVERED</span>
+        </div>
+        <div class="si-row" onclick="show('sop4')">
+          <span class="si-num">04</span>
+          <span class="si-name">New Field Employee Onboarding</span>
+          <span class="si-owner">HR / Owner</span>
+          <span class="si-status">DELIVERED</span>
+        </div>
+        <div class="si-row" onclick="show('sop5')">
+          <span class="si-num">05</span>
+          <span class="si-name">Customer Complaint &amp; Callback Resolution</span>
+          <span class="si-owner">Office Manager</span>
+          <span class="si-status">DELIVERED</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SOP 1: ESTIMATE TO CLOSE ── -->
+    <section id="sop1" class="sop-page">
+      <div class="sop-doc-header">
+        <div class="sdh-top">
+          <div>
+            <div class="sdh-code">SOP-SALES-01 · v1.0</div>
+            <div class="sdh-title">Residential Estimate-to-Close</div>
+            <div class="sdh-sub">Sales Process — Roofing Operations</div>
+          </div>
+          <div class="sdh-badges">
+            <span class="badge-sm g">ACTIVE</span>
+            <span class="badge-sm y">QUARTERLY REVIEW</span>
+          </div>
+        </div>
+        <div class="sdh-meta">
+          <div class="meta-cell"><label>Owner</label><span>Sales Mgr</span></div>
+          <div class="meta-cell"><label>Trigger</label><span>Appt Booked</span></div>
+          <div class="meta-cell"><label>End State</label><span>Contract Signed</span></div>
+          <div class="meta-cell"><label>Target SLA</label><span>≤ 5 days</span></div>
+          <div class="meta-cell"><label>Delivered</label><span>Apr 2026</span></div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="sb-head">Purpose</div>
+        <p>Define a repeatable, measurable process for converting a booked appointment into a signed contract. Eliminate rep-to-rep variability so outcomes depend on the system, not the individual.</p>
+      </div>
+
+      <div class="flow-wrap">
+        <div class="flow-label">Process Flow</div>
+        <div class="flow-nodes">
+          <div class="flow-node trigger"><div class="fn-icon">📅</div><div class="fn-name">Appt Confirmed</div><div class="fn-sla">-24 hrs</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">🔍</div><div class="fn-name">On-Site Inspection</div><div class="fn-sla">Day of</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">📋</div><div class="fn-name">Estimate Presented</div><div class="fn-sla">Same day</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node check"><div class="fn-icon">✍️</div><div class="fn-name">Signed Same Day?</div><div class="fn-sla">Decision</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">📲</div><div class="fn-name">Follow-Up Cadence</div><div class="fn-sla">72h / 7d</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node end"><div class="fn-icon">✅</div><div class="fn-name">Contract + Deposit</div><div class="fn-sla">Close</div></div>
+        </div>
+      </div>
+
+      <div class="steps-wrap">
+        <div class="step-card critical">
+          <div class="step-left"><div class="step-num">01</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>24-Hour Appointment Confirmation</h4>
+            <p>Send automated confirmation SMS + email the day before via CRM. Include the arrival window (not just a time), rep name and photo. Mark "Confirmed" in ServiceTitan only after customer responds.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Dispatcher</span><span class="tag sla">SLA: &lt;24 hrs pre-appt</span><span class="tag tool">ServiceTitan Automation</span></div>
+          </div>
+        </div>
+        <div class="step-card critical">
+          <div class="step-left"><div class="step-num">02</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>On-Site Scope &amp; Photo Documentation</h4>
+            <p>Arrive within confirmed window. Conduct inspection using the standard checklist in ServiceTitan. Minimum 8 photos required: 4 elevations, ridge, valleys, 2 damage close-ups. All scope items entered into estimate before leaving the property.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Sales Rep</span><span class="tag sla">Photos: same day</span><span class="tag tool">ServiceTitan Checklist</span></div>
+            <div class="step-note"><strong>⚠ Hard Stop:</strong> Estimate cannot be marked "Sent" in ServiceTitan until photos are uploaded. Dispatcher enforces this.</div>
+          </div>
+        </div>
+        <div class="step-card critical">
+          <div class="step-left"><div class="step-num">03</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Live Estimate Presentation</h4>
+            <p>Present in person whenever possible. Walk through scope line by line — materials, labor, disposal, warranty. Use the Estimate Presentation Script (Appendix A). Do not email an estimate without presenting it live first.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Sales Rep</span><span class="tag sla">Same day preferred</span></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-left"><div class="step-num">04</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Same-Day Follow-Up (If Not Closed On-Site)</h4>
+            <p>Send a personalized follow-up within 4 hours — not automated, not generic. Reference one specific thing from the conversation. Mark lead "Estimate Sent – Pending" in CRM.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Sales Rep</span><span class="tag sla">Within 4 hrs of leaving</span></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-left"><div class="step-num">05</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>72-Hour &amp; 7-Day Follow-Up Cadence</h4>
+            <p>72-hr: automated SMS via CRM. 7-day: rep makes a personal call — not a text. All contacts logged. Lead stays "Active" for 30 days before moving to "Nurture."</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Rep + CRM Auto</span><span class="tag sla">No lead &gt;7 days silent</span><span class="tag tool">Make Automation</span></div>
+          </div>
+        </div>
+        <div class="step-card critical">
+          <div class="step-left"><div class="step-num">06</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Contract Signature &amp; Deposit</h4>
+            <p>Contract signed digitally via ServiceTitan or DocuSign. Collect minimum 10% deposit at signature. Mark "Sold," trigger scheduling handoff to production. Upload contract to job file within 2 hours.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Sales Rep</span><span class="tag sla">Deposit: same day as close</span><span class="tag tool">DocuSign · ServiceTitan</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Close Rate</div><div class="kpi-target">≥ 45%</div><div class="kpi-bench">Industry avg: <span>30–40%</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Same-Day Close Rate</div><div class="kpi-target">≥ 25%</div><div class="kpi-bench">Industry avg: <span>15–20%</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Est-to-Close Days</div><div class="kpi-target">≤ 5 days</div><div class="kpi-bench">Industry avg: <span>7–12 days</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Follow-Up Compliance</div><div class="kpi-target">100%</div><div class="kpi-bench">Logged in CRM: <span>every lead</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Photo Compliance</div><div class="kpi-target">100%</div><div class="kpi-bench">Min 8 photos: <span>per estimate</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Deposit Lag</div><div class="kpi-target">Same day</div><div class="kpi-bench">Target: <span>0 days after signature</span></div></div>
+      </div>
+
+      <div class="exc-card">
+        <div class="exc-title">Exception Handling</div>
+        <div class="exc-item">
+          <div class="exc-icon">⚠</div>
+          <div class="exc-body">
+            <p><strong>"I want to get other quotes"</strong></p>
+            <p class="exc-response"><strong>Response:</strong> Do not discount. Ask what specifically they're comparing. Provide the Competitor Comparison one-pager. Schedule a specific callback before leaving. Never leave without a next step.</p>
+          </div>
+        </div>
+        <div class="exc-item">
+          <div class="exc-icon">⚠</div>
+          <div class="exc-body">
+            <p><strong>Homeowner is not the sole decision maker</strong></p>
+            <p class="exc-response"><strong>Response:</strong> Identify this at arrival, before inspection. Reschedule when both decision makers are present, or request a 3-way call during presentation. Do not leave a written estimate with one party expecting a callback.</p>
+          </div>
+        </div>
+        <div class="exc-item">
+          <div class="exc-icon">⚠</div>
+          <div class="exc-body">
+            <p><strong>Insurance job — scope may change after adjuster</strong></p>
+            <p class="exc-response"><strong>Response:</strong> Present as RCV only. Explain the supplement process. Flag as "Insurance – Pending Adjuster" in ServiceTitan. Do not follow the standard close cadence until adjuster visit is complete.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SOP 2: JOB CLOSEOUT ── -->
+    <section id="sop2" class="sop-page">
+      <div class="sop-doc-header">
+        <div class="sdh-top">
+          <div>
+            <div class="sdh-code">SOP-OPS-01 · v1.0</div>
+            <div class="sdh-title">Job Closeout &amp; Production Handoff</div>
+            <div class="sdh-sub">Field Operations — Roofing</div>
+          </div>
+          <div class="sdh-badges"><span class="badge-sm g">ACTIVE</span></div>
+        </div>
+        <div class="sdh-meta">
+          <div class="meta-cell"><label>Owner</label><span>Prod. Coord.</span></div>
+          <div class="meta-cell"><label>Trigger</label><span>Job Marked Done</span></div>
+          <div class="meta-cell"><label>End State</label><span>Invoice Sent</span></div>
+          <div class="meta-cell"><label>Target SLA</label><span>Same day</span></div>
+          <div class="meta-cell"><label>Delivered</label><span>Apr 2026</span></div>
+        </div>
+      </div>
+
+      <div class="flow-wrap">
+        <div class="flow-label">Process Flow</div>
+        <div class="flow-nodes">
+          <div class="flow-node trigger"><div class="fn-icon">🏗️</div><div class="fn-name">Job Completed</div><div class="fn-sla">Field</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">📸</div><div class="fn-name">Completion Photos</div><div class="fn-sla">Before crew leaves</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">🧹</div><div class="fn-name">Site Cleanup Check</div><div class="fn-sla">Before crew leaves</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">⭐</div><div class="fn-name">Review Request</div><div class="fn-sla">Auto · 2 hrs post</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node end"><div class="fn-icon">💵</div><div class="fn-name">Invoice Sent</div><div class="fn-sla">Same day</div></div>
+        </div>
+      </div>
+
+      <div class="steps-wrap">
+        <div class="step-card critical">
+          <div class="step-left"><div class="step-num">01</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Completion Photo Documentation</h4>
+            <p>Crew foreman uploads minimum 10 completion photos before leaving the site: all 4 elevations, ridge cap, valleys, any previous damage areas, dumpster removed, yard cleared. Photos uploaded directly to the job in ServiceTitan from the field.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Crew Foreman</span><span class="tag sla">Before leaving site</span><span class="tag tool">ServiceTitan Mobile</span></div>
+          </div>
+        </div>
+        <div class="step-card critical">
+          <div class="step-left"><div class="step-num">02</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Site Cleanup Verification</h4>
+            <p>Foreman completes the Site Cleanup Checklist in ServiceTitan: dumpster removed or scheduled, magnetic sweep completed, nails/debris cleared from driveway and yard, gutters cleared of debris from installation. Customer walks the property if present.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Crew Foreman</span><span class="tag sla">Before leaving site</span></div>
+            <div class="step-note"><strong>⚠ Note:</strong> Callbacks related to debris/cleanup are the leading driver of negative reviews. This step is non-negotiable.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-left"><div class="step-num">03</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Job Marked Complete in ServiceTitan</h4>
+            <p>Foreman marks job "Complete" in ServiceTitan app. This triggers the automated review request sequence (2-hour delay) and notifies the production coordinator to begin invoice prep.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Foreman → Auto triggers</span><span class="tag tool">ServiceTitan + Make</span></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-left"><div class="step-num">04</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Final Invoice Prep &amp; Send</h4>
+            <p>Production coordinator reviews job costs against estimate, confirms any change orders are captured, and sends final invoice via ServiceTitan. Invoice sent same day job is marked complete. Any variance &gt;5% flagged to owner before sending.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Prod. Coordinator</span><span class="tag sla">Same day as job close</span><span class="tag warn">Variance &gt;5% → Owner review</span></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-left"><div class="step-num">05</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Warranty Documentation Filed</h4>
+            <p>Production coordinator registers manufacturer warranty within 5 business days of completion. Warranty confirmation uploaded to job file. Customer emailed their warranty details automatically via CRM.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Prod. Coordinator</span><span class="tag sla">Within 5 business days</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Same-Day Invoice Rate</div><div class="kpi-target">≥ 95%</div><div class="kpi-bench">Current baseline: <span>measure week 1</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Photo Compliance</div><div class="kpi-target">100%</div><div class="kpi-bench">Min 10 photos: <span>per completed job</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Cleanup Callbacks</div><div class="kpi-target">0 / week</div><div class="kpi-bench">Industry avg: <span>1–2% of jobs</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Review Request Sent</div><div class="kpi-target">100%</div><div class="kpi-bench">Automated: <span>2 hrs post-complete</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Warranty Filing Lag</div><div class="kpi-target">≤ 5 days</div><div class="kpi-bench">Hard deadline: <span>per manufacturer</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Cost Variance Flagged</div><div class="kpi-target">&gt; 5%</div><div class="kpi-bench">Owner review: <span>before invoice sent</span></div></div>
+      </div>
+    </section>
+
+    <!-- ── SOP 3: DISPATCH ── -->
+    <section id="sop3" class="sop-page">
+      <div class="sop-doc-header">
+        <div class="sdh-top">
+          <div>
+            <div class="sdh-code">SOP-OPS-02 · v1.0</div>
+            <div class="sdh-title">Dispatch &amp; Daily Scheduling Protocol</div>
+            <div class="sdh-sub">Field Operations — Dispatch</div>
+          </div>
+          <div class="sdh-badges"><span class="badge-sm g">ACTIVE</span></div>
+        </div>
+        <div class="sdh-meta">
+          <div class="meta-cell"><label>Owner</label><span>Dispatcher</span></div>
+          <div class="meta-cell"><label>Trigger</label><span>Daily 6:00 AM</span></div>
+          <div class="meta-cell"><label>End State</label><span>All crews dispatched</span></div>
+          <div class="meta-cell"><label>Target SLA</label><span>7:00 AM</span></div>
+          <div class="meta-cell"><label>Delivered</label><span>Apr 2026</span></div>
+        </div>
+      </div>
+
+      <div class="flow-wrap">
+        <div class="flow-label">Daily Dispatch Flow</div>
+        <div class="flow-nodes">
+          <div class="flow-node trigger"><div class="fn-icon">⏰</div><div class="fn-name">6:00 AM Board Review</div><div class="fn-sla">Dispatcher</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">☁️</div><div class="fn-name">Weather Check</div><div class="fn-sla">6:15 AM</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">📦</div><div class="fn-name">Materials Confirmed</div><div class="fn-sla">6:30 AM</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">📲</div><div class="fn-name">Crews Notified</div><div class="fn-sla">6:45 AM</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node end"><div class="fn-icon">✅</div><div class="fn-name">Board Locked</div><div class="fn-sla">7:00 AM</div></div>
+        </div>
+      </div>
+
+      <div class="steps-wrap">
+        <div class="step-card critical">
+          <div class="step-left"><div class="step-num">01</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>6:00 AM — Review the Schedule Board</h4>
+            <p>Open ServiceTitan dispatch board. Confirm all jobs scheduled for today have: crew assigned, materials confirmed, customer contact on file, address and access notes complete. Flag any gaps to owner immediately — do not attempt to launch day with incomplete job cards.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Dispatcher</span><span class="tag sla">Complete by 6:15 AM</span><span class="tag tool">ServiceTitan Board</span></div>
+          </div>
+        </div>
+        <div class="step-card critical">
+          <div class="step-left"><div class="step-num">02</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>6:15 AM — Weather Check &amp; Adjustments</h4>
+            <p>Check Weather.com and local radar for precipitation forecast. Rain &gt;40% probability → flag affected jobs for potential reschedule. Contact affected homeowners by 7:30 AM if rescheduling. Update ServiceTitan with rescheduled dates immediately.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Dispatcher</span><span class="tag sla">Homeowners notified by 7:30 AM</span></div>
+            <div class="step-note"><strong>⚠ Rule:</strong> Never leave a homeowner to find out their install is cancelled. They call us — we don't call them back.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-left"><div class="step-num">03</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>6:30 AM — Materials Confirmation</h4>
+            <p>Confirm materials for today's jobs are staged at the yard or scheduled for delivery. For delivery jobs, confirm ETA with supplier. If materials are delayed, immediately notify crew foreman and assess whether job can proceed or needs to reschedule.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Dispatcher</span><span class="tag sla">Confirmed before crew dispatch</span></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-left"><div class="step-num">04</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>6:45 AM — Crew Notifications Sent</h4>
+            <p>Send automated day-of dispatch notifications via ServiceTitan to all crew foremen: job address, arrival window, scope summary, materials location, customer contact name/number, any site access notes. No surprises for the crew when they arrive.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Dispatcher + Auto</span><span class="tag tool">ServiceTitan Notifications</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Board Locked by 7 AM</div><div class="kpi-target">Daily</div><div class="kpi-bench">Target: <span>100% of working days</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Weather Reschedule Notice</div><div class="kpi-target">&lt; 7:30 AM</div><div class="kpi-bench">Customer notified: <span>before crew arrives</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Same-Day Material Delays</div><div class="kpi-target">≤ 1/wk</div><div class="kpi-bench">Escalate to owner: <span>if &gt;1 in same week</span></div></div>
+      </div>
+    </section>
+
+    <!-- ── SOP 4: ONBOARDING ── -->
+    <section id="sop4" class="sop-page">
+      <div class="sop-doc-header">
+        <div class="sdh-top">
+          <div>
+            <div class="sdh-code">SOP-HR-01 · v1.0</div>
+            <div class="sdh-title">New Field Employee Onboarding</div>
+            <div class="sdh-sub">Human Resources — Field Staff</div>
+          </div>
+          <div class="sdh-badges"><span class="badge-sm g">ACTIVE</span></div>
+        </div>
+        <div class="sdh-meta">
+          <div class="meta-cell"><label>Owner</label><span>HR / Owner</span></div>
+          <div class="meta-cell"><label>Trigger</label><span>Offer Accepted</span></div>
+          <div class="meta-cell"><label>End State</label><span>Day 30 Check-In</span></div>
+          <div class="meta-cell"><label>Target SLA</label><span>30 days</span></div>
+          <div class="meta-cell"><label>Delivered</label><span>Apr 2026</span></div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="training-card">
+          <div class="tc-head"><h4>Week 1 Checklist — Pre-Start</h4></div>
+          <div class="tc-body">
+            <div class="checklist">
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>Offer letter signed</strong> and filed in HR system</div></div>
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>I-9 and W-4</strong> completed before Day 1</div></div>
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>ServiceTitan profile</strong> created with role assigned</div></div>
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>Safety orientation</strong> scheduled for Day 1 AM</div></div>
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>Crew assignment</strong> confirmed with foreman</div></div>
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>PPE issued</strong> — hard hat, harness, safety glasses</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="training-card">
+          <div class="tc-head"><h4>Days 1–30 Milestones</h4></div>
+          <div class="tc-body">
+            <div class="checklist">
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>Day 1:</strong> Safety walkthrough, tool orientation, company handbook reviewed</div></div>
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>Day 3:</strong> ServiceTitan mobile app walkthrough with foreman</div></div>
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>Day 7:</strong> First week check-in with owner or supervisor (15 min)</div></div>
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>Day 14:</strong> Photo/documentation compliance reviewed</div></div>
+              <div class="chk-item"><div class="chk-box"><span class="chk-check">✓</span></div><div class="chk-text"><strong>Day 30:</strong> Formal 30-day review — performance, fit, questions</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Day 1 Readiness</div><div class="kpi-target">100%</div><div class="kpi-bench">Pre-start checklist: <span>complete before arrival</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">30-Day Retention</div><div class="kpi-target">≥ 90%</div><div class="kpi-bench">Industry avg: <span>75–80% field staff</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Check-In Completion</div><div class="kpi-target">100%</div><div class="kpi-bench">Day 7 + Day 30: <span>both required</span></div></div>
+      </div>
+    </section>
+
+    <!-- ── SOP 5: COMPLAINTS ── -->
+    <section id="sop5" class="sop-page">
+      <div class="sop-doc-header">
+        <div class="sdh-top">
+          <div>
+            <div class="sdh-code">SOP-CX-01 · v1.0</div>
+            <div class="sdh-title">Customer Complaint &amp; Callback Resolution</div>
+            <div class="sdh-sub">Customer Experience — All Staff</div>
+          </div>
+          <div class="sdh-badges"><span class="badge-sm g">ACTIVE</span><span class="badge-sm y">TRAIN ALL STAFF</span></div>
+        </div>
+        <div class="sdh-meta">
+          <div class="meta-cell"><label>Owner</label><span>Office Manager</span></div>
+          <div class="meta-cell"><label>Trigger</label><span>Complaint Received</span></div>
+          <div class="meta-cell"><label>End State</label><span>Resolved + Logged</span></div>
+          <div class="meta-cell"><label>Target SLA</label><span>24–48 hrs</span></div>
+          <div class="meta-cell"><label>Delivered</label><span>Apr 2026</span></div>
+        </div>
+      </div>
+
+      <div class="flow-wrap">
+        <div class="flow-label">Resolution Flow</div>
+        <div class="flow-nodes">
+          <div class="flow-node trigger"><div class="fn-icon">📞</div><div class="fn-name">Complaint Received</div><div class="fn-sla">Any channel</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">📋</div><div class="fn-name">Log in ServiceTitan</div><div class="fn-sla">Immediately</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node check"><div class="fn-icon">🔍</div><div class="fn-name">Assess Severity</div><div class="fn-sla">Within 1 hr</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node action"><div class="fn-icon">🤝</div><div class="fn-name">Callback Scheduled</div><div class="fn-sla">Within 24 hrs</div></div>
+          <div class="flow-arr">→</div>
+          <div class="flow-node end"><div class="fn-icon">✅</div><div class="fn-name">Resolved + Logged</div><div class="fn-sla">Root cause noted</div></div>
+        </div>
+      </div>
+
+      <div class="steps-wrap">
+        <div class="step-card critical">
+          <div class="step-left"><div class="step-num">01</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Receive &amp; Log Immediately</h4>
+            <p>Any staff member who receives a complaint — by phone, email, text, or in person — logs it in ServiceTitan under the job within 15 minutes. Do not attempt to resolve it on the spot without logging first. Required fields: complaint summary, customer name, job number, date/time received.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Any staff → Office Mgr</span><span class="tag sla">Log within 15 min</span></div>
+          </div>
+        </div>
+        <div class="step-card critical">
+          <div class="step-left"><div class="step-num">02</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Severity Assessment</h4>
+            <p>Office Manager assesses within 1 hour: <strong>High</strong> (active leak, structural concern, customer threatening legal or public review) → escalate to owner immediately. <strong>Medium</strong> (workmanship concern, cleanup issue) → schedule site visit within 48 hrs. <strong>Low</strong> (billing question, scheduling confusion) → resolve by phone same day.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Office Manager</span><span class="tag sla">Assessed within 1 hr</span><span class="tag warn">HIGH → Owner in 15 min</span></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-left"><div class="step-num">03</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Customer Acknowledgment Call</h4>
+            <p>Office Manager calls the customer within 24 hours regardless of severity. Script: acknowledge the issue, confirm you've reviewed the job, give them a specific resolution timeline. Do not promise outcomes you can't deliver. Do not be defensive. The goal of this call is to make them feel heard.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Office Manager</span><span class="tag sla">Within 24 hrs</span></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-left"><div class="step-num">04</div><div class="step-line"></div></div>
+          <div class="step-body">
+            <h4>Resolution &amp; Root Cause Log</h4>
+            <p>Once resolved, log the resolution method and root cause in ServiceTitan. Root cause options: installer error, material defect, scope miscommunication, weather-related, customer expectation mismatch. This data is reviewed weekly — patterns trigger process changes.</p>
+            <div class="step-footer"><span class="tag owner">OWNER: Office Manager</span><span class="tag sla">Logged before closing ticket</span></div>
+            <div class="step-note"><strong>Rule:</strong> No complaint is closed without a root cause logged. "One-off" is not a root cause.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Log Compliance</div><div class="kpi-target">100%</div><div class="kpi-bench">Every complaint: <span>logged in ServiceTitan</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Acknowledgment SLA</div><div class="kpi-target">&lt; 24 hrs</div><div class="kpi-bench">Customer call: <span>every complaint</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Complaint Rate</div><div class="kpi-target">≤ 2%</div><div class="kpi-bench">Of jobs completed: <span>monthly</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Resolution Time</div><div class="kpi-target">≤ 48 hrs</div><div class="kpi-bench">Medium severity: <span>site visit + close</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Root Cause Logged</div><div class="kpi-target">100%</div><div class="kpi-bench">Required to close: <span>every ticket</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Review Recovery Rate</div><div class="kpi-target">≥ 40%</div><div class="kpi-bench">Of complaints that: <span>leave a review after resolution</span></div></div>
+      </div>
+    </section>
+
+    <!-- ── ROLLOUT PLAN ── -->
+    <section id="rollout" class="sop-page">
+      <div class="sop-doc-header">
+        <div class="sdh-top">
+          <div>
+            <div class="sdh-code">ROLLOUT-01 · SOP Sprint</div>
+            <div class="sdh-title">30-Day Rollout Plan</div>
+            <div class="sdh-sub">Implementation Schedule — Smith Roofing LLC</div>
+          </div>
+          <div class="sdh-badges"><span class="badge-sm g">IN PROGRESS</span></div>
+        </div>
+        <div class="sdh-meta">
+          <div class="meta-cell"><label>Start Date</label><span>May 1, 2026</span></div>
+          <div class="meta-cell"><label>End Date</label><span>May 31, 2026</span></div>
+          <div class="meta-cell"><label>SOPs</label><span>5 Active</span></div>
+          <div class="meta-cell"><label>Owner</label><span>Chance Peare</span></div>
+          <div class="meta-cell"><label>Review</label><span>June 1</span></div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="sb-head">Implementation Philosophy</div>
+        <p>Don't launch all 5 SOPs at once. Stagger by impact and complexity. Sales (SOP-01) and Closeout (SOP-02) go live first — they directly affect revenue collection and customer experience. Dispatch and HR follow in Week 2. Complaints last, because it requires buy-in from the entire team.</p>
+        <p>Each SOP has a 1-week shadow period where staff follow the new process alongside the old one, then a go-live date where the old process is retired. Framework OPS reviews compliance data weekly during the rollout.</p>
+      </div>
+
+      <div class="rollout-timeline">
+        <div class="rt-row">
+          <div class="rt-week">WEEK 1<br>May 1–7</div>
+          <div class="rt-body">
+            <h5>Training Week — Sales &amp; Closeout</h5>
+            <p>Walk through SOP-SALES-01 and SOP-OPS-01 with the sales team and production coordinator. Confirm ServiceTitan fields and automation triggers are set up correctly. Run through each process step live with the team — no live client jobs yet.</p>
+            <div class="rt-tasks"><span class="rt-task">SOP-01 Training</span><span class="rt-task">SOP-02 Training</span><span class="rt-task">ServiceTitan Setup</span><span class="rt-task">Automation Test</span></div>
+          </div>
+        </div>
+        <div class="rt-row">
+          <div class="rt-week">WEEK 2<br>May 8–14</div>
+          <div class="rt-body">
+            <h5>Shadow Period — Sales &amp; Closeout Go Live</h5>
+            <p>SOP-01 and SOP-02 go live. Sales reps follow the new estimate process on all new leads. Production coordinator follows the new closeout checklist on every completed job. Framework OPS reviews compliance data at end of week — flag exceptions, not blame.</p>
+            <div class="rt-tasks"><span class="rt-task">SOP-01 Live</span><span class="rt-task">SOP-02 Live</span><span class="rt-task">SOP-03 Training</span><span class="rt-task">SOP-04 Training</span><span class="rt-task">Weekly Review</span></div>
+          </div>
+        </div>
+        <div class="rt-row">
+          <div class="rt-week">WEEK 3<br>May 15–21</div>
+          <div class="rt-body">
+            <h5>Dispatch &amp; HR Go Live</h5>
+            <p>SOP-OPS-02 (Dispatch) and SOP-HR-01 (Onboarding) go live. Dispatcher follows the new 6 AM protocol starting Monday. HR onboarding process applies to next new hire. SOP-05 (Complaints) introduced in team meeting — training only, not live yet.</p>
+            <div class="rt-tasks"><span class="rt-task">SOP-03 Live</span><span class="rt-task">SOP-04 Live</span><span class="rt-task">SOP-05 Training</span><span class="rt-task">Weekly Review</span></div>
+          </div>
+        </div>
+        <div class="rt-row">
+          <div class="rt-week">WEEK 4<br>May 22–31</div>
+          <div class="rt-body">
+            <h5>All 5 SOPs Live — Compliance Review</h5>
+            <p>SOP-CX-01 (Complaints) goes live. All 5 SOPs now active. Framework OPS pulls compliance data from ServiceTitan — photo rates, follow-up cadence completion, complaint log compliance — and delivers a rollout summary report. Any SOPs with &lt;80% compliance get a targeted fix session.</p>
+            <div class="rt-tasks"><span class="rt-task">SOP-05 Live</span><span class="rt-task">All 5 Active</span><span class="rt-task">Compliance Report</span><span class="rt-task">Fix Sessions if Needed</span><span class="rt-task">June 1 Review</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="sb-head accent">What Success Looks Like at Day 30</div>
+        <p>All 5 SOPs followed consistently without reminders from management. ServiceTitan data shows photo compliance at 100%, same-day invoice rate above 90%, and complaint log compliance at 100%. Owner is no longer the one chasing reps for follow-up documentation. The system is running the process — not a person.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.cover, .sop-page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+  var target = document.getElementById(id);
+  if (target) { target.classList.add('active'); window.scrollTo(0,0); }
+  var items = document.querySelectorAll('.sb-item');
+  items.forEach(function(item) {
+    if (item.getAttribute('onclick') && item.getAttribute('onclick').indexOf("'" + id + "'") > -1) {
+      item.classList.add('active');
+    }
+  });
+}
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 ## Pricing Philosophy
 
-Pricing reflects time, expertise, and implementation risk — not what the market will theoretically bear. These ranges are intentionally conservative. New practices without a deep referral network should anchor toward the lower half of any range until 3–5 case studies exist.
+Pricing reflects time, expertise, and implementation risk — not what the market will theoretically bear. Retainer prices are fixed, not ranges. Sprints carry ranges to account for scope variance at intake.
 
 The service menu is structured in three groups: **Entry / Trust Builders** (low-cost, defined-scope entry points), **Productized Sprints** (fixed-scope project work), and **Retainers** (ongoing fractional COO engagements). A prospect doesn't have to start with a retainer — the entry products are designed to generate trust and demonstrate value before a longer commitment.
 
@@ -54,7 +54,7 @@ Low-risk, defined deliverables. These exist to get a foot in the door with opera
 
 Fixed scope, fixed price, defined timeline. Sprints are project engagements — not ongoing. They are designed for clients who have a specific operational gap to close but aren't ready for or don't need a full retainer.
 
-### SOP Sprint — $1,500–$2,500
+### SOP Sprint — $2,000
 
 **Deliverable:** 5 fully documented standard operating procedures for the client's highest-priority processes. Includes process mapping, written SOP in the Framework OPS template, training guide for each SOP, and a recommended storage/delivery method for the team.
 
@@ -66,7 +66,7 @@ Fixed scope, fixed price, defined timeline. Sprints are project engagements — 
 
 ---
 
-### Automation Build Sprint — $1,500–$3,000
+### Automation Build Sprint — $2,000
 
 **Deliverable:** Design, build, test, and deploy 2–3 automation workflows for the client's operation. Includes documentation of each automation so the client's team can maintain it.
 
@@ -80,15 +80,15 @@ Fixed scope, fixed price, defined timeline. Sprints are project engagements — 
 
 ---
 
-### 90-Day Roadmap Sprint — $2,000–$3,500
+### KPI Dashboard Build — $2,000
 
-**Deliverable:** A fully built, prioritized 90-day operational roadmap for the client's business. Includes: diagnostic of current state (financials, ops, people, tech), identification of top 5 problems ranked by impact and effort, KPI dashboard design, and a week-by-week execution plan with assigned owners.
+**Deliverable:** A live KPI dashboard built on the client's existing tools — revenue, gross margin, close rate, job costing, and cash position visible in one place. Includes a weekly auto-report delivered to the owner's inbox every Monday morning. No more pulling numbers manually.
 
-**Timeline:** 2–3 weeks to deliver; roadmap covers the following 90 days
+**Timeline:** 2–3 weeks
 
-**Format:** 90-minute diagnostic session + document review + 60-minute delivery session. Final output: a working document (Notion, Google Doc, or equivalent) the client team can execute from.
+**Format:** One 60-minute scoping call to confirm data sources and key metrics → build and test → 45-minute handoff call with the owner and whoever manages reporting. Final output: live dashboard + automated weekly report running in the client's stack.
 
-**Best for:** Clients who need a clear plan but have internal capacity to execute it. Also useful as a standalone engagement for companies not ready for a retainer but who need more than the OPS Assessment.
+**Best for:** Operators who are flying blind on their numbers or spending hours each week manually compiling reports. Creates a durable asset that pulls toward a retainer — owner sees the data, wants someone to act on it.
 
 ---
 
@@ -100,7 +100,7 @@ Ongoing fractional COO engagements. Monthly commitment with a minimum initial te
 
 | | Advisory | Light | Active ⭐ Most Common | Embedded |
 |---|---|---|---|---|
-| **Monthly Investment** | $1,500–$2,500 | $2,500–$3,500 | $4,000–$5,500 | $7,000–$10,000 |
+| **Monthly Investment** | $1,500 | $2,500 | $4,000 | $6,000 |
 | **Hours/Month** | 4–6 hrs | 8–12 hrs | 15–20 hrs | 30–40 hrs |
 | **Min. Commitment** | 3 months | 3 months | 6 months | 6–12 months |
 | **Working Sessions** | 2x/month (60 min) | Weekly (45 min) | Weekly (60 min) | 2x/week |
@@ -116,7 +116,7 @@ Ongoing fractional COO engagements. Monthly commitment with a minimum initial te
 ---
 
 ### Advisory
-**$1,500–$2,500/month | 3-month minimum | ~4–6 hours/month**
+**$1,500/month | 3-month minimum | ~4–6 hours/month**
 
 Senior sounding board only. Two monthly calls, async review of documents and reports. No implementation. Best for companies with a capable internal operator who just needs strategic guidance.
 
@@ -125,23 +125,23 @@ Realistic expectation: this tier does not transform operations. It helps owners 
 ---
 
 ### Light
-**$2,500–$3,500/month | 3-month minimum | ~8–12 hours/month**
+**$2,500/month | 3-month minimum | ~8–12 hours/month**
 
 Weekly working sessions with some implementation support. Builds the KPI dashboard and cash flow model, develops one SOP per month, provides same-day async support. Good fit for $2M–$4M companies beginning to put systems in place.
 
 ---
 
 ### Active (Most Common)
-**$4,000–$5,500/month | 6-month minimum | ~15–20 hours/month**
+**$4,000/month | 6-month minimum | ~15–20 hours/month**
 
 The core engagement. Weekly sessions, full financial visibility stack (cash flow model + job costing), 2–3 SOPs per month, automation build each quarter, same-day support. This is where Framework OPS delivers the highest ROI for the $3M–$10M home service operator.
 
-At $4,500/month, the client needs to see a clear path to $13,500+ in measurable value creation within 90 days. Realistic value drivers: gross margin improvement from job costing visibility, reduced owner hours from delegation systems, cash flow clarity preventing costly borrowing decisions.
+At $4,000/month, the client needs to see a clear path to $12,000+ in measurable value creation within 90 days. Realistic value drivers: gross margin improvement from job costing visibility, reduced owner hours from delegation systems, cash flow clarity preventing costly borrowing decisions.
 
 ---
 
 ### Embedded
-**$7,000–$10,000/month | 6–12 month minimum | ~30–40 hours/month**
+**$6,000/month | 6–12 month minimum | ~30–40 hours/month**
 
 Deep integration into the client's leadership structure. Two weekly sessions, direct manager coaching, full SOP library, monthly automation builds, quarterly on-site visits, hiring process ownership. Best for $8M–$20M companies in active growth events: new market, leadership transition, PE prep.
 
