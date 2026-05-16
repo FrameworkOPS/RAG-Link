@@ -30,3 +30,7 @@ out/
 
 # Smart Connections embedding cache (large, regenerable)
 .smart-env/
+
+# Obsidian plugin binaries — installed via Obsidian, not version-controlled
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/styles.css
