@@ -34,3 +34,6 @@ out/
 # Obsidian plugin binaries — installed via Obsidian, not version-controlled
 .obsidian/plugins/*/main.js
 .obsidian/plugins/*/styles.css
+
+# Local Netlify folder
+.netlify
