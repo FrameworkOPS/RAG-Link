@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Framework OPS — Operations KPI Dashboard (Sample)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #1a1f2e;
+    --panel-2: #232a3d;
+    --border: #2d3548;
+    --text: #e8ecf3;
+    --text-dim: #8893a8;
+    --accent: #4a9eff;
+    --good: #3ec97e;
+    --warn: #f5a524;
+    --bad: #ef4444;
+    --neutral: #6b7280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .header .subtitle {
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .header .brand {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .filters {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .filters select {
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .filters label {
+    color: var(--text-dim);
+    font-size: 12px;
+  }
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+  }
+  .kpi-label {
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .kpi-value {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .kpi-trend {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .kpi-trend.up { color: var(--good); }
+  .kpi-trend.down { color: var(--bad); }
+  .kpi-trend.warn { color: var(--warn); }
+  .kpi-bench {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 8px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .panel h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .panel .sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .chart-wrap {
+    position: relative;
+    height: 240px;
+  }
+  .chart-wrap.tall { height: 280px; }
+  .chart-wrap.short { height: 200px; }
+  .funnel {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .funnel-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 80px 70px;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .funnel-label { color: var(--text-dim); }
+  .funnel-bar {
+    height: 22px;
+    background: var(--panel-2);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .funnel-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #6bb6ff);
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .funnel-count { text-align: right; font-weight: 600; }
+  .funnel-conv { text-align: right; color: var(--text-dim); font-size: 11px; }
+  .footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  .badge.good { background: rgba(62,201,126,0.15); color: var(--good); }
+  .badge.warn { background: rgba(245,165,36,0.15); color: var(--warn); }
+  .badge.bad { background: rgba(239,68,68,0.15); color: var(--bad); }
+  table {
+    width: 100%;
+    font-size: 12px;
+    border-collapse: collapse;
+  }
+  table th {
+    text-align: left;
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  table td {
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  table tr:last-child td { border-bottom: none; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="brand">Framework OPS — Sample Dashboard</div>
+    <h1>Northside Roofing Co. — Operations Snapshot</h1>
+    <div class="subtitle">Trailing 12 months · $5.2M revenue · 22 employees · Residential + storm</div>
+  </div>
+  <div class="filters">
+    <label>View:</label>
+    <select id="periodSelect">
+      <option value="ttm">Trailing 12 months</option>
+      <option value="q">Trailing 90 days</option>
+      <option value="m">Last month</option>
+    </select>
+  </div>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi-card">
+    <div class="kpi-label">TTM Revenue</div>
+    <div class="kpi-value">$5.18M</div>
+    <div class="kpi-trend up">▲ 12% YoY</div>
+    <div class="kpi-bench">Industry growth 15–30% · pace below healthy growth</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Gross Margin</div>
+    <div class="kpi-value">39.4%</div>
+    <div class="kpi-trend down">▼ 2.8 pts YoY</div>
+    <div class="kpi-bench">Bench 38–52% · trending toward red flag (35%)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Close Rate (Blended)</div>
+    <div class="kpi-value">41.2%</div>
+    <div class="kpi-trend warn">▼ 3.4 pts vs. prior 90d</div>
+    <div class="kpi-bench">Retail bench 35–55% · acceptable, declining</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">AR &gt; 60 days</div>
+    <div class="kpi-value">11.8%</div>
+    <div class="kpi-trend down">▲ 4.1 pts QoQ</div>
+    <div class="kpi-bench">Bench &lt;5% · collections issue</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Callback Rate</div>
+    <div class="kpi-value">2.6%</div>
+    <div class="kpi-trend warn">▲ 0.8 pts QoQ</div>
+    <div class="kpi-bench">Bench &lt;2% · install quality drift</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Crew Utilization</div>
+    <div class="kpi-value">71%</div>
+    <div class="kpi-trend down">▼ 6 pts QoQ</div>
+    <div class="kpi-bench">Bench 75–85% · scheduling/pipeline gap</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h3>Monthly Revenue & Gross Margin <span class="badge warn">GM trending down</span></h3>
+    <div class="sub">Bars: revenue ($K). Line: GM% per month. Benchmark band 38–52%.</div>
+    <div class="chart-wrap tall"><canvas id="revGmChart"></canvas></div>
+  </div>
+  <div class="panel">
+    <h3>AR Aging</h3>
+    <div class="sub">% of total receivables by bucket. Healthy: &gt;90% in 0–30.</div>
+    <div class="chart-wrap tall"><canvas id="arAgingChart"></canvas></div>
+  </div>
+</div>
+
+<div class="grid-3">
+  <div class="panel">
+    <h3>Lead-to-Cash Funnel <span class="badge bad">Estimate→Sold drag</span></h3>
+    <div class="sub">Last 90 days. Stage conversion shows where deals leak.</div>
+    <div class="funnel" id="funnel"></div>
+  </div>
+  <div class="panel">
+    <h3>Close Rate by Lead Source</h3>
+    <div class="sub">Where the volume comes from vs. where it closes.</div>
+    <div class="chart-wrap"><canvas id="leadSourceChart"></canvas></div>
+  </div>
+  <div class="panel">
+    <h3>Job Cycle Time</h3>
+    <div class="sub">Signed contract → completion. Bench: 2–21 days retail.</div>
+    <div class="chart-wrap"><canvas id="cycleChart"></canvas></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h3>Top 10 Jobs by GM% (Last 90 days)</h3>
+    <div class="sub">Red flag: GM% below 35%. Yellow: 35–38%. Green: 38%+.</div>
+    <table id="jobTable">
+      <thead><tr>
+        <th>Job</th><th>Crew</th><th>Type</th><th class="num">Revenue</th><th class="num">GM%</th><th>Status</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="panel">
+    <h3>Marketing Spend → Revenue</h3>
+    <div class="sub">% of revenue spent on marketing by month. Bench: 5–12%.</div>
+    <div class="chart-wrap"><canvas id="marketingChart"></canvas></div>
+  </div>
+</div>
+
+<div class="footer">
+  <div>Sample data · Framework OPS sample suite · Numbers anchored to roofing operations benchmark playbook</div>
+  <div>Built for live demo · not a real client</div>
+</div>
+
+<script>
+  // Sample data — anchored to roofing benchmarks. Story: company is hitting top-line but
+  // GM is leaking, AR is aging, and pipeline is softening. Classic $5M owner-operator pattern.
+  Chart.defaults.color = '#8893a8';
+  Chart.defaults.borderColor = '#2d3548';
+  Chart.defaults.font.family = '-apple-system, "Segoe UI", Roboto, sans-serif';
+
+  const months = ['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'];
+  const revenue = [385, 442, 478, 521, 498, 462, 388, 312, 358, 442, 478, 511]; // $K
+  const gm = [44.1, 43.8, 43.2, 42.5, 41.8, 41.2, 40.8, 41.5, 40.6, 39.8, 39.2, 39.4];
+
+  new Chart(document.getElementById('revGmChart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        { label: 'Revenue ($K)', data: revenue, backgroundColor: '#4a9eff', borderRadius: 4, yAxisID: 'y' },
+        { label: 'GM%', data: gm, type: 'line', borderColor: '#f5a524', backgroundColor: '#f5a524',
+          tension: 0.3, pointRadius: 3, borderWidth: 2, yAxisID: 'y1' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+      scales: {
+        y: { position: 'left', ticks: { callback: v => '$' + v + 'K' }, grid: { color: '#2d3548' } },
+        y1: { position: 'right', min: 30, max: 55, ticks: { callback: v => v + '%' }, grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('arAgingChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['0–30 days', '31–60 days', '61–90 days', '90+ days'],
+      datasets: [{
+        data: [62.4, 25.8, 7.2, 4.6],
+        backgroundColor: ['#3ec97e', '#4a9eff', '#f5a524', '#ef4444'],
+        borderColor: '#1a1f2e', borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '60%',
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => c.label + ': ' + c.parsed + '%' } }
+      }
+    }
+  });
+
+  // Funnel
+  const funnelData = [
+    { stage: 'Leads', count: 412, conv: null },
+    { stage: 'Estimates Set', count: 298, conv: 72 },
+    { stage: 'Estimates Run', count: 251, conv: 84 },
+    { stage: 'Sold', count: 104, conv: 41 },
+    { stage: 'Completed', count: 89, conv: 86 },
+    { stage: 'Collected', count: 78, conv: 88 }
+  ];
+  const funnelEl = document.getElementById('funnel');
+  const maxCount = funnelData[0].count;
+  funnelData.forEach(s => {
+    const pct = Math.round((s.count / maxCount) * 100);
+    const row = document.createElement('div');
+    row.className = 'funnel-row';
+    row.innerHTML = `
+      <div class="funnel-label">${s.stage}</div>
+      <div class="funnel-bar"><div class="funnel-bar-fill" style="width:${pct}%">${pct}%</div></div>
+      <div class="funnel-count">${s.count.toLocaleString()}</div>
+      <div class="funnel-conv">${s.conv !== null ? s.conv + '%' : '—'}</div>
+    `;
+    funnelEl.appendChild(row);
+  });
+
+  new Chart(document.getElementById('leadSourceChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Storm canvas','Google Ads','Referral','Facebook','Yard signs','Home Advisor'],
+      datasets: [
+        { label: 'Leads', data: [142, 88, 64, 72, 28, 18], backgroundColor: '#4a9eff' },
+        { label: 'Close %', data: [62, 31, 58, 22, 51, 18], type: 'line',
+          borderColor: '#3ec97e', backgroundColor: '#3ec97e', tension: 0.3, yAxisID: 'y1', borderWidth: 2 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+      scales: {
+        y: { position: 'left', grid: { color: '#2d3548' } },
+        y1: { position: 'right', min: 0, max: 80, ticks: { callback: v => v + '%' }, grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('cycleChart'), {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Avg cycle (days)',
+        data: [11.2, 9.8, 10.4, 11.1, 12.8, 14.2, 16.8, 18.4, 15.6, 13.2, 12.1, 13.8],
+        borderColor: '#f5a524', backgroundColor: 'rgba(245,165,36,0.15)',
+        tension: 0.3, fill: true, borderWidth: 2, pointRadius: 3
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { grid: { color: '#2d3548' }, ticks: { callback: v => v + 'd' } }
+      }
+    }
+  });
+
+  // Job table
+  const jobs = [
+    { id: 'J-2418', crew: 'Crew B', type: 'Storm', rev: 22400, gm: 48.2 },
+    { id: 'J-2422', crew: 'Crew A', type: 'Retail', rev: 14800, gm: 44.6 },
+    { id: 'J-2431', crew: 'Sub-1', type: 'Storm', rev: 38200, gm: 42.1 },
+    { id: 'J-2435', crew: 'Crew A', type: 'Retail', rev: 11600, gm: 41.8 },
+    { id: 'J-2441', crew: 'Crew B', type: 'Retail', rev: 9800, gm: 39.4 },
+    { id: 'J-2446', crew: 'Sub-2', type: 'Storm', rev: 28400, gm: 37.2 },
+    { id: 'J-2452', crew: 'Crew A', type: 'Retail', rev: 12200, gm: 36.8 },
+    { id: 'J-2458', crew: 'Sub-1', type: 'Storm', rev: 18900, gm: 34.4 },
+    { id: 'J-2462', crew: 'Crew B', type: 'Retail', rev: 8600, gm: 32.1 },
+    { id: 'J-2468', crew: 'Sub-2', type: 'Storm', rev: 16400, gm: 28.6 }
+  ];
+  const tbody = document.querySelector('#jobTable tbody');
+  jobs.forEach(j => {
+    const status = j.gm >= 38 ? 'good' : (j.gm >= 35 ? 'warn' : 'bad');
+    const label = j.gm >= 38 ? 'On bench' : (j.gm >= 35 ? 'Tight' : 'Red flag');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${j.id}</td>
+      <td>${j.crew}</td>
+      <td>${j.type}</td>
+      <td class="num">$${j.rev.toLocaleString()}</td>
+      <td class="num">${j.gm.toFixed(1)}%</td>
+      <td><span class="badge ${status}">${label}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  new Chart(document.getElementById('marketingChart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Marketing % of revenue',
+        data: [8.2, 7.8, 7.2, 6.9, 7.4, 8.1, 9.6, 11.2, 10.4, 9.1, 8.8, 8.2],
+        backgroundColor: ctx => {
+          const v = ctx.parsed.y;
+          if (v > 12) return '#ef4444';
+          if (v < 5) return '#f5a524';
+          return '#4a9eff';
+        },
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { grid: { color: '#2d3548' }, ticks: { callback: v => v + '%' } } }
+    }
+  });
+
+  // Period filter is sample-only (would re-pull from FSM in production)
+  document.getElementById('periodSelect').addEventListener('change', e => {
+    console.log('Period changed:', e.target.value, '— in production this re-pulls from ServiceTitan/JobNimbus.');
+  });
+</script>
+</body>
+</html>
