@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Framework OPS — Pipeline Dashboard</title>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --border: rgba(0,0,0,0.1);
+    --text: #1a1a18;
+    --muted: #6b6a65;
+    --hint: #9b9a94;
+    --green-bg: #eaf3de;
+    --green: #3b6d11;
+    --blue-bg: #e6f1fb;
+    --blue: #185fa5;
+    --amber-bg: #faeeda;
+    --amber: #854f0b;
+    --mono: 'SF Mono', 'Fira Code', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #242422;
+      --surface2: #2c2c2a;
+      --border: rgba(255,255,255,0.1);
+      --text: #f0efe9;
+      --muted: #9b9a94;
+      --hint: #6b6a65;
+      --green-bg: #173404;
+      --green: #c0dd97;
+      --blue-bg: #042c53;
+      --blue: #b5d4f4;
+      --amber-bg: #412402;
+      --amber: #fac775;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 24px 16px 48px; }
+  header { margin-bottom: 24px; }
+  header h1 { font-size: 17px; font-weight: 500; }
+  header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--hint); margin: 0 0 10px; }
+  .metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 24px; }
+  @media(min-width:400px) { .metrics { grid-template-columns: repeat(4, 1fr); } }
+  .metric { background: var(--surface2); border-radius: 10px; padding: 14px 16px; }
+  .metric-val { font-size: 26px; font-weight: 500; line-height: 1; margin-bottom: 4px; }
+  .metric-lbl { font-size: 12px; color: var(--muted); }
+  .pipes { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
+  @media(min-width:480px) { .pipes { grid-template-columns: 1fr 1fr; } }
+  .pipe { background: var(--surface); border: 0.5px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+  .pipe-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .pipe-name { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 7px; }
+  .badge { font-size: 11px; padding: 2px 9px; border-radius: 8px; }
+  .badge-ok { background: var(--green-bg); color: var(--green); }
+  .pipe-meta { font-size: 12px; color: var(--muted); line-height: 1.8; }
+  .cmd-block { background: var(--surface2); border-radius: 8px; padding: 9px 12px; margin-top: 10px; font-family: var(--mono); font-size: 11px; color: var(--muted); display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; line-height: 1.6; }
+  .copy-btn { flex-shrink: 0; font-size: 11px; padding: 4px 8px; cursor: pointer; border-radius: 7px; border: 0.5px solid var(--border); background: transparent; color: var(--muted); display: flex; align-items: center; gap: 4px; transition: background 0.15s; }
+  .copy-btn:hover { background: var(--surface2); }
+  .copy-btn.copied { color: var(--green); }
+  .meetings-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .meetings-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 10px; border-bottom: 0.5px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; font-weight: 500; color: var(--hint); text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; border-bottom: 0.5px solid var(--border); }
+  td { padding: 11px 16px; border-bottom: 0.5px solid var(--border); font-size: 13px; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 7px; background: var(--blue-bg); color: var(--blue); }
+  .tag.fieldy { background: var(--amber-bg); color: var(--amber); }
+  .empty { text-align: center; padding: 32px 16px; color: var(--muted); font-size: 13px; }
+  .refresh-btn { font-size: 12px; padding: 5px 12px; cursor: pointer; border-radius: 8px; border: 0.5px solid var(--border); background: transparent; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+  .refresh-btn:hover { background: var(--surface2); }
+  .spin { animation: spin 1s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .last-updated { font-size: 11px; color: var(--hint); }
+  svg.icon { width: 14px; height: 14px; vertical-align: -2px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Framework OPS — Pipeline Dashboard</h1>
+    <p>Fathom + Fieldy &rarr; Obsidian + Supabase RAG</p>
+  </header>
+
+  <p class="section-label">Overview</p>
+  <div class="metrics" id="metrics">
+    <div class="metric"><div class="metric-val" id="m-total">—</div><div class="metric-lbl">Chunks ingested</div></div>
+    <div class="metric"><div class="metric-val" id="m-meetings">—</div><div class="metric-lbl">Meetings in RAG</div></div>
+    <div class="metric"><div class="metric-val" id="m-today">—</div><div class="metric-lbl">Added today</div></div>
+    <div class="metric"><div class="metric-val">7:00 AM</div><div class="metric-lbl">Daily run time</div></div>
+  </div>
+
+  <p class="section-label">Pipelines</p>
+  <div class="pipes">
+    <div class="pipe">
+      <div class="pipe-head">
+        <div class="pipe-name">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Fathom
+        </div>
+        <span class="badge badge-ok">active</span>
+      </div>
+      <div class="pipe-meta">
+        Runs at <strong>7:00 AM</strong> daily<br>
+        Obsidian &rarr; Fathom/{year}/{month}/<br>
+        RAG &rarr; framework-ops/fathom-meetings
+      </div>
+      <div class="cmd-block">
+        <span id="fathom-cmd">cd ~/Documents/Framework-OPS/fathom && python3 scheduled_fathom.py</span>
+        <button class="copy-btn" onclick="copy('fathom-cmd',this)">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+    </div>
+    <div class="pipe">
+      <div class="pipe-head">
+        <div class="pipe-name">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Fieldy
+        </div>
+        <span class="badge badge-ok">active</span>
+      </div>
+      <div class="pipe-meta">
+        Runs at <strong>7:05 AM</strong> daily<br>
+        Obsidian &rarr; Fieldy/{year}/{month}/<br>
+        RAG &rarr; framework-ops/fieldy-meetings
+      </div>
+      <div class="cmd-block">
+        <span id="fieldy-cmd">cd ~/Documents/Framework-OPS/fieldy && python3 scheduled_fieldy.py</span>
+        <button class="copy-btn" onclick="copy('fieldy-cmd',this)">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="meetings-card">
+    <div class="meetings-header">
+      <span style="font-size:14px;font-weight:500;">Recent meetings</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="last-updated" id="last-fetch"></span>
+        <button class="refresh-btn" onclick="load()" id="refresh-btn">
+          <span id="refresh-icon">↻</span> Refresh
+        </button>
+      </div>
+    </div>
+    <div id="meetings-container">
+      <div class="empty"><span class="spin">↻</span> Loading...</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SUPA = 'https://cnvvvxltuebymowemwpk.supabase.co';
+const KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNudnZ2eGx0dWVieW1vd2Vtd3BrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODM2ODY2NCwiZXhwIjoyMDkzOTQ0NjY0fQ.CUtP8KhxDN2PGVcxBxU2xRlqBsGafmhhRvyqw6mPSac';
+
+function copy(id, btn) {
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = '✓ Copied';
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy'; }, 1800);
+  });
+}
+
+async function load() {
+  document.getElementById('refresh-icon').textContent = '↻';
+  document.getElementById('refresh-icon').classList.add('spin');
+  try {
+    const r = await fetch(`${SUPA}/rest/v1/documents?source_type=eq.meeting&select=id,title,url,metadata,created_at&order=created_at.desc&limit=100`, {
+      headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }
+    });
+    const rows = await r.json();
+
+    const seen = new Set();
+    const meetings = rows.filter(row => {
+      const key = (row.metadata && (row.metadata.recording_id || row.metadata.conversation_id)) || row.title;
+      if (seen.has(key)) return false;
+      seen.add(key); return true;
+    });
+
+    const today = new Date().toISOString().slice(0,10);
+    document.getElementById('m-total').textContent = rows.length.toLocaleString();
+    document.getElementById('m-meetings').textContent = meetings.length;
+    document.getElementById('m-today').textContent = rows.filter(r => r.created_at && r.created_at.slice(0,10) === today).length;
+    document.getElementById('last-fetch').textContent = 'Updated ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+    if (!meetings.length) {
+      document.getElementById('meetings-container').innerHTML = '<div class="empty">No meetings ingested yet.</div>';
+      return;
+    }
+
+    let html = '<table><thead><tr><th>Meeting</th><th>Date</th><th>Source</th><th>Chunks</th></tr></thead><tbody>';
+    meetings.forEach(m => {
+      const title = (m.title || '').replace(/ — .*/, '') || 'Untitled';
+      const date  = (m.metadata && m.metadata.date) || (m.created_at && m.created_at.slice(0,10)) || '—';
+      const src   = (m.metadata && m.metadata.meeting_type) || 'fathom';
+      const total = (m.metadata && m.metadata.total_chunks) || '—';
+      const url   = m.url || '#';
+      html += `<tr>
+        <td><a href="${url}" target="_blank" rel="noopener">${title}</a></td>
+        <td style="color:var(--muted);white-space:nowrap;">${date}</td>
+        <td><span class="tag ${src === 'fieldy' ? 'fieldy' : ''}">${src}</span></td>
+        <td style="color:var(--muted);">${total}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('meetings-container').innerHTML = html;
+  } catch(e) {
+    document.getElementById('meetings-container').innerHTML = `<div class="empty">Could not load data.<br><small>${e.message}</small></div>`;
+  } finally {
+    document.getElementById('refresh-icon').classList.remove('spin');
+    document.getElementById('refresh-icon').textContent = '↻';
+  }
+}
+
+load();
+</script>
+</body>
+</html>
