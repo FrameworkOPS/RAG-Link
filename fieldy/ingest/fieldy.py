@@ -5,7 +5,7 @@ Env vars required:
     FIELDY_API_KEY     — Fieldy API key (sk-f-...)
     SUPABASE_URL       — e.g. https://xxxx.supabase.co
     SUPABASE_KEY       — service_role key
-    OPENAI_API_KEY     — for text-embedding-3-small
+    VOYAGE_API_KEY     — pa-... (voyage-code-2, 1536-dim — matches backend)
 
 Usage:
     python fieldy.py                        # ingests last 24 hrs
@@ -24,8 +24,8 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import requests
+import httpx
 from dotenv import load_dotenv
-from openai import OpenAI
 from supabase import create_client, Client
 
 load_dotenv()
@@ -41,10 +41,12 @@ log = logging.getLogger(__name__)
 FIELDY_API_KEY  = os.environ["FIELDY_API_KEY"]
 SUPABASE_URL    = os.environ["SUPABASE_URL"]
 SUPABASE_KEY    = os.environ["SUPABASE_KEY"]
-OPENAI_API_KEY  = os.environ["OPENAI_API_KEY"]
+VOYAGE_API_KEY  = os.environ["VOYAGE_API_KEY"]
 
 FIELDY_BASE     = "https://api.fieldy.ai/api/public/v2"
-EMBED_MODEL     = "text-embedding-3-small"
+VOYAGE_URL      = "https://api.voyageai.com/v1/embeddings"
+VOYAGE_MODEL    = "voyage-code-2"
+VOYAGE_SLEEP    = 25          # seconds between batches (free tier ~3 req/min)
 SUPABASE_TABLE  = "documents"
 RATE_LIMIT_RPS  = 30          # Fieldy allows 30 req/min → ~0.5/sec
 MIN_DELAY       = 60 / RATE_LIMIT_RPS   # seconds between requests
@@ -229,11 +231,15 @@ Keywords: {keyword_str}
 
 
 # ── Embeddings ────────────────────────────────────────────────────────────────
-_oai = OpenAI(api_key=OPENAI_API_KEY)
-
 def embed(text: str) -> list[float]:
-    resp = _oai.embeddings.create(input=text, model=EMBED_MODEL)
-    return resp.data[0].embedding
+    resp = httpx.post(
+        VOYAGE_URL,
+        headers={"Authorization": f"Bearer {VOYAGE_API_KEY}", "Content-Type": "application/json"},
+        json={"model": VOYAGE_MODEL, "input": [text], "input_type": "document"},
+        timeout=60,
+    )
+    resp.raise_for_status()
+    return resp.json()["data"][0]["embedding"]
 
 
 # ── Supabase ──────────────────────────────────────────────────────────────────
