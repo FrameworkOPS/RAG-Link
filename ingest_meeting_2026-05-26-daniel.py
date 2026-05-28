@@ -5,8 +5,8 @@ One-shot ingest of the Daniel / William meeting (2026-05-26) into the
 Framework OPS Supabase pgvector RAG (documents table).
 
 Embedding model : Voyage AI  voyage-code-2  (1536-dim) — matches backend
-Source type     : 'wiki'  (nearest allowed value for meeting notes under
-                  the source_type CHECK constraint)
+Source type     : 'meeting'  (requires migration migrate_add_meeting_source_type.sql
+                  to be applied first — adds 'meeting' to the source_type CHECK constraint)
 
 Usage
 -----
@@ -45,7 +45,7 @@ VOYAGE_MODEL  = "voyage-code-2"
 VOYAGE_URL    = "https://api.voyageai.com/v1/embeddings"
 TABLE         = "documents"
 REPO          = "framework-ops/meetings"
-SOURCE_TYPE   = "meeting"         # added via migration 002_add_meeting_source_type.sql
+SOURCE_TYPE   = "meeting"         # requires migrate_add_meeting_source_type.sql to be applied first
 EMBED_BATCH   = 8
 RATE_SLEEP    = 25                # seconds between Voyage batches (free tier ~3 req/min)
 
