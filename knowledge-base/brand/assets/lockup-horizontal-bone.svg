@@ -1,0 +1,14 @@
+<svg width="900" height="180" viewBox="0 0 520 96" xmlns="http://www.w3.org/2000/svg" font-family="Geist Mono, ui-monospace, JetBrains Mono, Menlo, monospace">
+  <g transform="translate(6,12) scale(0.36)">
+    <rect x="20" y="20" width="48" height="48" rx="10" fill="#14B981"></rect>
+    <rect x="76" y="20" width="48" height="48" rx="10" fill="#14B981"></rect>
+    <rect x="132" y="20" width="48" height="48" rx="10" fill="#14B981"></rect>
+    <rect x="20" y="76" width="48" height="48" rx="10" fill="#14B981"></rect>
+    <rect x="76" y="76" width="48" height="48" rx="10" fill="#14B981"></rect>
+    <circle cx="156" cy="100" r="9" fill="#14B981"></circle>
+    <rect x="20" y="132" width="48" height="48" rx="10" fill="#14B981"></rect>
+    <circle cx="100" cy="156" r="9" fill="#14B981"></circle>
+    <circle cx="156" cy="156" r="9" fill="#14B981"></circle>
+  </g>
+  <text x="104" y="64" font-size="42" font-weight="500" fill="#F4F4EE" letter-spacing="-1">framework<tspan fill="#14B981">/</tspan>ops</text>
+</svg>
