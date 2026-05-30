@@ -1,0 +1,8 @@
+ERROR: <pymupdf.mupdf.FzErrorSystem; proxy of <Swig Object of type 'mupdf::FzErrorSystem *' at 0xe6b60d820f70> >
+Traceback (most recent call last):
+  File "/sessions/sharp-affectionate-cannon/mnt/outputs/render_check.py", line 12, in <module>
+    p.save(kp)
+  File "/sessions/sharp-affectionate-cannon/.local/lib/python3.10/site-packages/pymupdf/__init__.py", line 13897, in save
+    return self._writeIMG(filename, idx, jpg_quality)
+  File "/sessions/sharp-affectionate-cannon/.local/lib/python3.10/site-packages/pymupdf/__init__.py", line 13576, in _writeIMG
+    if   format_ == 1:  mupdf.fz_save_pixmap_as_png(
