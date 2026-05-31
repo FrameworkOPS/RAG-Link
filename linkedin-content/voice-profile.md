@@ -100,7 +100,13 @@ When the bank is empty and a post wants a number, default to principle-based wri
 
 Track what actually performs so batches weight toward it. **Empty until Chance uploads his Buffer export** — at that point, analyze top posts by engagement and log the patterns here (pillar, hook style, length, topic). Until then, generate evenly across pillars and let the denial loop calibrate.
 
-- _(empty — pending Buffer historical export)_
+- 2026-05-31 — Pulled live from LinkedIn creator analytics (28-day window: 1,961 impressions, ~1,007 members reached — SMALL account, treat all signal as weak until ~8–12 weeks of data). Top performers:
+  - **Outlier: 627 impressions** — "The fastest way to lose money in contracting isn't a bad bid… if you're not measuring it, you're funding it." Short (4 lines), declarative, hard cost-of-inaction close. Theme = measurement / job costing / money leaking unseen. 2.5x the next best post. This is the only genuine breakout and it's on-strategy.
+  - 254 impressions, 5 reactions (most reactions of any post) — "flex capacity / mobilized crews" long-form story. Depth drove engagement-per-view despite lower reach. Long-form trades reach for connection; not dead.
+  - 214 impressions — "$500K vs $2M company / leadership structure," short punchy.
+  - Generic operational one-liners ("clarity beats hustle" style) did NOT make the top tier.
+  - PROVISIONAL TAKEAWAYS (low confidence, small n): (1) short ops-teardowns with a sharp cost line are the highest-reach format; (2) the measurement/job-costing theme is the only proven breakout topic; (3) long-form stories earn reaction depth even at lower reach — keep ~1 per batch. Re-evaluate after the every-other-day 9am cadence generates more data.
+- TIMING: No supportable conclusion yet. Nearly all posts went out 9am Mountain on weekdays, so there's no variance to analyze and content type is confounded with send time. The every-other-day 9am cadence is the baseline; vary deliberately later to test.
 
 ---
 
