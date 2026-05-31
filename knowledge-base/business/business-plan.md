@@ -14,19 +14,42 @@ Framework OPS LLC is a fractional COO consulting practice serving home service c
 
 The 3-year plan is to build from a $98K Year 1 revenue base (alongside Skyright W2 income) to ~$195K standalone revenue by Year 3, with controlled growth through a tested service menu, a defined ICP, and a deliberate hiring sequence (solo → VA → US associate) that follows revenue, not the other way around.
 
-The biggest risk is Year 2: Skyright W2 ($96K stable income) ends, replaced by uncontracted retainer revenue subject to industry-standard 30%+ annual churn. Conservative take-home Y2 lands $55-65K below current Y1 levels. Plan is built around this transition with explicit pipeline milestones and emergency cash buffer.
+**Significant update (May 2026):** Skyright is anticipated to sell fall 2026, likely to a strategic acquirer or owner-operator buyer (not PE). Chance holds 5% phantom (ghost) equity that vests at sale — expected payment $100-200K, planning mid-low at $125K gross. Phantom equity is taxed as W2 ordinary income + FICA (~30% effective), net ~$87,500 to bank. Three planning scenarios modeled: A) stay at NewCo as W2 (25% probability), B) Skyright transitions to Embedded retainer client (40% probability, **planning baseline**), C) clean exit (35% probability). Weighted 24-month gross: $464,850 across scenarios.
 
-### Headline numbers (pessimistic case)
+The biggest risk shifts from Year 2 to Year 1 Q4 — sale event timing, equity payment landing, Skyright transition arrangement, and VA + automation buildout all converge in a 90-day window (Oct-26 to Dec-26). Execution risk is the dominant variable.
 
-| Metric | Year 1 | Year 2 | Year 3 |
-|---|---|---|---|
-| Skyright W2 | $96,000 | $0 | $0 |
-| Framework OPS revenue | $98,000 | $169,000 | $195,000 |
-| Total gross | $194,000 | $169,000 | $195,000 |
-| Net pre-owner pay | $187,688 | $160,000 | $181,800 |
-| End-of-year active retainers | 3 | 5 | 5 |
+### Headline numbers (pessimistic case, by scenario)
 
-Year-2 net drops because Skyright disappears and is not fully replaced. Year-3 recovers most of the gap but stays below Y1. **Real take-home dynamics are worse than gross-level suggests** because Y2/Y3 income is entirely 1099 (full 15.3% SE tax) and family loses employer health insurance ($18-30K/yr ACA premium not in this model).
+**Scenario A — Stay at NewCo W2 (25% probability):**
+| Metric | Y1 Gross | Y2 Gross |
+|---|---|---|
+| Skyright/NewCo W2 | $96,000 | $96,000 |
+| Equity payment (net of tax) | $87,500 | $0 |
+| FW Ops revenue | $98,000 | $159,000 |
+| **Total** | **$281,500** | **$255,000** |
+
+**Scenario B — Skyright as Embedded retainer (40% probability — PLANNING BASELINE):**
+| Metric | Y1 Gross | Y2 Gross |
+|---|---|---|
+| Skyright W2 (ends Oct-26) | $32,000 | $0 |
+| Equity payment (net of tax) | $87,500 | $0 |
+| Skyright Embedded retainer ($6K/mo, 18-mo duration) | $42,000 | $66,000 |
+| Other FW Ops revenue | $104,000 | $188,500 |
+| VA cost (loaded $2.4K/mo from Oct-26) | -$19,200 | -$28,800 |
+| **Total** | **$246,300** | **$225,700** |
+
+**Scenario C — Clean exit (35% probability):**
+| Metric | Y1 Gross | Y2 Gross |
+|---|---|---|
+| Skyright W2 (ends Oct-26) | $32,000 | $0 |
+| Equity payment (net of tax) | $87,500 | $0 |
+| FW Ops revenue (aggressive growth) | $107,000 | $227,000 |
+| VA cost | -$19,200 | -$28,800 |
+| **Total** | **$207,300** | **$198,200** |
+
+**Weighted 24-month total (25/40/35 probability split): $464,850**
+
+Health coverage: Family of 6 moving to health sharing ministry at $600/mo ($7,200/yr) in Scenarios B and C — saves $15-23K/yr vs ACA but is NOT insurance and has coverage limits including pre-existing conditions. Material risk worth flagging.
 
 ---
 
@@ -253,11 +276,11 @@ Detailed in `income_forecaster.xlsx` Pipeline & Capacity tab.
 
 ### Recommended sequencing
 
-**Phase 1 (now → Q1-27, while at Skyright):**
-Solo. Bottleneck is pipeline, not delivery. No hires. Build SOP library, fill template stack, document IP.
+**Phase 1 (now → Oct-26 sale event):**
+Solo at Framework OPS. Build SOP library, populate template stack, document JobNimbus + estimating + office automation work happening at Skyright. **CRITICAL: clarify IP ownership of automation work NOW.** JobNimbus workflows stay with Skyright (their seat). Make/Zapier automations under personal accounts may be portable. Best path: document everything as Skyright IP, license-back through the retainer in Scenario B.
 
-**Phase 2 (Q2-27 → Q4-27, Skyright ending):**
-Hire Mid-tier VA at $2,000-2,500/mo ($24-30K/yr). LatAm preferred for time zone (Latamify, Athyna). Deploy on: outreach, admin, follow-up sequences, CRM hygiene, template population. Highest leverage period because Skyright income is gone and every hour matters. Cost = 14-18% of revenue, defensible.
+**Phase 2 (Oct-26 → Q4-27, sale completed):**
+Hire Mid-tier VA at $2,000-2,500/mo ($24-30K/yr) timed with sale month. LatAm preferred (Latamify, Athyna). Deploy on: Skyright Embedded admin (Scenario B), outreach for new clients, follow-up sequences, CRM hygiene, template population. VA absorbs ~50% of Skyright operational work; automation reduces hours per retainer from 35 to ~21. Total capacity buffer: ~61 hrs/mo after Skyright + 3 other Active retainers + sales motion + ops.
 
 **Phase 3 (Y3 if revenue > $200K with 4+ retainers):**
 Upgrade to Executive VA ($3,500-4,500/mo) OR add second Mid VA. Splits admin / deliverables / sales ops.
@@ -334,13 +357,27 @@ Reserves not yet incurred (must be addressed):
 - **Effective rate: 12.3%**
 - Take-home: $159,086 / $13,257 monthly
 
-### Year 2 tax math (rough estimate, NOT modeled in workbook)
-- All $169K is 1099 → much higher SE tax: ~$24K
-- Federal income tax: ~$19K
-- ACA health insurance (family of 6, FL): $20-25K/yr — replaces employer plan
-- Total tax + insurance: ~$63-68K
-- **Y2 take-home: ~$100-105K**
-- Y2 take-home is **$55-65K below Y1** despite gross dropping only $25K
+### Year 1 tax with equity event (Scenario B)
+Equity is phantom/ghost equity = W2 ordinary income + FICA at payment. NOT capital gains.
+- W2 income (Skyright pre-sale + equity): $32K + $125K = $157K
+- 1099 income: ~$146K (clients + Skyright retainer post-sale)
+- Total gross: ~$303K
+- After std ded $30K + QBI ~$15K: taxable ~$258K
+- Federal income tax: ~$47K marginal, ~$39K post-CTC
+- FICA on W2 portion: ~$14K (already withheld)
+- SE tax on 1099: ~$2K (SS portion capped because W2 wages exceed wage base; just Medicare 2.9%)
+- Total tax: ~$55K
+- **Y1 take-home (Scenario B): ~$248K**
+
+### Year 2 tax (Scenario B, no equity event)
+- 1099 income only: ~$226K (clients + Skyright retainer)
+- Full SE tax: ~$32K (no W2 cap)
+- Federal income tax post-CTC: ~$25K
+- Health sharing $7,200/yr (vs ACA $22-30K saves $15-23K/yr)
+- Total tax + health: ~$64K
+- **Y2 take-home (Scenario B): ~$162K**
+
+Y2 vs Y1 take-home gap (Scenario B): about $86K drop, driven primarily by no W2 wage cap on SS portion of SE tax + equity event not repeating + 1099 income share increasing.
 
 ### Quarterly estimated tax payments
 1099 income requires quarterly federal payments. Roughly $7,500/quarter on Year 1 base ($30K/yr ÷ 4). Either:
@@ -367,25 +404,36 @@ Re-evaluate Q4-27 when 1099 income trends toward $150K+ for following year.
 **By Aug-26 (mo 3):**
 - ✅ Home sale closed, debt payoff executed (CC + Loans #1 + #2)
 - ✅ Emergency fund established at $41K
-- ✅ Quarterly estimated tax payment process set up
+- ✅ Quarterly estimated tax payment process set up (scaled up for equity year)
 - ✅ E&O insurance quoted and in place
 - ✅ Client 3 signed agreement OR removed from forecast
+- ✅ Skyright retainer terms negotiated with current owner (Scenario B path) — written into sale documents
+- ✅ JobNimbus / Make / Zapier automation IP ownership clarified in writing
+- ✅ Health sharing plan researched and ready to activate at sale close
 
-**By Nov-26 (mo 6):**
-- ✅ Outreach machine running (LinkedIn + cold + referral channels active)
+**By Oct-26 (mo 5) — sale event window:**
+- ✅ Sale of Skyright closes; equity payment ($87.5K net) lands in personal account
+- ✅ VA hired and onboarded (started ~Sep-26 for ramp)
+- ✅ Skyright retainer agreement (Scenario B) executed OR clean exit decision made (Scenario C)
+- ✅ Health sharing plan active
+- ✅ Tax withholding adjusted for equity event (avoid April surprise)
+
+**By Dec-26 (mo 7):**
+- ✅ VA fully ramped — running outreach + admin + Skyright support
 - ✅ Pipeline of 10+ qualified prospects in flight
 - ✅ SOP library 50%+ built in `knowledge-base/playbooks/`
-- ✅ ClickUp client scaffold deployed for all active clients
+- ✅ Skyright Embedded retainer running smoothly at 21 hrs/mo (with automation)
 
-**By Jan-27 (mo 8):**
-- ✅ New Retainer #1 signed and onboarded
-- ✅ 3 active retainers steady-state
-- ✅ Skyright transition plan documented
+**By Mar-27 (mo 10):**
+- ✅ 4 active retainers (Carlos + Client 3 + Skyright + New #1)
+- ✅ Outreach pipeline of 15+ qualified prospects
+- ✅ Y1 weighted gross tracking ≥ $240K
 
 **By May-27 (mo 12):**
-- ✅ Y1 net pre-owner pay ≥ $180K
-- ✅ Outreach pipeline of 15+ qualified prospects
-- ✅ VA hire identified and starting Jun-27
+- ✅ Y1 weighted gross ≥ $240K achieved
+- ✅ 4-5 active retainers steady-state
+- ✅ Cash position ≥ $120K (post-debt payoff, post-equity)
+- ✅ Scenario B Skyright retainer renewal terms negotiated (or graceful step-down planned)
 
 ### Year 2 milestones
 
@@ -447,10 +495,15 @@ Re-evaluate Q4-27 when 1099 income trends toward $150K+ for following year.
 - *Impact:* Single client dispute can wipe out emergency fund in legal fees
 - *Mitigation:* Quote Hiscox or Pie Insurance this week. $50-100/mo expected.
 
-**R4 — Skyright W2 ends early (before May-27).**
-- *Likelihood:* Low-moderate
-- *Impact:* Compresses 12-month bridge to 8-9 months. May-be 2 missing retainers worth of income gap.
-- *Mitigation:* Accelerate VA hire and outreach machine. Cut discretionary spend aggressively.
+**R4 — Skyright sale closes / W2 ends Oct-26 (not May-27).**
+- *Likelihood:* High. Active process.
+- *Impact:* Y1 W2 drops from $96K to $32K (~Oct-26 cutoff). Replaced by either continued W2 at NewCo (Scenario A), Embedded retainer at Skyright (Scenario B), or full exit (Scenario C).
+- *Mitigation:* Negotiate the Skyright retainer arrangement WITH CURRENT OWNER before sale. Write it into sale documents as a transition condition. Push for premium Embedded $8-10K/mo first 12 months stepping down to $6K thereafter. Clarify IP ownership of automation work before sale closes.
+
+**R4a — Buyer is PE-backed (instead of strategic / owner-operator).**
+- *Likelihood:* Low per current read, but possible
+- *Impact:* PE almost always installs own ops team. Scenario B falls apart. Forces Scenario C.
+- *Mitigation:* $87.5K net equity payment provides 12-15 months of runway in Scenario C. Aggressive new client acquisition can replace lost income. Plan B fallback documented.
 
 **R5 — Carlos and/or Client 3 churn in Q4.**
 - *Likelihood:* 25-30% per industry churn rates
