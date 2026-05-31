@@ -1,19 +1,50 @@
 # Founder Financials — Snapshot
 
 **Owner:** Chance Peare
-**Last updated:** 2026-05-30
+**Last updated:** 2026-05-30 (v2 — sale event factored)
 **Linked workbook:** `income_forecaster.xlsx` (Framework-OPS root)
 **Purpose:** Personal/household financial snapshot driving capacity, runway, and risk decisions for the Framework OPS practice. Pessimistic standard — figures here trend conservative.
 
 ---
 
-## Income — 12 months (Jun-26 to May-27)
+## MAJOR UPDATE — Skyright Sale Event (Fall 2026)
+
+Skyright is anticipated to sell fall 2026. Likely buyer: strategic acquirer or owner-operator (NOT PE). Default sale month modeled: October 2026 (month 5).
+
+**Equity stake:** 5% phantom (ghost) equity — working equity, no buy-in / no cost basis.
+- **Gross payment estimate:** $125,000 (mid-low of $100-200K range, pessimistic)
+- **Tax treatment:** Ordinary income + FICA (NOT capital gains — phantom equity is W2 wages)
+- **Effective tax rate:** ~30% (22-24% federal + 7.65% FICA employee)
+- **Net to bank:** ~$87,500
+
+**Three planning scenarios:**
+
+| Scenario | Probability | Y1 Gross | Y2 Gross | 24-Mo Total |
+|---|---|---|---|---|
+| A — Stay at NewCo as W2 | 25% | $281,500 | $255,000 | $536,500 |
+| **B — Skyright as Embedded retainer ⭐** | **40%** | **$246,300** | **$225,700** | **$472,000** |
+| C — Clean exit | 35% | $207,300 | $198,200 | $405,500 |
+| **Weighted (planning baseline)** | — | **$241,450** | **$223,400** | **$464,850** |
+
+**Scenario B is the planning baseline.** Buyer likely strategic/owner-operator, current owner already on board with the arrangement. Skyright transitions to Embedded retainer client at $6K/mo for 18 months (pessimistic). Push for $8-10K/mo first 12 months in negotiation — current owner is the leverage point, write it into sale documents.
+
+**Health coverage:** Switching from Skyright employer plan ($400/mo payroll deduction) to health sharing ministry at $600/mo ($7,200/yr). Saves $15-23K/yr vs ACA but NOT insurance — material risk for family of 6.
+
+**JobNimbus / automation work:** Currently building estimating tools + office support automation at Skyright. CRITICAL — IP ownership must be clarified before sale. JobNimbus workflows stay with Skyright (their seat). Personal Make/Zapier automations may be portable. Best path: document everything as Skyright IP, license-back through retainer engagement.
+
+---
+
+## Income — 12 months (Jun-26 to May-27) — Original baseline (pre-sale-event)
+
+*Note: numbers below assume Skyright W2 continues full year. The sale event (Scenarios A/B/C above) overrides this for actual planning.*
 
 ### Sources
-- **Skyright W2:** $8,000/mo gross → $96,000/yr. Stable, withholding handled.
+- **Skyright W2:** $8,000/mo gross → $96,000/yr (Scenario A); $32,000 through Oct-26 then $0 (Scenarios B/C).
 - **Carlos retainer:** $1,500 June ramp, $3,000/mo Jul onward → $34,500/yr.
 - **Client 3 retainer (assumed close, Sep ramp):** $3,000/mo Sep–May → $27,000/yr. *Most fragile line — not yet a signed contract.*
 - **Daniel + Upwork variable:** $2,000/mo average → $24,000/yr. *Lumpy and uncontracted — soft number.*
+- **Equity payment (Scenarios A/B/C):** $87,500 net at sale month.
+- **Skyright Embedded retainer (Scenario B only):** $6K/mo for 18 months → $42K Y1 partial, $66K Y2.
 
 ### Scenarios (gross)
 
@@ -166,7 +197,13 @@ Owner pay flows to 1040 as 1099 income (disregarded entity), not booked as LLC e
 ## Key risks / flags
 
 - **Client 3 is an assumption, not a contract.** A Sep-26 ramp requires discovery in early July, proposal mid-July, close early August. If no named prospect by mid-July, $27K of base revenue is empty pipe.
-- **Sale price uncertainty.** $615K is target, not closed. At $590K, the debt payoff plan must drop Loan #1 from the kill list.
+- **Home sale price uncertainty.** $615K is target, not closed. At $590K, the debt payoff plan must drop Loan #1 from the kill list.
+- **Skyright sale timing risk.** Default Oct-26 sale month is best estimate, no buyer yet identified. Slipping to 2027 changes everything — equity event delayed, W2 income continues longer, but pressure on Q4-26 transition planning eases.
+- **Skyright buyer becomes PE-backed.** Lower probability per current read, but possible. PE typically installs own ops team — Scenario B (Embedded retainer) falls apart, forcing Scenario C clean exit. Mitigated by $87.5K equity = 12-15 mo runway.
+- **Phantom equity tax surprise.** Treated as W2 wages — withholding may be inadequate. Adjust Skyright W-4 BEFORE equity payment lands, or set aside ~30% of gross for April tax bill.
+- **Health sharing limits.** $600/mo ministry plan is NOT insurance. Pre-existing condition exclusions, annual sharing caps, expensive case denials all possible. Material risk for family of 6 — consider catastrophic-only HSA-eligible backstop.
+- **Skyright retainer not contracted yet.** Negotiate WITH CURRENT OWNER before sale closes. Write into sale documents as transition condition. Current owner is the leverage point — buyer has no incentive once they own the asset.
+- **JobNimbus / automation IP ownership unclear.** Without written agreement, all work done at Skyright is Skyright's property. Document IP before sale OR transfer to FW Ops accounts where appropriate.
 - **Emergency fund right at the floor.** $41K buffer ≈ 6 months of essential burn ($7K/mo × 6 = $42K). One major car/AC repair eats into it.
 - **No business insurance in place.** E&O/GL gap is real exposure. Single client dispute can wipe out the emergency fund in legal fees. Quote this week — Hiscox or Pie typically $50–100/mo for new fractional COO.
 - **Behavioral risk on CC payoff.** $16K elimination is durable only if spending doesn't rebuild the balance in 90 days. Automate full-balance pay from Mercury.
@@ -177,8 +214,28 @@ Owner pay flows to 1040 as 1099 income (disregarded entity), not booked as LLC e
 
 ## Decisions / next actions
 
-1. Quote E&O insurance this week — non-negotiable.
-2. Set up quarterly estimated tax payment cadence via Mercury / QBO.
-3. Confirm Client 3 prospect by mid-July or cut $27K from base projections.
-4. Automate Mercury → personal transfers post-sale to pre-fund debt payoff before discretionary spend.
-5. Solo 401(k) or SEP IRA on 1099 net income — biggest tax lever unused. At ~$85K SE income, employer-side contribution alone could hit ~$25K, saving $3–5.5K in tax. Revisit before Q4.
+**Sale-event priorities (most urgent — execute before close):**
+
+1. **Negotiate Skyright retainer terms with current owner.** Push for $8-10K/mo first 12 months, stepping down to $6K thereafter. Write into sale documents as transition condition. Extra $2-4K × 12 = $24-48K of Y1 upside.
+2. **Clarify IP ownership of JobNimbus + Make/Zapier automation work.** Document as Skyright IP, license-back through retainer engagement. JobNimbus workflows stay with Skyright seat; personal Make/Zapier may be portable.
+3. **§409A consult with CPA on equity timing.** Confirm phantom equity treatment AND explore deferring payment into Q1-27 to avoid stacking with Y1 income. Could save $5-10K in marginal tax.
+4. **Adjust Skyright W-4 BEFORE equity payment.** Avoid April surprise on ordinary income + FICA withholding on $125K.
+5. **Set up VA hire pipeline.** Latamify/Athyna search starting now; onboard ~Sep-26 to be ramped before sale close.
+6. **Research and activate health sharing plan.** Have effective date ready to align with sale close.
+
+**Ongoing priorities:**
+
+7. Quote E&O insurance this week — non-negotiable.
+8. Set up quarterly estimated tax payment cadence via Mercury / QBO. Scale up for equity year.
+9. Confirm Client 3 prospect by mid-July or cut $27K from base projections.
+10. Automate Mercury → personal transfers post-home-sale to pre-fund debt payoff before discretionary spend.
+11. Solo 401(k) or SEP IRA on 1099 net income — biggest tax lever unused. Q4 cash deployment: ~$25K contribution from equity inflow, saving $5-8K in tax.
+
+**Cash deployment order (Q4-26 inflows: ~$200K total from home sale + equity):**
+
+1. Debt payoff (CC + Loans #1 + #2): $53.5K
+2. Moving + rent deposit: $11.4K
+3. Emergency fund floor: $45K
+4. Business reserves (E&O premium, 6 mo OpEx): $15K
+5. Solo 401(k) contribution: $25K (tax lever)
+6. Remaining buffer: ~$50K (Y1 family expense smoothing)
