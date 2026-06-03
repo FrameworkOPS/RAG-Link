@@ -2,10 +2,11 @@
 type: brand-reference
 status: active
 version: 1.0
-last_updated: 2026-05-29
+last_updated: 2026-06-01
 tags: [brand, identity, logo, color, typography, voice]
 supersedes: brand.md (v0, frameworkopsllc.com-derived)
-note: Canonical single source of truth for Framework / Ops identity. Overrides all previous brand documents for logos and colors.
+pdf_source: brand/brand-book-v1.0.pdf
+note: Canonical single source of truth for Framework / Ops identity. Visual brand book is brand-book-v1.0.pdf in the same folder. Overrides all previous brand documents for logos and colors.
 ---
 
 # Framework / Ops — Brand Guidelines

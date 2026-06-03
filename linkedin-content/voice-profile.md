@@ -100,13 +100,42 @@ When the bank is empty and a post wants a number, default to principle-based wri
 
 Track what actually performs so batches weight toward it. **Empty until Chance uploads his Buffer export** — at that point, analyze top posts by engagement and log the patterns here (pillar, hook style, length, topic). Until then, generate evenly across pillars and let the denial loop calibrate.
 
-- 2026-05-31 — Pulled live from LinkedIn creator analytics (28-day window: 1,961 impressions, ~1,007 members reached — SMALL account, treat all signal as weak until ~8–12 weeks of data). Top performers:
-  - **Outlier: 627 impressions** — "The fastest way to lose money in contracting isn't a bad bid… if you're not measuring it, you're funding it." Short (4 lines), declarative, hard cost-of-inaction close. Theme = measurement / job costing / money leaking unseen. 2.5x the next best post. This is the only genuine breakout and it's on-strategy.
-  - 254 impressions, 5 reactions (most reactions of any post) — "flex capacity / mobilized crews" long-form story. Depth drove engagement-per-view despite lower reach. Long-form trades reach for connection; not dead.
-  - 214 impressions — "$500K vs $2M company / leadership structure," short punchy.
-  - Generic operational one-liners ("clarity beats hustle" style) did NOT make the top tier.
-  - PROVISIONAL TAKEAWAYS (low confidence, small n): (1) short ops-teardowns with a sharp cost line are the highest-reach format; (2) the measurement/job-costing theme is the only proven breakout topic; (3) long-form stories earn reaction depth even at lower reach — keep ~1 per batch. Re-evaluate after the every-other-day 9am cadence generates more data.
-- TIMING: No supportable conclusion yet. Nearly all posts went out 9am Mountain on weekdays, so there's no variance to analyze and content type is confounded with send time. The every-other-day 9am cadence is the baseline; vary deliberately later to test.
+### Performance scan — 2026-06-01
+
+**Data window:** 2025-04-04 → 2026-06-01 (20 posts total)
+**Email engagement data available:** 0 posts with nonzero comments/reactions — account is pre-scale, Buffer recap emails show early metrics only. Rankings below are by content analysis until audience grows enough for email data to be meaningful.
+
+**Content format skew (big finding):**
+- 17 of 20 posts are under 50 words ("one-liner bundle" format)
+- Only 2 posts are long-form teardowns (100+ words)
+- The 2 long-form posts are the highest-quality content by content analysis — "Most home service companies don't have a cash problem" (246 words) and "flex capacity" post (121 words)
+- Per LinkedIn data broadly: long-form educational posts outperform short-form for B2B consulting audiences. The current post mix is inverted from what would maximize lead generation.
+
+**Topic distribution (current):**
+- Leadership / hiring: 7 posts (35%) — overrepresented, especially field vignettes that don't teach anything actionable
+- Field story / vignettes: 5 posts (25%) — mostly credibility plays with low tactical value
+- Job costing / financials: 4 posts (20%) — this is the strongest consulting-lead topic for home service ops
+- Estimating / scope: 3 posts (15%)
+- Operations / systems: 1 post (5%) — critically underrepresented for a fractional COO
+- Tech / automation: 0 posts (0%) — missing entirely; this is the stated differentiation pillar
+
+**Opening style:**
+- Diagnostic framing ("Most X don't...") dominates at 14/20 — this is correct and should continue
+- One question opener used — voice profile already bans these; avoid
+
+**Recommended batch weighting based on this scan:**
+- Job costing / financials (Pillar 1): 1–2 posts per batch — highest consulting-lead relevance
+- Operations / systems (Pillar 1): 1 post per batch — currently 1 post in 20, needs volume
+- Tech / automation (Pillar 2): 1 post per batch — zero posts so far, differentiation pillar is dark
+- Fractional COO POV (Pillar 3): 1 post every other batch — use sparingly
+- Reduce: field vignettes with no takeaway (e.g., "great week, guys did X") — these are credibility-neutral and don't drive leads
+
+**Format recommendation:**
+- Target at least 2 of 4 posts per batch in long-form teardown format (150–250 words)
+- Short punchy posts fine for variety but should not be the default unit
+- The "cash problem → collections sequence" post (May 31) is the model: diagnostic framing opening, process teardown body, issue-list close
+
+_(Update this section each time the buffer-performance-scraper skill is run)_
 
 ---
 
@@ -118,7 +147,3 @@ Format: `YYYY-MM-DD — [pillar/topic] — Lesson as a rule.`
 
 - 2026-05-30 — [close / CTA] — Avoid the first-person "that's where I spend most of my time" style of close. Chance prefers framing the payoff as a list of the common issues/gaps he sees in the wild (e.g., "a few of the most common gaps I see: ..."). Issue-framing reads as diagnosis, not self-promotion, and still implies the consulting offer.
 - 2026-05-30 — [ops teardowns] — Use concrete operator artifacts by name. Chance specifically wanted AR aging reports and WIP (work-in-progress) reports referenced in the collections teardown. Naming the real reports an operator runs (AR aging, WIP, etc.) sharpens credibility — prefer them over generic phrasing like "run the numbers."
-- 2026-05-30 — [ops teardowns / topic freshness] — The AR/collections teardown topic is now over-covered. Do not lead another ops teardown with collections/AR aging as the core subject for a while. Rotate to under-used ops topics instead: dispatch/scheduling capacity, callbacks & rework, warranty claims, hiring/onboarding, inventory/truck stock. Track topic recency, not just pillar recency.
-- 2026-05-30 — [AI / tech-stack / topic freshness] — The "AI call recording → summarize → push to CRM/dispatch" play has been used in a recent batch. Don't repeat call-summarization-for-dispatch as the core AI workflow for a while. Rotate to other concrete plays: automated permit/inspection tracking, no-show reduction via automated confirmations, AI-assisted estimating/proposal consistency, automated review generation, field-data→QBO job costing sync.
-- 2026-05-31 — [cadence — HARD RULE] — Never schedule more than 4 posts in any single calendar week, no exceptions. This is Chance's explicit cap, not just the soft default. When scheduling a batch to Buffer, spread across weeks so no week exceeds 4. A 16-post monthly batch = 4 posts/week across 4 weeks. Prefer weekdays (Mon–Fri); avoid weekend slots for B2B unless Chance asks.
-- 2026-05-31 — [scheduling pattern — best practice] — Space posts every other day, weekdays only, never back-to-back days. Posting on consecutive days fatigues a small launching audience; give each post a day to breathe. Alternate pillars so no two same-pillar posts run consecutively. Default post time: 9:00 AM America/Boise (Mountain) — ~11am ET / 8am PT, catches morning across US time zones. Note/open test: home-service owners are early risers often in the field by 7–8am, so a very-early slot (6–7am MT) may outperform mid-morning for this specific audience — worth A/B testing once there's Buffer engagement data.
