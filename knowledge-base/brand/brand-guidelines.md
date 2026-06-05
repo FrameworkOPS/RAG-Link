@@ -1,22 +1,23 @@
 ---
 type: brand-reference
 status: active
-version: 1.0
-last_updated: 2026-06-01
-tags: [brand, identity, logo, color, typography, voice]
+version: 1.1
+last_updated: 2026-06-04
+tags: [brand, identity, logo, color, typography, voice, collateral, spreadsheets, charts]
 supersedes: brand.md (v0, frameworkopsllc.com-derived)
 pdf_source: brand/brand-book-v1.0.pdf
-note: Canonical single source of truth for Framework / Ops identity. Visual brand book is brand-book-v1.0.pdf in the same folder. Overrides all previous brand documents for logos and colors.
+note: Canonical single source of truth for Framework / Ops identity and collateral. The visual PDF brand book is retained as the v1.0 identity reference; this Markdown file governs all collateral, spreadsheet, chart, and sales-document work.
 ---
 
 # Framework / Ops — Brand Guidelines
 
 > Canonical brand reference for Framework / Ops. This document is the single source of truth for identity, color, typography, voice, and asset usage. It is written to be ingested by a retrieval system (RAG): each section is self-contained, headings are explicit, and values are stated in full rather than cross-referenced. When any downstream material conflicts with this document, this document wins.
 
-- **Document:** Brand Guidelines v1.0
-- **Last updated:** May 2026
+- **Document:** Brand Guidelines v1.1
+- **Last updated:** June 2026
 - **Owner:** Framework / Ops
 - **Status:** Active
+- **PDF reference:** `brand-book-v1.0.pdf` remains the visual reference for the core identity. Where the PDF conflicts with this Markdown file, this Markdown file wins.
 
 ---
 
@@ -32,6 +33,7 @@ note: Canonical single source of truth for Framework / Ops identity. Visual bran
 - **Primary wordmark:** `framework/ops` set in Geist Mono, lowercase, with an emerald slash
 - **Core colors:** Ink navy `#07182B` and Emerald `#14B981`
 - **Core typefaces:** Geist (sans) and Geist Mono (mono)
+- **Collateral style:** Clean operating documents: dense enough for a contractor to use, polished enough to justify premium advisory pricing.
 
 **One-line positioning:** We build the ops layer home-service companies actually run on.
 
@@ -178,6 +180,25 @@ Emerald is AA-Large only against some backgrounds; never set long body copy in E
 
 ---
 
+### 5.6 Functional colors for data and warnings
+Use these only for charts, dashboards, spreadsheet warnings, and decision states. They are **not** brand colors and should not appear in logos, hero treatments, apparel, or broad page backgrounds.
+
+| Name | Token | Hex | Use |
+|---|---|---|---|
+| Warning | `--fo-warning` | `#B7791F` | Marginal fit, budget pressure, aging AR, schedule risk |
+| Danger | `--fo-danger` | `#C2410C` | No-Go flags, critical margin leakage, cash risk, broken handoff |
+| Blue Signal | `--fo-blue-signal` | `#2563EB` | Neutral comparison series, secondary chart line, non-financial volume metric |
+| Violet Signal | `--fo-violet-signal` | `#7C3AED` | Third chart series only when needed |
+
+**Usage rules**
+- Positive performance uses Emerald or Emerald Deep.
+- Negative performance uses Danger, not red-tinted Emerald.
+- Caution uses Warning.
+- Neutral benchmark/comparison lines use Graphite, Ash, or Blue Signal.
+- Never use more than four series colors in a client-facing chart. If the chart needs more than four colors, the chart is trying to say too much.
+
+---
+
 ## 6. Typography
 
 Two families, both open-source from Vercel.
@@ -239,9 +260,118 @@ Framework / Ops sounds **operational, not aspirational.** Three principles:
 
 ---
 
-## 8. Web tokens (developer handoff)
+## 8. Sales and delivery collateral
 
-### 8.1 CSS custom properties
+Framework / Ops collateral should look like operating infrastructure, not a marketing brochure. The client should feel like the document could be used in a Monday leadership meeting, not just admired and filed away.
+
+### 8.1 Core collateral types
+
+| Asset | Primary job | Format | Design pattern |
+|---|---|---|---|
+| Customer journey map | Show how a prospect moves from first touch to kickoff | PDF, Docx, slide, or web export | Horizontal stage map with decision gates and owner/client responsibilities |
+| Offer sheet | Explain one offer, one next step, one price | One-page PDF | Top diagnosis, middle deliverables, bottom investment and next step |
+| OPS Assessment | Diagnose operating gaps and rank fixes | 4-6 page PDF/docx | Scored dimensions, problem cost, 30/60/90 priorities |
+| Proposal | Convert diagnostic into one recommended path | 4-6 page PDF/docx | What we heard, what it costs, what we will build, investment |
+| Spreadsheet model | Let Chance manipulate real numbers | XLSX / Google Sheets | Inputs on left/top, outputs on right/top, assumptions separated from results |
+| Sales tracker | Track prospects without CRM bloat | XLSX / Google Sheets | Dense table, status flags, next action, follow-up date |
+
+### 8.2 Page structure
+- **Use one clear job per page.** If a page explains the journey, do not also sell all services.
+- **Lead with the operator's situation.** Start with revenue stage, margin leak, cash strain, owner bottleneck, lead response, dispatch, job costing, callbacks, or sales handoff.
+- **Keep the brand quiet.** Use the mark or wordmark once per page unless the asset is a cover.
+- **Use Ink for anchors, Paper/Bone for working surface, Emerald for the one action or positive signal.**
+- **No decorative pattern fills.** The Constellation mark is a logo, not wallpaper.
+- **No generic icons unless they clarify workflow.** Prefer labels like "Discovery," "Diagnostic," "Proposal," "Kickoff," "30-day install."
+
+### 8.3 Customer journey maps
+Use this structure for Framework / Ops sales and onboarding journey visuals:
+
+| Stage | Label | Owner/client action | Framework / Ops action | Gate |
+|---|---|---|---|---|
+| 1 | Discovery | Owner names revenue, pain, budget, urgency | Qualify ICP and red flags | Go / No-Go |
+| 2 | Intake | Owner submits written intake and access list | Review revenue, margin, tech stack, org chart | Enough data to diagnose |
+| 3 | OPS Assessment | Owner attends 90-minute diagnostic | Score gaps and quantify cost | Diagnosis accepted |
+| 4 | Proposal | Owner reviews one recommended path live | Present scope, timeline, investment, ROI | 7-day decision |
+| 5 | Agreement | Owner signs and pays first month | Schedule kickoff, collect access | Paid kickoff |
+| 6 | First 90 days | Owner/team implements with Chance | Install systems, SOPs, dashboard, cadence | 90-day review |
+
+Design rules:
+- Use a horizontal six-stage map on landscape pages and a vertical six-stage stack on mobile or portrait pages.
+- Each stage gets one primary action and one gate. Do not crowd the map with every task.
+- Use Emerald only for current/complete/Go states.
+- Use Warning for stalled intake or missing data.
+- Use Danger only for No-Go or blocked implementation.
+- Show the OPS Assessment as the gateway. Do not visually imply prospects skip straight from discovery to retainer.
+
+### 8.4 Proposal and assessment pages
+- Use a restrained cover: Ink background, Bone title, small Emerald mark, one sentence of context.
+- Do not open with Chance's bio. Open with the client's operating condition.
+- Every problem block should include the observed symptom, the likely root cause, and the cost at that revenue level.
+- Every scope block should name the deliverable: "13-week cash flow model," "job costing dashboard," "sales-to-production handoff SOP," "Monday review cadence."
+- Include a "Not in scope" box in Graphite/Bone styling. This protects margin and reduces hand-wavy scope creep.
+- ROI pages must show downside, conservative case, and upside in that order. Never show upside alone.
+
+### 8.5 Spreadsheet styling
+Framework / Ops spreadsheets should feel like operator tools, not finance-department art projects.
+
+| Element | Style |
+|---|---|
+| Workbook cover / first tab | Ink header, wordmark, short usage note, last updated date |
+| Input cells | Bone fill, Ink text, Fog border, label in Graphite |
+| Required inputs | Thin Emerald left border or small Emerald status dot |
+| Assumption cells | Paper fill, Graphite label, mono note where helpful |
+| Output cells | Ink fill, Bone text, Emerald value only when positive |
+| Warning outputs | Warning fill at 12-18% tint, Ink text, explicit reason |
+| No-Go outputs | Danger fill at 10-14% tint, Ink text, no vague label |
+| Protected/formula cells | Light Fog fill, Graphite text, locked where possible |
+| Section headers | Ink text, 12px Geist Mono uppercase, +22% tracking |
+| Tables | 1px Fog borders, no heavy grid, zebra rows only if table has 12+ rows |
+
+Workbook rules:
+- Inputs, assumptions, lookups, and outputs must be visually distinct.
+- Never hide critical assumptions. If implementation rate is 65%, show it.
+- Use freeze panes on sales trackers and pricing models.
+- Use data validation for stage/status fields.
+- Use plain English flags: "Go," "Wait," "No-Go," "Budget risk," "Missing gross margin."
+- The retainer affordability flag must be visually obvious when monthly retainer exceeds 15% of monthly net profit.
+
+### 8.6 Charts and dashboards
+- Use Ink or Graphite for axes and labels. Use Fog for gridlines.
+- Use Emerald for actual performance when it is good or on track.
+- Use Graphite/Ash for benchmarks.
+- Use Warning and Danger only for decisions or variance that needs action.
+- Label the chart in the title. "Gross margin gap by month" is better than "Margin."
+- Put the takeaway above the chart in one sentence.
+- Avoid donut charts for operating metrics. Use bars, lines, scorecards, and variance tables.
+- Do not chart more than 12 months unless the trend is the point.
+
+### 8.7 Sales-document tone
+Use field-level words: job costing, callbacks, DSO, draw schedule, FSM, dispatch, close rate, gross margin, lead response, production handoff, weekly review. Avoid imported SaaS language like "customer lifecycle," "revenue engine," or "activation" unless the audience is specifically a software or marketing client.
+
+---
+
+## 9. PDF and export production
+
+### 9.1 PDF source of truth
+The v1.0 PDF brand book is a visual reference, not the editable source. For future brand-book updates, rebuild from an editable source file and export a new PDF instead of manually editing the PDF.
+
+### 9.2 PDF export requirements
+- Text must remain selectable and copy cleanly. Avoid letterspacing implementations that make words extract as "shiptoday" or "oneidentity."
+- Every export should pass a visual render check: no clipped text, no overlapping type, no broken glyphs, no low-contrast captions.
+- Include document title, version, last updated date, and owner in the file properties where the tool allows it.
+- For client PDFs, use filenames in this pattern: `Framework-OPS_[Client-or-Asset]_[YYYY-MM-DD].pdf`.
+- For internal brand PDFs, use versioned filenames: `brand-book-v1.1.pdf`, not `brand-book-final.pdf`.
+
+### 9.3 Accessibility basics
+- Do not rely on Emerald alone to communicate status. Pair color with labels like "Go," "Wait," "No-Go," or "Budget risk."
+- Keep body text at 10.5pt minimum in PDF/docx exports.
+- Use real tables for tabular data in docx where practical; screenshots of spreadsheets are allowed only when the visual layout is the deliverable.
+
+---
+
+## 10. Web tokens (developer handoff)
+
+### 10.1 CSS custom properties
 ```css
 :root {
   /* Color · Ink scale */
@@ -261,6 +391,12 @@ Framework / Ops sounds **operational, not aspirational.** Three principles:
   --fo-fog:       #D9DDD5;
   --fo-graphite:  #4A5868;
   --fo-ash:       #8893A1;
+
+  /* Functional data states */
+  --fo-warning:       #B7791F;
+  --fo-danger:        #C2410C;
+  --fo-blue-signal:   #2563EB;
+  --fo-violet-signal: #7C3AED;
 
   /* Type */
   --fo-font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
@@ -285,7 +421,7 @@ body {
 }
 ```
 
-### 8.2 Tailwind config
+### 10.2 Tailwind config
 ```js
 // tailwind.config.js
 module.exports = {
@@ -300,6 +436,10 @@ module.exports = {
         fog:    '#D9DDD5',
         graphite:'#4A5868',
         ash:    '#8893A1',
+        warning:'#B7791F',
+        danger: '#C2410C',
+        blueSignal: '#2563EB',
+        violetSignal: '#7C3AED',
       },
       fontFamily: {
         sans: ['Geist', 'ui-sans-serif', 'system-ui'],
@@ -310,24 +450,25 @@ module.exports = {
 };
 ```
 
-### 8.3 Favicon
+### 10.3 Favicon
 ```html
 <link rel="icon" type="image/svg+xml" href="/assets/mark-constellation.svg">
 ```
 
 ---
 
-## 9. Apparel & merchandise (gear)
+## 11. Apparel & merchandise (gear)
 
 The Constellation mark is the hero on gear: it embroiders cleanly, screen-prints in one color, and reads at small apparel sizes.
 
-### 9.1 General print specs
+### 11.1 General print specs
 - **Embroidery:** Constellation mark only. Minimum 2″ (51mm) wide. Pantone **2245 C** for emerald, Pantone **539 C** for ink. Drop the three dots below ¾″.
+- **Embroidery style:** Flat embroidery only. Do not use 3D/puff embroidery for the Constellation mark; puff distorts the small signal dots and rounded cell corners.
 - **Screen print:** One color preferred — Bone on Ink garments, Ink on Bone garments. Two-color (emerald mark on contrasting body) for premium runs.
 - **Vinyl:** Die-cut to the mark silhouette + 2mm safe edge. Single-color only; avoid full-color vinyl.
 - **Substrates:** Avoid pure-white garments. Use Bone heather, natural cotton, or Ink so the brand reads warm, not corporate.
 
-### 9.2 Recommended sample hat
+### 11.2 Recommended sample hat
 - **Style:** Unstructured 6-panel "dad cap" (reference: Richardson 320 or equivalent).
 - **Material:** 100% cotton twill, garment-washed.
 - **Body color:** Ink navy, matched to Pantone 539 C.
@@ -337,7 +478,7 @@ The Constellation mark is the hero on gear: it embroiders cleanly, screen-prints
 - **Backing:** Tear-away, 2.5oz, fully removed.
 - **Alternate colorways:** Bone (natural cotton) and Khaki (structured 6-panel canvas, trade-site), both with the Ink mark.
 
-### 9.3 Acceptance criteria (QC)
+### 11.3 Acceptance criteria (QC)
 - Mark centered front ±2mm; ⅝″ down from bill seam ±2mm.
 - Mark exactly 2″ × 2″ ±1.5mm.
 - Emerald thread reads as `#14B981` in daylight — not blue-shifted, not olive.
@@ -348,7 +489,7 @@ The Constellation mark is the hero on gear: it embroiders cleanly, screen-prints
 
 ---
 
-## 10. Asset inventory
+## 12. Asset inventory
 
 All paths are relative to the brand project root.
 
@@ -365,7 +506,7 @@ All paths are relative to the brand project root.
 
 ---
 
-## 11. Quick-reference summary
+## 13. Quick-reference summary
 
 - **Mark:** Constellation — 3×3 emerald grid, 6 cells + 3 dots. File: `assets/mark-constellation.svg`.
 - **Wordmark:** `framework/ops` — Geist Mono 500, lowercase, emerald slash, no spaces around slash.
@@ -374,9 +515,12 @@ All paths are relative to the brand project root.
 - **Typefaces:** Geist (sans), Geist Mono (mono).
 - **Color ratio:** 60 Ink/Bone · 30 neutral · 10 Emerald.
 - **Voice:** operational, not aspirational — concrete, measured, plain.
+- **Collateral:** operator tools first — proposals, journey maps, assessments, and spreadsheets should be dense, clear, and decision-oriented.
+- **Charts:** Emerald for good/on-track, Warning for marginal, Danger for No-Go/critical, Graphite/Ash for benchmarks.
 - **Tagline:** "We build the ops layer home-service companies actually run on."
 - **Min mark size:** 16px screen / 2″ embroidery; drop the 3 dots below the floor.
+- **Gear:** flat embroidery only; no 3D/puff on the Constellation mark.
 
 ---
 
-*End of Framework / Ops Brand Guidelines v1.0.*
+*End of Framework / Ops Brand Guidelines v1.1.*
