@@ -22,21 +22,23 @@ Site renders entirely client-side. This means:
 
 ### Pricing — currently outdated (Week 1 fix)
 
-Current site shows 11 offers across 3 tiers. New offer ladder (per [[offer-ladder]]) is 6 offers:
+Current site shows 11 offers across 3 tiers. Canonical offer ladder (per [[service-tiers]]) is 10 offers:
 
-**KEEP:**
-- OPS Assessment $997
-- SOP Sprint $2,000 (flat — kill the range)
-- Automation Build $2,000 (flat — kill the range)
-- OPS Light $2,000/mo
-- OPS Active $3,500/mo (mark as MOST COMMON)
-- OPS Embedded — change from $6,500/30-40hr to $5,500/25-30hr
+**KEEP / UPDATE:**
+- AI Readiness Assessment $297
+- Tech Stack Audit $497
+- OPS Assessment $997 (Start Here)
+- SOP Sprint $2,000 (flat)
+- Automation Build Sprint $2,000 (flat)
+- KPI Dashboard Build $2,000 (flat)
+- Advisory $1,500/mo
+- OPS Light $2,500/mo
+- OPS Active $4,000/mo (mark as MOST COMMON)
+- OPS Embedded $6,000/mo (30-40 hrs)
 
 **KILL:**
-- AI Readiness Score ($297)
-- Tech Stack Audit ($497)
-- 90-Day OPS Roadmap ($2,000)
-- OPS Advisory ($1,200/mo)
+- 90-Day OPS Roadmap ($2,000) — replaced by KPI Dashboard Build
+- Any legacy/duplicate tiers beyond the 10 above (the old site carried an 11th)
 
 ### ICP language inconsistency
 

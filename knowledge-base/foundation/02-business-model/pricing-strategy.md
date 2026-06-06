@@ -20,10 +20,10 @@ The salaried roofing COO role covers the financial nut, so margin can be traded 
 ## Risks of this approach
 
 ### Price anchoring
-Clients who buy at $3,500/mo will resist $6,500/mo at renewal. **Plan to graduate clients out, not raise them up.**
+Clients who anchor at today's Year-1 rates (e.g. $4,000/mo Active) will resist a materially higher renewal price. **Plan to graduate clients out, not raise them up.**
 
 ### Cheap clients are often the worst clients
-$1M owners writing $1,200 checks scrutinize every hour. Budget extra hand-holding time at this price tier.
+$1-2M owners writing $1,500 Advisory checks scrutinize every hour. Budget extra hand-holding time at the lowest tier.
 
 ### Stuck-at-low-prices trap
 Without a planned increase milestone, year-3 prices will match year-1 prices because raising on existing clients is hard.
@@ -36,9 +36,9 @@ Tier 2 target pricing (rough — to be refined when trigger hits):
 - OPS Assessment: $997 → $2,500
 - SOP Sprint: $2,000 → $2,500
 - Automation Build: $2,000 → $3,500
-- OPS Light: $2,000 → $2,500
-- OPS Active: $3,500 → $5,000
-- OPS Embedded: $5,500 → $8,500
+- OPS Light: $2,500 → $3,000
+- OPS Active: $4,000 → $5,000
+- OPS Embedded: $6,000 → $8,500
 
 Existing clients grandfather at Year-1 rates for 12 months, then transition.
 
@@ -46,8 +46,8 @@ Existing clients grandfather at Year-1 rates for 12 months, then transition.
 
 - Fractional COO retainers across all segments: $3-15K/month
 - $1-3M home service specifically: realistic ceiling $3-6K/month
-- Year-1 Framework OPS retainers ($2-5.5K) are at low end of market — intentional
-- Year-2 target pricing ($2.5-8.5K) is mid-market — appropriate given credentials + case studies
+- Year-1 Framework OPS retainers ($1.5-6K) are at low end of market — intentional
+- Year-2 target pricing ($3-8.5K) is mid-market — appropriate given credentials + case studies
 
 ## What NOT to do
 

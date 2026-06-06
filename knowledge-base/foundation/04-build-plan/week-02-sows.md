@@ -9,6 +9,7 @@
 - OPS Assessment SOW template
 - SOP Sprint SOW template
 - Automation Build SOW template
+- Advisory retainer agreement
 - OPS Light retainer agreement
 - OPS Active retainer agreement
 - OPS Embedded retainer agreement

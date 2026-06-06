@@ -6,7 +6,7 @@
 ## Deliverables
 
 ### 1. Update frameworkopsllc.com (~2 hrs)
-- Kill: AI Readiness Score, Tech Stack Audit, 90-Day OPS Roadmap, OPS Advisory
+- Offer menu (per [[service-tiers]]): 3 entry products (AI Readiness $297, Tech Stack Audit $497, OPS Assessment $997), 3 sprints at $2k, 4 retainers (Advisory/Light/Active/Embedded). Kill only the 90-Day OPS Roadmap — replaced by KPI Dashboard Build.
 - Update prices per [[offer-ladder]]
 - Change ICP language: $1-5M → $1-3M home service operators
 - Mark OPS Active as MOST COMMON

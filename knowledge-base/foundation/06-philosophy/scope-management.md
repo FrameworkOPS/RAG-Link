@@ -56,9 +56,9 @@ Specific examples of what's NOT included must be listed. Generic items:
 
 ## Capping hours on retainers
 
-The OPS Embedded tier originally priced at $6,500/30-40 hrs was the worst hourly rate on the offer ladder. Re-priced to $5,500/25-30 hrs.
+The OPS Embedded tier ($6,000/30-40 hrs) carries the lowest effective hourly rate on the ladder ($150-200/hr). This is accepted deliberately — it earns on depth and a 6-12 month commitment, not on rate.
 
-**Rule:** When pricing retainers, watch effective hourly rate. The most expensive tier should NOT have the lowest hourly rate.
+**Rule:** When pricing retainers, always watch effective hourly rate. Embedded is the one allowed exception to "the most expensive tier shouldn't have the lowest rate" — and only because scope is capped hard at 40 hrs and the commitment length carries it. Do not let any tier slip below ~$150/hr.
 
 Per [[offer-ladder]] all retainers now in $175-220/hr effective range.
 

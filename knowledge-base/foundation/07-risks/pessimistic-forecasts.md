@@ -86,13 +86,14 @@ Year-1 pricing means thin margin on hourly basis. Real economics:
 | OPS Assessment | $997 | 10-12 | $83-100/hr |
 | SOP Sprint | $2,000 | 12-15 | $133-167/hr |
 | Automation Build | $2,000 | 15-20 | $100-133/hr |
-| OPS Light | $2,000/mo | 8-10/mo | $200-250/hr |
-| OPS Active | $3,500/mo | 16-20/mo | $175-220/hr |
-| OPS Embedded | $5,500/mo | 25-30/mo | $183-220/hr |
+| Advisory | $1,500/mo | 4-6/mo | $250-375/hr |
+| OPS Light | $2,500/mo | 8-12/mo | $210-310/hr |
+| OPS Active | $4,000/mo | 15-20/mo | $200-265/hr |
+| OPS Embedded | $6,000/mo | 30-40/mo | $150-200/hr |
 
 **Productized offers (Audit/Sprint/Build) are nearly break-even hourly vs. roofing COO salary.** They exist for client acquisition + case study creation, not profit.
 
-**Retainers are the actual profit engine** at $175-250/hr effective.
+**Retainers are the actual profit engine** at $150-375/hr effective depending on tier (Embedded is the lowest hourly — it earns on depth and commitment length, not rate).
 
 This means: every hour spent on Audit/Sprint/Build delivery is a marketing/acquisition cost, not a profit center. Budget accordingly.
 

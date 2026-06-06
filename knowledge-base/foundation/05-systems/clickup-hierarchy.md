@@ -64,7 +64,7 @@ Full nested structure of the Framework OPS command center. Built via API in Week
 - List: OPS Assessment ($997)
 - List: SOP Sprint ($2,000)
 - List: Automation Build ($2,000)
-- List: Retainers (Light / Active / Embedded)
+- List: Retainers (Advisory / Light / Active / Embedded)
 
 **Custom fields:** SOP Status (Draft/Review/Published), Owner, Last Updated, Vertical Applicability, Linked Automations, Reusability Score 1-5.
 
