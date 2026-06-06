@@ -26,7 +26,7 @@ Current site shows 11 offers across 3 tiers. New offer ladder (per [[offer-ladde
 
 **KEEP:**
 - OPS Assessment $997
-- SOP Sprint $1,500 (flat — kill the range)
+- SOP Sprint $2,000 (flat — kill the range)
 - Automation Build $2,000 (flat — kill the range)
 - OPS Light $2,000/mo
 - OPS Active $3,500/mo (mark as MOST COMMON)

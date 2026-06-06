@@ -84,7 +84,7 @@ Year-1 pricing means thin margin on hourly basis. Real economics:
 | Offer | Price | Realistic hours | Effective hourly |
 |---|---|---|---|
 | OPS Assessment | $997 | 10-12 | $83-100/hr |
-| SOP Sprint | $1,500 | 12-15 | $100-125/hr |
+| SOP Sprint | $2,000 | 12-15 | $133-167/hr |
 | Automation Build | $2,000 | 15-20 | $100-133/hr |
 | OPS Light | $2,000/mo | 8-10/mo | $200-250/hr |
 | OPS Active | $3,500/mo | 16-20/mo | $175-220/hr |

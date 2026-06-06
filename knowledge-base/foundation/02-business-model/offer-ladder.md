@@ -15,12 +15,12 @@ Final offer structure as of May 2026. **6 offers total.** All previous "Entry & 
 
 ## Tier 2: Productized Sprints (2 offers)
 
-### SOP Sprint — $1,500 flat
+### SOP Sprint — $2,000 flat
 
 - **Format:** 2 weeks
 - **Scope:** One focused department or process, fully documented
 - **Deliverable:** SOP doc + training video + rollout plan
-- **Hours to deliver:** 12-15 (watch scope creep — at 25 hrs this is $60/hr, worse than roofing job)
+- **Hours to deliver:** 12-15 (watch scope creep — at 25 hrs this is $80/hr, worse than roofing job)
 - **Examples:** Estimating workflow, job completion checklist, dispatch protocol
 
 ### Automation Build — $2,000 flat
@@ -65,7 +65,7 @@ Final offer structure as of May 2026. **6 offers total.** All previous "Entry & 
 
 ## Service ladder logic
 
-Audit ($997) → Sprint ($1,500-2,000) → Retainer ($2,000-5,500/mo)
+Audit ($997) → Sprint ($2,000) → Retainer ($2,000-5,500/mo)
 
 Goal: $997 audit converts at 50-60% to next-step engagement. If under 40%, audit isn't selling the next step properly.
 

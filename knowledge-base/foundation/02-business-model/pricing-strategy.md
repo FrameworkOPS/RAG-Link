@@ -34,7 +34,7 @@ Without a planned increase milestone, year-3 prices will match year-1 prices bec
 
 Tier 2 target pricing (rough — to be refined when trigger hits):
 - OPS Assessment: $997 → $2,500
-- SOP Sprint: $1,500 → $2,500
+- SOP Sprint: $2,000 → $2,500
 - Automation Build: $2,000 → $3,500
 - OPS Light: $2,000 → $2,500
 - OPS Active: $3,500 → $5,000

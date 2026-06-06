@@ -62,7 +62,7 @@ Full nested structure of the Framework OPS command center. Built via API in Week
 
 **Folder: Productized Service Specs**
 - List: OPS Assessment ($997)
-- List: SOP Sprint ($1,500)
+- List: SOP Sprint ($2,000)
 - List: Automation Build ($2,000)
 - List: Retainers (Light / Active / Embedded)
 

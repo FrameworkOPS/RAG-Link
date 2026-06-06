@@ -40,10 +40,10 @@ Pricing is in `knowledge-base/business/service-tiers.md`. Summary:
 - Tech Stack Audit — $497
 - OPS Assessment — $997 ⭐ (credits to retainer Month 1 if signed within 30 days)
 
-**Productized Sprints** (fixed scope, 2–4 weeks)
-- SOP Sprint — $1,500–$2,500
-- Automation Build Sprint — $1,500–$3,000
-- 90-Day Roadmap Sprint — $2,000–$3,500
+**Productized Sprints** (fixed scope, 2–4 weeks — flat $2,000 each, no ranges)
+- SOP Sprint — $2,000
+- Automation Build Sprint — $2,000
+- KPI Dashboard Build — $2,000
 
 **Retainers** (ongoing fractional COO)
 - Advisory — $1,500/mo, 3-mo min, 4–6 hrs

@@ -2,7 +2,7 @@
 
 ## Pricing Philosophy
 
-Pricing reflects time, expertise, and implementation risk — not what the market will theoretically bear. Retainer prices are fixed, not ranges. Sprints carry ranges to account for scope variance at intake.
+Pricing reflects time, expertise, and implementation risk — not what the market will theoretically bear. Retainer prices are fixed, not ranges. Sprints are flat-priced at $2,000 each — no ranges. Scope is held to the fixed deliverable; if a prospect needs more, scope up to a retainer rather than inflating the sprint price.
 
 The service menu is structured in three groups: **Entry / Trust Builders** (low-cost, defined-scope entry points), **Productized Sprints** (fixed-scope project work), and **Retainers** (ongoing fractional COO engagements). A prospect doesn't have to start with a retainer — the entry products are designed to generate trust and demonstrate value before a longer commitment.
 
