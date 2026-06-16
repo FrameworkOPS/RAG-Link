@@ -3,11 +3,12 @@
 import asyncio
 import logging
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from pydantic import BaseModel, Field
 
 from app.ingestion.pipeline import create_job, run_ingestion
 from app.retrieval.vector_store import get_ingestion_jobs, get_job, get_repositories
+from app.api.auth import require_api_key
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,7 @@ class IngestRequest(BaseModel):
     )
 
 
-@router.post("/ingest", status_code=202)
+@router.post("/ingest", status_code=202, dependencies=[Depends(require_api_key)])
 async def trigger_ingestion(req: IngestRequest, background_tasks: BackgroundTasks):
     invalid = set(req.source_types) - VALID_SOURCE_TYPES
     if invalid:
@@ -39,7 +40,7 @@ async def trigger_ingestion(req: IngestRequest, background_tasks: BackgroundTask
     return {"job_id": job_id, "status": "pending"}
 
 
-@router.get("/ingest/{job_id}")
+@router.get("/ingest/{job_id}", dependencies=[Depends(require_api_key)])
 async def get_job_status(job_id: str):
     job = await get_job(job_id)
     if not job:
@@ -47,11 +48,11 @@ async def get_job_status(job_id: str):
     return job
 
 
-@router.get("/ingest")
+@router.get("/ingest", dependencies=[Depends(require_api_key)])
 async def list_jobs():
     return await get_ingestion_jobs()
 
 
-@router.get("/repos")
+@router.get("/repos", dependencies=[Depends(require_api_key)])
 async def list_repos():
     return await get_repositories()

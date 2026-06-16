@@ -19,7 +19,7 @@ DEFAULT_SOURCE_TYPES = ["code", "issues", "prs", "readme"]
 def _verify_signature(body: bytes, signature: str) -> bool:
     """Verify GitHub webhook HMAC-SHA256 signature."""
     if not settings.github_webhook_secret:
-        return True  # Signature verification disabled
+        return False
     expected = "sha256=" + hmac.new(
         settings.github_webhook_secret.encode(),
         body,

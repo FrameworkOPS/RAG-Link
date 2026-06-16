@@ -4,7 +4,7 @@ import json
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
@@ -12,6 +12,7 @@ from app.embeddings.voyage import VoyageClient
 from app.generation.claude import stream_answer
 from app.retrieval.vector_store import SearchResult, similarity_search
 from app.config import settings
+from app.api.auth import require_api_key
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +63,7 @@ async def _sse_stream(query: str, results: list[SearchResult]):
     yield "event: done\ndata: {}\n\n"
 
 
-@router.post("/query")
+@router.post("/query", dependencies=[Depends(require_api_key)])
 async def query_rag(req: QueryRequest):
     voyage = VoyageClient(settings.voyage_api_key, settings.voyage_model)
     embedding = await voyage.embed_query(req.query)
