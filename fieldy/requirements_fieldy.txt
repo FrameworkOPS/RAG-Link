@@ -1,0 +1,15 @@
+# Fieldy integration dependencies
+# Install: pip install -r requirements_fieldy.txt
+
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+# RAG ingestion (fieldy.py)
+httpx>=0.27.0
+supabase>=2.4.0
+
+# Digest summarization (fieldy_digest.py)
+anthropic>=0.28.0
+
+# Slack posting (fieldy_digest.py)
+slack-sdk>=3.27.0

@@ -22,3 +22,18 @@ out/
 # General
 .DS_Store
 *.log
+
+# Obsidian — plugin secrets & machine-local state
+.obsidian/plugins/*/data.json
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Smart Connections embedding cache (large, regenerable)
+.smart-env/
+
+# Obsidian plugin binaries — installed via Obsidian, not version-controlled
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/styles.css
+
+# Local Netlify folder
+.netlify

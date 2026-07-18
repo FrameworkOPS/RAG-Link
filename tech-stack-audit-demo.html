@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Stack Audit — Framework OPS Demo</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#090d17;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+  .demo-banner{background:#10B981;color:#000;text-align:center;padding:8px 16px;font-size:13px;font-weight:600;letter-spacing:.3px}
+  .header{background:#0f1623;border-bottom:1px solid #1e293b;padding:20px 32px;display:flex;align-items:center;gap:16px}
+  .logo{font-family:'JetBrains Mono',monospace;font-size:14px;color:#10B981;font-weight:700;letter-spacing:1px}
+  .header-title{font-size:18px;font-weight:700;color:#f1f5f9}
+  .header-sub{font-size:13px;color:#64748b;margin-top:2px}
+  .header-badge{margin-left:auto;background:#1e293b;border:1px solid #10B981;color:#10B981;font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px}
+  .client-info{background:#0f1623;border-bottom:1px solid #1e293b;padding:12px 32px;display:flex;gap:32px;font-size:13px;color:#94a3b8;flex-wrap:wrap}
+  .client-info span{color:#f1f5f9;font-weight:600}
+  .tabs{display:flex;gap:0;border-bottom:1px solid #1e293b;background:#0f1623;padding:0 32px}
+  .tab{padding:14px 20px;cursor:pointer;font-size:13px;font-weight:500;color:#64748b;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+  .tab:hover{color:#cbd5e1}
+  .tab.active{color:#10B981;border-bottom-color:#10B981}
+  .content{padding:32px;max-width:1100px;margin:0 auto}
+  .section-title{font-size:20px;font-weight:700;color:#f1f5f9;margin-bottom:6px}
+  .section-sub{font-size:14px;color:#64748b;margin-bottom:24px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .card{background:#0f1623;border:1px solid #1e293b;border-radius:10px;padding:20px}
+  .card-title{font-size:13px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}
+  .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+  .badge-critical{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+  .badge-high{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3)}
+  .badge-medium{background:rgba(59,130,246,.15);color:#3b82f6;border:1px solid rgba(59,130,246,.3)}
+  .badge-low{background:rgba(16,185,129,.15);color:#10B981;border:1px solid rgba(16,185,129,.3)}
+  .badge-neutral{background:#1e293b;color:#94a3b8;border:1px solid #334155}
+  .tool-card{background:#0f1623;border:1px solid #1e293b;border-radius:10px;padding:18px}
+  .tool-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+  .tool-name{font-size:15px;font-weight:700;color:#f1f5f9}
+  .tool-category{font-size:11px;color:#64748b;margin-top:2px}
+  .tool-cost{font-size:13px;font-weight:600;color:#94a3b8;text-align:right}
+  .tool-cost-label{font-size:10px;color:#475569;text-align:right}
+  .util-bar-wrap{height:6px;background:#1e293b;border-radius:3px;overflow:hidden;margin:8px 0}
+  .util-bar{height:100%;border-radius:3px}
+  .util-label{display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-bottom:2px}
+  .tool-findings{margin-top:10px;display:flex;flex-direction:column;gap:5px}
+  .finding-line{font-size:12px;color:#94a3b8;display:flex;align-items:flex-start;gap:6px;line-height:1.5}
+  .finding-line::before{content:'·';color:#64748b;flex-shrink:0}
+  .audit-table{width:100%;border-collapse:collapse}
+  .audit-table th{text-align:left;padding:10px 12px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid #1e293b}
+  .audit-table td{padding:13px 12px;font-size:13px;border-bottom:1px solid #1a2332;color:#cbd5e1;vertical-align:top}
+  .audit-table tr:last-child td{border-bottom:none}
+  .audit-table tr:hover td{background:rgba(16,185,129,.03)}
+  .action-num{width:24px;height:24px;border-radius:50%;background:#10B981;color:#000;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .action-card{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid #1a2332;align-items:flex-start}
+  .action-card:last-child{border-bottom:none}
+  .action-title{font-size:14px;font-weight:700;color:#f1f5f9;margin-bottom:4px}
+  .action-desc{font-size:13px;color:#94a3b8;line-height:1.6}
+  .action-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .meta-pill{background:#1e293b;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;color:#94a3b8}
+  .meta-pill.green{color:#10B981}
+  .meta-pill.yellow{color:#f59e0b}
+  .meta-pill.red{color:#ef4444}
+  .rec-stack-row{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid #1a2332;align-items:flex-start}
+  .rec-stack-row:last-child{border-bottom:none}
+  .rec-icon{width:36px;height:36px;border-radius:8px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .rec-name{font-size:14px;font-weight:700;color:#f1f5f9}
+  .rec-role{font-size:12px;color:#64748b;margin-top:2px}
+  .rec-action{font-size:12px;margin-top:6px;line-height:1.5}
+  .keep{color:#10B981}
+  .replace{color:#ef4444}
+  .add{color:#3b82f6}
+  .redundancy-card{border:1px solid #334155;border-radius:8px;padding:16px;margin-bottom:12px}
+  .redundancy-title{font-size:13px;font-weight:700;color:#f59e0b;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .redundancy-body{font-size:13px;color:#94a3b8;line-height:1.6}
+  .redundancy-cost{margin-top:8px;font-size:13px;font-weight:600;color:#ef4444}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+  .score-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+  .score-mini{background:#0f1623;border:1px solid #1e293b;border-radius:8px;padding:16px;text-align:center}
+  .score-mini-val{font-size:28px;font-weight:800;line-height:1}
+  .score-mini-label{font-size:11px;color:#64748b;margin-top:4px;line-height:1.3}
+  @media(max-width:700px){.grid-2,.grid-3,.score-summary-grid{grid-template-columns:1fr 1fr}.tabs{overflow-x:auto}.content{padding:20px}}
+  @media(max-width:500px){.score-summary-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="demo-banner">Demo environment — populated with sample roofing company data · Not a real client audit</div>
+
+<div class="header">
+  <div>
+    <div class="logo">FRAMEWORK OPS</div>
+  </div>
+  <div style="width:1px;height:36px;background:#1e293b;margin:0 8px"></div>
+  <div>
+    <div class="header-title">Tech Stack Audit</div>
+    <div class="header-sub">Delivered deliverable — example output</div>
+  </div>
+  <div class="header-badge">$497 Entry Product</div>
+</div>
+
+<div class="client-info">
+  <div>Company: <span>Summit Roofing &amp; Gutters</span></div>
+  <div>Revenue: <span>~$4.2M TTM</span></div>
+  <div>Trade: <span>Roofing</span></div>
+  <div>Employees: <span>22</span></div>
+  <div>Active Tools: <span>9</span></div>
+  <div>Audit Date: <span>April 2025</span></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('overview',this)">Stack Overview</div>
+  <div class="tab" onclick="showTab('utilization',this)">Utilization Analysis</div>
+  <div class="tab" onclick="showTab('redundancy',this)">Redundancy Findings</div>
+  <div class="tab" onclick="showTab('actions',this)">Action List</div>
+  <div class="tab" onclick="showTab('recommended',this)">Recommended Stack</div>
+</div>
+
+<!-- OVERVIEW TAB -->
+<div id="tab-overview" class="tab-panel active">
+<div class="content">
+  <div class="section-title">Tech Stack Overview</div>
+  <div class="section-sub">9 tools in active use. Annual spend: ~$11,400. 3 redundancies identified. No FSM platform — highest-value gap in the stack.</div>
+
+  <div class="score-summary-grid">
+    <div class="score-mini">
+      <div class="score-mini-val" style="color:#ef4444">$4,200</div>
+      <div class="score-mini-label">Annual waste on redundant or unused tools</div>
+    </div>
+    <div class="score-mini">
+      <div class="score-mini-val" style="color:#f59e0b">3</div>
+      <div class="score-mini-label">Redundant tool pairs identified</div>
+    </div>
+    <div class="score-mini">
+      <div class="score-mini-val" style="color:#3b82f6">42%</div>
+      <div class="score-mini-label">Average feature utilization across stack</div>
+    </div>
+    <div class="score-mini">
+      <div class="score-mini-val" style="color:#10B981">1</div>
+      <div class="score-mini-label">Critical missing platform (FSM)</div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="tool-card">
+      <div class="tool-header">
+        <div>
+          <div class="tool-name">JobNimbus</div>
+          <div class="tool-category">CRM / Estimating / Pipeline</div>
+        </div>
+        <div>
+          <div class="tool-cost">$149/mo</div>
+          <div class="tool-cost-label">$1,788/yr</div>
+        </div>
+      </div>
+      <div class="util-label"><span>Utilization</span><span style="color:#3b82f6">55%</span></div>
+      <div class="util-bar-wrap"><div class="util-bar" style="width:55%;background:#3b82f6"></div></div>
+      <span class="badge badge-medium">Underutilized</span>
+      <div class="tool-findings">
+        <div class="finding-line">Estimates and pipeline active — scheduling and job management unused</div>
+        <div class="finding-line">Automation rules configured but not turned on</div>
+        <div class="finding-line">No API connections to any other tool</div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-header">
+        <div>
+          <div class="tool-name">QuickBooks Online</div>
+          <div class="tool-category">Accounting / Invoicing / Payroll</div>
+        </div>
+        <div>
+          <div class="tool-cost">$85/mo</div>
+          <div class="tool-cost-label">$1,020/yr</div>
+        </div>
+      </div>
+      <div class="util-label"><span>Utilization</span><span style="color:#10B981">80%</span></div>
+      <div class="util-bar-wrap"><div class="util-bar" style="width:80%;background:#10B981"></div></div>
+      <span class="badge badge-low">Well Utilized</span>
+      <div class="tool-findings">
+        <div class="finding-line">Invoicing, payroll, and P&amp;L active</div>
+        <div class="finding-line">Job costing by class partially set up — not enforced</div>
+        <div class="finding-line">No integration to JobNimbus → manual invoice duplication</div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-header">
+        <div>
+          <div class="tool-name">Google Workspace</div>
+          <div class="tool-category">Email / Docs / Sheets / Drive</div>
+        </div>
+        <div>
+          <div class="tool-cost">$72/mo</div>
+          <div class="tool-cost-label">$864/yr</div>
+        </div>
+      </div>
+      <div class="util-label"><span>Utilization</span><span style="color:#f59e0b">65%</span></div>
+      <div class="util-bar-wrap"><div class="util-bar" style="width:65%;background:#f59e0b"></div></div>
+      <span class="badge badge-medium">Mixed Use</span>
+      <div class="tool-findings">
+        <div class="finding-line">Gmail and Drive well-used</div>
+        <div class="finding-line">Sheets being used as a scheduling tool and reporting database — should be FSM + automation</div>
+        <div class="finding-line">Google Forms used for lead intake — duplicates JobNimbus lead entry</div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-header">
+        <div>
+          <div class="tool-name">CompanyCam</div>
+          <div class="tool-category">Photo documentation</div>
+        </div>
+        <div>
+          <div class="tool-cost">$39/mo</div>
+          <div class="tool-cost-label">$468/yr</div>
+        </div>
+      </div>
+      <div class="util-label"><span>Utilization</span><span style="color:#10B981">85%</span></div>
+      <div class="util-bar-wrap"><div class="util-bar" style="width:85%;background:#10B981"></div></div>
+      <span class="badge badge-low">Well Utilized</span>
+      <div class="tool-findings">
+        <div class="finding-line">Active use on every job — crew adoption solid</div>
+        <div class="finding-line">Photos not connected to JobNimbus job record — manual link required</div>
+        <div class="finding-line">Good candidate for automation trigger (job complete → notify office)</div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-header">
+        <div>
+          <div class="tool-name">EagleView / Hover</div>
+          <div class="tool-category">Aerial measurement / estimating</div>
+        </div>
+        <div>
+          <div class="tool-cost">$250/mo</div>
+          <div class="tool-cost-label">$3,000/yr</div>
+        </div>
+      </div>
+      <div class="util-label"><span>Utilization</span><span style="color:#10B981">90%</span></div>
+      <div class="util-bar-wrap"><div class="util-bar" style="width:90%;background:#10B981"></div></div>
+      <span class="badge badge-low">Core Tool</span>
+      <div class="tool-findings">
+        <div class="finding-line">Used on all full-replacement estimates</div>
+        <div class="finding-line">No complaints — keep as-is</div>
+        <div class="finding-line">Both EagleView AND Hover subscribed — redundant</div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="border-color:rgba(245,158,11,.3)">
+      <div class="tool-header">
+        <div>
+          <div class="tool-name">Hover</div>
+          <div class="tool-category">Aerial measurement (duplicate)</div>
+        </div>
+        <div>
+          <div class="tool-cost">$149/mo</div>
+          <div class="tool-cost-label">$1,788/yr</div>
+        </div>
+      </div>
+      <div class="util-label"><span>Utilization</span><span style="color:#ef4444">20%</span></div>
+      <div class="util-bar-wrap"><div class="util-bar" style="width:20%;background:#ef4444"></div></div>
+      <span class="badge badge-critical">Redundant — Cancel</span>
+      <div class="tool-findings">
+        <div class="finding-line">Same function as EagleView — team defaults to EagleView</div>
+        <div class="finding-line">Was trialed, never cancelled</div>
+        <div class="finding-line">$1,788/yr with 20% usage rate</div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-header">
+        <div>
+          <div class="tool-name">Make.com</div>
+          <div class="tool-category">Automation / Integration</div>
+        </div>
+        <div>
+          <div class="tool-cost">$29/mo</div>
+          <div class="tool-cost-label">$348/yr</div>
+        </div>
+      </div>
+      <div class="util-label"><span>Utilization</span><span style="color:#ef4444">10%</span></div>
+      <div class="util-bar-wrap"><div class="util-bar" style="width:10%;background:#ef4444"></div></div>
+      <span class="badge badge-high">Underactivated</span>
+      <div class="tool-findings">
+        <div class="finding-line">Account set up — 1 scenario running (Slack notification)</div>
+        <div class="finding-line">Significant untapped capacity at current plan level</div>
+        <div class="finding-line">Key enabler for AI Readiness Phase 1 automations</div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="border-color:rgba(245,158,11,.3)">
+      <div class="tool-header">
+        <div>
+          <div class="tool-name">Slack</div>
+          <div class="tool-category">Team communication</div>
+        </div>
+        <div>
+          <div class="tool-cost">$87/mo</div>
+          <div class="tool-cost-label">$1,044/yr</div>
+        </div>
+      </div>
+      <div class="util-label"><span>Utilization</span><span style="color:#f59e0b">40%</span></div>
+      <div class="util-bar-wrap"><div class="util-bar" style="width:40%;background:#f59e0b"></div></div>
+      <span class="badge badge-high">Partially Adopted</span>
+      <div class="tool-findings">
+        <div class="finding-line">Office staff uses it — field crews do not</div>
+        <div class="finding-line">Team also uses group text threads for field comms — duplicate channel</div>
+        <div class="finding-line">Consider replacing with FSM's built-in messaging at scale</div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="border-color:rgba(245,158,11,.3)">
+      <div class="tool-header">
+        <div>
+          <div class="tool-name">Monday.com</div>
+          <div class="tool-category">Project / task management</div>
+        </div>
+        <div>
+          <div class="tool-cost">$48/mo</div>
+          <div class="tool-cost-label">$576/yr</div>
+        </div>
+      </div>
+      <div class="util-label"><span>Utilization</span><span style="color:#ef4444">15%</span></div>
+      <div class="util-bar-wrap"><div class="util-bar" style="width:15%;background:#ef4444"></div></div>
+      <span class="badge badge-critical">Redundant — Cancel</span>
+      <div class="tool-findings">
+        <div class="finding-line">Used by 1 person (office manager) for internal to-do tracking</div>
+        <div class="finding-line">Same function handled by JobNimbus task feature (unused)</div>
+        <div class="finding-line">$576/yr with near-zero team adoption</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- UTILIZATION TAB -->
+<div id="tab-utilization" class="tab-panel">
+<div class="content">
+  <div class="section-title">Utilization Analysis</div>
+  <div class="section-sub">Feature utilization vs. available capability. Low utilization means you're paying for tools you're not using — or using manual workarounds for features you already have.</div>
+
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px">
+    <table class="audit-table">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Monthly Cost</th>
+          <th>Features Available</th>
+          <th>Features In Use</th>
+          <th>Utilization</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:#f1f5f9">JobNimbus</strong></td>
+          <td>$149</td>
+          <td>CRM, pipeline, estimates, scheduling, jobs, workflow automation, reporting, mobile app</td>
+          <td>CRM, estimates only</td>
+          <td><span style="color:#3b82f6;font-weight:700">55%</span></td>
+          <td><span class="badge badge-medium">Expand use</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#f1f5f9">QuickBooks Online</strong></td>
+          <td>$85</td>
+          <td>A/R, A/P, payroll, job costing, class tracking, reporting, bank feeds, integrations</td>
+          <td>A/R, A/P, payroll, basic reporting</td>
+          <td><span style="color:#10B981;font-weight:700">80%</span></td>
+          <td><span class="badge badge-low">Good — enable job costing</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#f1f5f9">Google Workspace</strong></td>
+          <td>$72</td>
+          <td>Email, calendar, Drive, Docs, Sheets, Forms, Meet, Looker Studio</td>
+          <td>Email, Drive, Sheets (scheduling use case), Forms</td>
+          <td><span style="color:#f59e0b;font-weight:700">65%</span></td>
+          <td><span class="badge badge-medium">Reduce Sheets dependency</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#f1f5f9">CompanyCam</strong></td>
+          <td>$39</td>
+          <td>Photo docs, project timeline, reports, annotations, integrations</td>
+          <td>Photo docs, project timeline</td>
+          <td><span style="color:#10B981;font-weight:700">85%</span></td>
+          <td><span class="badge badge-low">Keep — add integration</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#f1f5f9">EagleView</strong></td>
+          <td>$250</td>
+          <td>Aerial measurement, material estimates, report delivery</td>
+          <td>All features actively used</td>
+          <td><span style="color:#10B981;font-weight:700">90%</span></td>
+          <td><span class="badge badge-low">Keep as primary</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#ef4444">Hover</strong></td>
+          <td>$149</td>
+          <td>Aerial measurement, 3D models, material estimates</td>
+          <td>Occasional measurement only</td>
+          <td><span style="color:#ef4444;font-weight:700">20%</span></td>
+          <td><span class="badge badge-critical">Cancel — redundant</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#f1f5f9">Make.com</strong></td>
+          <td>$29</td>
+          <td>1,000+ app connectors, multi-step workflows, scheduled triggers, webhooks</td>
+          <td>1 scenario (Slack notification)</td>
+          <td><span style="color:#ef4444;font-weight:700">10%</span></td>
+          <td><span class="badge badge-high">Activate — high ROI available</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#f59e0b">Slack</strong></td>
+          <td>$87</td>
+          <td>Channels, DMs, workflows, file sharing, app integrations</td>
+          <td>Office staff DMs + 2 channels</td>
+          <td><span style="color:#f59e0b;font-weight:700">40%</span></td>
+          <td><span class="badge badge-medium">Consolidate or downgrade</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#ef4444">Monday.com</strong></td>
+          <td>$48</td>
+          <td>Project boards, task tracking, automations, dashboards, forms</td>
+          <td>1 user internal to-do list</td>
+          <td><span style="color:#ef4444;font-weight:700">15%</span></td>
+          <td><span class="badge badge-critical">Cancel — move to JobNimbus tasks</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Biggest Utilization Gap: JobNimbus</div>
+      <div style="font-size:14px;color:#f1f5f9;margin-bottom:12px;line-height:1.7">JobNimbus has scheduling, job management, workflow automation, and task management built in — all features that Summit Roofing is currently solving with Google Sheets, Monday.com, and manual processes.</div>
+      <div style="font-size:13px;color:#94a3b8;line-height:1.7">Activating these features eliminates 2 redundant tools and the scheduling spreadsheet. Estimated time to fully configure: 8–12 hrs with a structured implementation plan.</div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="badge badge-low">$624/yr eliminated (Monday)</span>
+        <span class="badge badge-low">~4 hrs/wk Sheets work eliminated</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Highest-Impact Unused Feature: QBO Job Costing</div>
+      <div style="font-size:14px;color:#f1f5f9;margin-bottom:12px;line-height:1.7">QBO's class tracking is set up but not enforced. Job costing by class requires every expense and invoice to be tagged — currently only ~30% are. Without clean job cost data, you can't tell which job types are actually profitable.</div>
+      <div style="font-size:13px;color:#94a3b8;line-height:1.7">At $4.2M revenue with typical roofing margins, a 2–3% GM improvement from better job costing visibility is $84K–$126K annually. This requires process discipline, not more software.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- REDUNDANCY TAB -->
+<div id="tab-redundancy" class="tab-panel">
+<div class="content">
+  <div class="section-title">Redundancy Findings</div>
+  <div class="section-sub">3 redundant tool pairs identified. $4,200/yr in immediate savings available with no functionality lost.</div>
+
+  <div style="margin-bottom:20px">
+    <div class="redundancy-card">
+      <div class="redundancy-title">
+        <span>🔴</span> Redundancy #1: EagleView + Hover (aerial measurement)
+      </div>
+      <div class="redundancy-body">
+        Both tools do aerial measurement and material quantity takeoffs. Team defaults to EagleView — Hover was trialed during Q3 last year and never cancelled. Usage logs show Hover used 8 times in the last 6 months, all for simple measurements that EagleView handles. No unique Hover capability is being used.
+      </div>
+      <div class="redundancy-cost">Annual waste: $1,788/yr → Cancel Hover immediately</div>
+    </div>
+
+    <div class="redundancy-card">
+      <div class="redundancy-title">
+        <span>🟡</span> Redundancy #2: Monday.com + JobNimbus Tasks (task/project tracking)
+      </div>
+      <div class="redundancy-body">
+        Monday.com is used by the office manager for internal task tracking. JobNimbus has a full task and project management feature set that is currently unused. Moving internal tasks to JobNimbus consolidates the stack, keeps everything in the same system the team is already in, and eliminates a $48/month tool. Migration effort: approximately 2 hours.
+      </div>
+      <div class="redundancy-cost">Annual waste: $576/yr → Cancel Monday.com, migrate to JobNimbus tasks</div>
+    </div>
+
+    <div class="redundancy-card">
+      <div class="redundancy-title">
+        <span>🟡</span> Redundancy #3: Google Forms + JobNimbus Lead Intake (lead capture)
+      </div>
+      <div class="redundancy-body">
+        The website uses a Google Form for lead capture. The lead data is then manually re-entered into JobNimbus as a new contact. JobNimbus has a native web form / lead capture feature that feeds directly into the CRM with no manual re-entry. This double-entry takes office staff approximately 20 minutes per lead — at 15 leads/week, that's 5 hours/week of avoidable data entry.
+      </div>
+      <div class="redundancy-cost">Annual waste: ~$19,500 (staff time, not software cost) → Replace Google Form with JobNimbus web form</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Communication Channel Overlap (Partial Redundancy)</div>
+    <div style="font-size:13px;color:#94a3b8;line-height:1.7;margin-bottom:12px">
+      Field comms happen across 3 channels simultaneously: Slack (office staff prefer), group text threads (field crews prefer), and phone calls (owner defaults). No single source of record for job-related field communication. This isn't a software cost problem — it's a process problem that software can't fix until you standardize the communication protocol first.
+    </div>
+    <div style="font-size:13px;color:#f1f5f9;line-height:1.7">
+      <strong>Recommendation:</strong> Standardize field comms on a single channel before investing in FSM. The channel doesn't matter as much as consistency. Once an FSM is in place, the field messaging typically consolidates naturally.
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ACTIONS TAB -->
+<div id="tab-actions" class="tab-panel">
+<div class="content">
+  <div class="section-title">Prioritized Action List</div>
+  <div class="section-sub">Ranked by value-to-effort ratio. Items 1–3 can be done this week with no outside help.</div>
+
+  <div class="card">
+    <div class="action-card">
+      <div class="action-num">1</div>
+      <div>
+        <div class="action-title">Cancel Hover subscription</div>
+        <div class="action-desc">Log into Hover account, cancel subscription before next billing cycle. No migration needed — EagleView handles everything Hover does at better accuracy. Confirm EagleView plan covers current measurement volume before cancelling.</div>
+        <div class="action-meta">
+          <span class="meta-pill">⏱ 15 minutes</span>
+          <span class="meta-pill green">💰 $1,788/yr saved</span>
+          <span class="meta-pill">👤 Owner</span>
+          <span class="meta-pill green">Do this week</span>
+        </div>
+      </div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">2</div>
+      <div>
+        <div class="action-title">Cancel Monday.com, move tasks to JobNimbus</div>
+        <div class="action-desc">Export current Monday.com task list (CSV). Recreate open items as tasks in JobNimbus. Train office manager on JobNimbus task view (30 min walkthrough). Cancel Monday.com before next renewal.</div>
+        <div class="action-meta">
+          <span class="meta-pill">⏱ 2 hours</span>
+          <span class="meta-pill green">💰 $576/yr saved</span>
+          <span class="meta-pill">👤 Owner + Office Manager</span>
+          <span class="meta-pill green">Do this week</span>
+        </div>
+      </div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">3</div>
+      <div>
+        <div class="action-title">Replace Google Form with JobNimbus web form</div>
+        <div class="action-desc">Build lead capture form in JobNimbus (15 min setup). Update website embed code. Test lead-to-CRM flow. Eliminates double-entry for all future leads. At 15 leads/week at 20 min re-entry each — this recovers 5 hrs/week of office staff time immediately.</div>
+        <div class="action-meta">
+          <span class="meta-pill">⏱ 1–2 hours</span>
+          <span class="meta-pill green">💰 ~5 hrs/wk staff time recovered</span>
+          <span class="meta-pill">👤 Office Manager</span>
+          <span class="meta-pill green">Do this week</span>
+        </div>
+      </div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">4</div>
+      <div>
+        <div class="action-title">Enforce QBO job cost class tagging</div>
+        <div class="action-desc">Define 3–5 job cost classes in QBO (e.g., Residential Replacement, Commercial, Repairs, Gutters). Update invoice and bill entry SOP to require class tagging. Run 30-day compliance check. This is a process discipline change, not a software change — but it unlocks job-level profitability visibility that currently doesn't exist.</div>
+        <div class="action-meta">
+          <span class="meta-pill">⏱ 1 week to implement + 30 days to normalize</span>
+          <span class="meta-pill yellow">💰 High-value data unlock</span>
+          <span class="meta-pill">👤 Owner + Bookkeeper</span>
+          <span class="meta-pill yellow">Month 1</span>
+        </div>
+      </div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">5</div>
+      <div>
+        <div class="action-title">Activate JobNimbus scheduling and job management</div>
+        <div class="action-desc">Map current scheduling workflow from Google Sheets to JobNimbus job stages. Configure job views for office staff. Train field leads on mobile app. Migrate active jobs from Sheets. This eliminates the scheduling spreadsheet and puts all job data in one system — prerequisite for Make.com automation builds.</div>
+        <div class="action-meta">
+          <span class="meta-pill">⏱ 1–2 weeks</span>
+          <span class="meta-pill green">💰 Prerequisite for automation ROI</span>
+          <span class="meta-pill">👤 Owner + Office Manager</span>
+          <span class="meta-pill yellow">Month 1–2</span>
+        </div>
+      </div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">6</div>
+      <div>
+        <div class="action-title">Evaluate FSM platform (Jobber or ServiceTitan)</div>
+        <div class="action-desc">At $4.2M revenue, the stack is approaching the complexity ceiling where a dedicated FSM consolidates scheduling, dispatch, job costing, invoicing, and field comms into one platform. Demo Jobber first (lower implementation cost, fits $2M–$8M roofing). ServiceTitan is the upgrade path at $8M+. This is a 90-day evaluation, not a this-quarter decision.</div>
+        <div class="action-meta">
+          <span class="meta-pill">⏱ 90-day evaluation</span>
+          <span class="meta-pill yellow">💰 $12K–$24K/yr FSM cost at this size</span>
+          <span class="meta-pill">👤 Owner decision</span>
+          <span class="meta-pill red">Quarter 3–4</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-title">Total Impact of Actions 1–5</div>
+    <div style="display:flex;gap:32px;flex-wrap:wrap;align-items:center">
+      <div><div style="font-size:28px;font-weight:800;color:#10B981">$2,364/yr</div><div style="font-size:12px;color:#64748b">Hard savings (cancelled subscriptions)</div></div>
+      <div><div style="font-size:28px;font-weight:800;color:#10B981">~7 hrs/wk</div><div style="font-size:12px;color:#64748b">Staff time recovered (lead intake + scheduling)</div></div>
+      <div><div style="font-size:28px;font-weight:800;color:#f1f5f9">$497</div><div style="font-size:12px;color:#64748b">Cost of this audit</div></div>
+      <div><div style="font-size:28px;font-weight:800;color:#10B981">&lt;30 days</div><div style="font-size:12px;color:#64748b">To break even on the audit cost</div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- RECOMMENDED STACK TAB -->
+<div id="tab-recommended" class="tab-panel">
+<div class="content">
+  <div class="section-title">Recommended Stack</div>
+  <div class="section-sub">Current vs. target state. No new tools needed in the near term — the work is consolidation and activation, not purchasing.</div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-title">Current State — 9 tools, $11,388/yr</div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">📋</div>
+        <div>
+          <div class="rec-name">JobNimbus</div>
+          <div class="rec-role">CRM / Estimates (partial)</div>
+          <div class="rec-action keep">→ Keep — expand to full job mgmt + scheduling</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">💰</div>
+        <div>
+          <div class="rec-name">QuickBooks Online</div>
+          <div class="rec-role">Accounting / Invoicing / Payroll</div>
+          <div class="rec-action keep">→ Keep — activate job cost class tracking</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">📧</div>
+        <div>
+          <div class="rec-name">Google Workspace</div>
+          <div class="rec-role">Email, Drive, Sheets (scheduling)</div>
+          <div class="rec-action keep">→ Keep — remove scheduling from Sheets</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">📷</div>
+        <div>
+          <div class="rec-name">CompanyCam</div>
+          <div class="rec-role">Photo documentation</div>
+          <div class="rec-action keep">→ Keep — add JobNimbus integration</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">🛰️</div>
+        <div>
+          <div class="rec-name">EagleView</div>
+          <div class="rec-role">Aerial measurement (primary)</div>
+          <div class="rec-action keep">→ Keep as primary measurement tool</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">🛰️</div>
+        <div>
+          <div class="rec-name">Hover</div>
+          <div class="rec-role">Aerial measurement (duplicate)</div>
+          <div class="rec-action replace">→ Cancel — 20% utilization, duplicates EagleView</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">⚡</div>
+        <div>
+          <div class="rec-name">Make.com</div>
+          <div class="rec-role">Automation (1 active scenario)</div>
+          <div class="rec-action keep">→ Keep — major activation needed</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">💬</div>
+        <div>
+          <div class="rec-name">Slack</div>
+          <div class="rec-role">Internal comms (partial adoption)</div>
+          <div class="rec-action replace">→ Evaluate — downgrade or consolidate when FSM adds</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">📌</div>
+        <div>
+          <div class="rec-name">Monday.com</div>
+          <div class="rec-role">Task management (1 user)</div>
+          <div class="rec-action replace">→ Cancel — migrate to JobNimbus tasks</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Target State (90 Days) — 7 tools, ~$8,900/yr</div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">📋</div>
+        <div>
+          <div class="rec-name">JobNimbus</div>
+          <div class="rec-role">CRM + Estimates + Scheduling + Jobs + Tasks + Lead Intake</div>
+          <div class="rec-action keep">→ Full activation of existing subscription</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">💰</div>
+        <div>
+          <div class="rec-name">QuickBooks Online</div>
+          <div class="rec-role">Accounting + Job Cost Tracking</div>
+          <div class="rec-action keep">→ Class tracking enforced, COGS structured for margins</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">📧</div>
+        <div>
+          <div class="rec-name">Google Workspace</div>
+          <div class="rec-role">Email + Drive only (no more Sheets ops use)</div>
+          <div class="rec-action keep">→ Simplified use, no scheduling Sheets</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">📷</div>
+        <div>
+          <div class="rec-name">CompanyCam</div>
+          <div class="rec-role">Photo docs + JobNimbus integration</div>
+          <div class="rec-action keep">→ Job photos auto-linked to JobNimbus record</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">🛰️</div>
+        <div>
+          <div class="rec-name">EagleView</div>
+          <div class="rec-role">Sole aerial measurement tool</div>
+          <div class="rec-action keep">→ Hover cancelled</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">⚡</div>
+        <div>
+          <div class="rec-name">Make.com</div>
+          <div class="rec-role">Automation hub — 5+ active scenarios</div>
+          <div class="rec-action add">→ Phase 1 automations built and running</div>
+        </div>
+      </div>
+      <div class="rec-stack-row">
+        <div class="rec-icon">💬</div>
+        <div>
+          <div class="rec-name">Slack (or downgrade)</div>
+          <div class="rec-role">Internal office comms only</div>
+          <div class="rec-action add">→ Downgrade to free tier or consolidate into FSM when ready</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid #1e293b">
+        <div style="font-size:13px;color:#64748b;margin-bottom:8px">90-day savings:</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <div><div style="font-size:20px;font-weight:800;color:#10B981">$2,364/yr</div><div style="font-size:11px;color:#64748b">Subscription savings</div></div>
+          <div><div style="font-size:20px;font-weight:800;color:#10B981">~7 hrs/wk</div><div style="font-size:11px;color:#64748b">Staff time recovered</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">FSM Decision Framework (6–12 Month Horizon)</div>
+    <div style="font-size:14px;color:#94a3b8;line-height:1.8">
+      At $4.2M revenue with 22 employees, Summit Roofing is at the inflection point where a purpose-built FSM platform starts delivering ROI over a patched stack. The decision isn't urgent — Q3–Q4 is the right window, after Phase 1 consolidation is stable.
+      <br><br>
+      <strong style="color:#f1f5f9">Jobber ($200–$350/mo):</strong> Right fit for $2M–$8M roofing. Handles scheduling, dispatch, invoicing, client management, and field app in one platform. Lower implementation overhead than ServiceTitan. Would replace JobNimbus, Monday.com, and the scheduling spreadsheet entirely.
+      <br><br>
+      <strong style="color:#f1f5f9">ServiceTitan ($400–$800/mo):</strong> More powerful but significantly higher implementation cost and onboarding time (3–6 months). Better fit at $8M+ or when scaling past 40 field employees. Not the right next step at this revenue level.
+      <br><br>
+      <strong style="color:#64748b">Don't make this decision until:</strong> JobNimbus is fully activated and job data is clean in QBO for 90+ days. You need clean data to migrate to an FSM — migrating chaos just moves the problem.
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>

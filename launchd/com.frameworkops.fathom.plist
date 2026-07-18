@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.frameworkops.fathom</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/Skyright/Documents/Framework-OPS/fathom/scheduled_fathom.py</string>
+    </array>
+
+    <!-- Run daily at 7:00 AM local time -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>7</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/Skyright/Documents/Framework-OPS/fathom</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/Skyright/Library/Logs/frameworkops-fathom.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/Skyright/Library/Logs/frameworkops-fathom.log</string>
+
+    <!-- Run even if missed while Mac was asleep -->
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

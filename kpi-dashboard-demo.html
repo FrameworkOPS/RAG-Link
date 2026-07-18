@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPS Dashboard — Summit Roofing & Gutters</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#020817;color:#f1f5f9;font-size:14px}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:#0f172a}::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:240px;background:#0f172a;border-right:1px solid rgba(51,65,85,.5);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-logo{height:72px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid rgba(51,65,85,.5);gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#0891b2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-icon svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:1.75}
+.logo-text{display:flex;flex-direction:column}
+.logo-name{font-size:13px;font-weight:700;color:#f1f5f9;line-height:1.2}
+.logo-sub{font-size:10px;color:#64748b;letter-spacing:.3px}
+nav{flex:1;overflow-y:auto;padding:12px 10px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500;color:#94a3b8;cursor:pointer;transition:all .15s;border:1px solid transparent;user-select:none}
+.nav-item:hover{background:#1e293b;color:#f1f5f9}
+.nav-item.active{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.2)}
+.nav-item svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;flex-shrink:0}
+.sidebar-user{padding:14px 16px;border-top:1px solid rgba(51,65,85,.5)}
+.user-info{display:flex;align-items:center;gap:10px}
+.user-avatar{width:34px;height:34px;background:#2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:13px;font-weight:600;color:#f1f5f9}
+.user-role{font-size:11px;color:#64748b}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.header{height:56px;background:#0f172a;border-bottom:1px solid rgba(51,65,85,.5);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0}
+.header-title{font-size:15px;font-weight:700;color:#f1f5f9}
+.header-actions{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:#2563eb;color:#fff}.btn-primary:hover{background:#1d4ed8}
+.btn-secondary{background:#1e293b;color:#f1f5f9;border:1px solid rgba(51,65,85,.6)}.btn-secondary:hover{background:#334155}
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+
+/* Stat cards */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.stat-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px 18px}
+.stat-label{font-size:11px;font-weight:500;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.stat-value{font-size:26px;font-weight:800;line-height:1;margin-bottom:4px}
+.stat-sub{font-size:11px;color:#475569}
+.stat-icon{float:right;opacity:.6}
+.stat-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75}
+.c-blue{color:#60a5fa}.c-green{color:#34d399}.c-yellow{color:#fbbf24}.c-red{color:#f87171}.c-purple{color:#c084fc}.c-cyan{color:#22d3ee}
+
+/* Cards */
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;margin-bottom:18px}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(51,65,85,.6)}
+.card-title{font-size:13px;font-weight:700;color:#f1f5f9}
+.card-link{font-size:11px;color:#60a5fa;cursor:pointer;text-decoration:none}.card-link:hover{color:#93c5fd}
+.card-body{padding:0}
+
+/* QBO tile */
+.qbo-tile{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px 18px;margin-bottom:18px}
+.qbo-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.qbo-icon{width:28px;height:28px;background:rgba(34,197,94,.15);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.qbo-icon svg{width:15px;height:15px;fill:none;stroke:#4ade80;stroke-width:2}
+.qbo-title{font-size:13px;font-weight:700;color:#f1f5f9}
+.qbo-sub{font-size:10px;color:#64748b}
+.qbo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.qbo-item label{font-size:10px;color:#64748b;display:block;margin-bottom:2px}
+.qbo-item span{font-size:17px;font-weight:800}
+
+/* Two-col */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+/* Table rows */
+.row-item{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid rgba(51,65,85,.3)}
+.row-item:last-child{border-bottom:none}
+.row-text{flex:1;font-size:12px;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-sub{font-size:11px;color:#64748b;flex-shrink:0}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;flex-shrink:0}
+.badge-green{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.25)}
+.badge-red{background:rgba(248,113,113,.15);color:#f87171;border:1px solid rgba(248,113,113,.25)}
+.badge-yellow{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.25)}
+.badge-blue{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.25)}
+.badge-slate{background:rgba(100,116,139,.2);color:#94a3b8;border:1px solid rgba(100,116,139,.3)}
+
+/* Scorecard */
+.sc-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.team-filter{display:flex;gap:6px}
+.tf-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #334155;background:#1e293b;color:#94a3b8;transition:all .15s}
+.tf-btn.active{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.3)}
+.legend{display:flex;gap:14px;font-size:11px;color:#64748b}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.sc-table-wrap{background:#1e293b;border:1px solid #334155;border-radius:12px;overflow-x:auto}
+.sc-table{width:100%;border-collapse:collapse;font-size:11px}
+.sc-table th{padding:9px 10px;text-align:center;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#64748b;border-bottom:1px solid #334155;white-space:nowrap}
+.sc-table th:first-child{text-align:left;min-width:160px;position:sticky;left:0;background:#1e293b;z-index:2}
+.sc-table th:nth-child(2){min-width:70px}
+.sc-table th.cur{color:#60a5fa;background:rgba(59,130,246,.06);border-left:1px solid rgba(59,130,246,.25);border-right:1px solid rgba(59,130,246,.25)}
+.sc-table td{padding:9px 10px;text-align:center;border-bottom:1px solid rgba(51,65,85,.3);white-space:nowrap;cursor:pointer}
+.sc-table tr:last-child td{border-bottom:none}
+.sc-table tr:hover td{background:rgba(30,41,59,.6)}
+.sc-table td:first-child{text-align:left;position:sticky;left:0;background:#1e293b;z-index:1}
+.sc-table tr:hover td:first-child{background:#1a2740}
+.sc-table td.cur{background:rgba(59,130,246,.05);border-left:1px solid rgba(59,130,246,.15);border-right:1px solid rgba(59,130,246,.15)}
+.sc-table td.on{color:#4ade80;font-weight:700}
+.sc-table td.off{color:#f87171;font-weight:700}
+.sc-table td.no{color:#475569}
+.metric-name{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#f1f5f9}
+.metric-team{font-size:10px;color:#475569;font-weight:400}
+
+/* Rocks kanban */
+.rocks-filters{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.rocks-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.col-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b}
+.col-count{font-size:10px;font-weight:700;background:#334155;color:#94a3b8;border-radius:20px;padding:1px 8px}
+.rock-card{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px;margin-bottom:10px;border-left-width:3px}
+.rock-card.bc-slate{border-left-color:#475569}
+.rock-card.bc-green{border-left-color:rgba(34,197,94,.5)}
+.rock-card.bc-yellow{border-left-color:rgba(251,191,36,.5)}
+.rock-card.bc-blue{border-left-color:rgba(96,165,250,.5)}
+.rock-title{font-size:12px;font-weight:600;color:#f1f5f9;margin-bottom:8px;line-height:1.4}
+.rock-meta{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#64748b;margin-bottom:8px}
+.rock-progress{margin-top:8px}
+.rock-prog-label{display:flex;justify-content:space-between;font-size:10px;color:#64748b;margin-bottom:4px}
+.prog-bar{height:4px;background:#334155;border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;transition:width .3s}
+.prog-fill.green{background:#22c55e}
+.prog-fill.yellow{background:#eab308}
+.prog-fill.blue{background:#3b82f6}
+.prog-fill.slate{background:#475569}
+.empty-col{text-align:center;padding:28px 10px;font-size:11px;color:#475569;background:rgba(30,41,59,.4);border:1px dashed #334155;border-radius:10px}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:#1e293b;border:1px solid #334155;border-radius:16px;width:100%;max-width:680px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 25px 60px rgba(0,0,0,.6)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #334155;flex-shrink:0}
+.modal-title{font-size:14px;font-weight:700;color:#f1f5f9}
+.modal-sub{font-size:11px;color:#64748b;margin-top:2px}
+.modal-close{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;color:#64748b;background:transparent;border:none;transition:all .15s}
+.modal-close:hover{background:#334155;color:#f1f5f9}
+.modal-body{padding:20px;overflow-y:auto}
+.chart-wrap{background:rgba(15,23,42,.5);border-radius:10px;padding:16px;margin-bottom:16px}
+.history-table{width:100%;border-collapse:collapse}
+.history-table th{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;padding:6px 12px;text-align:left;border-bottom:1px solid #334155}
+.history-table td{padding:8px 12px;font-size:12px;border-bottom:1px solid rgba(51,65,85,.3);color:#f1f5f9}
+.history-table tr:last-child td{border-bottom:none}
+
+/* Placeholder views */
+.placeholder-view{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60%;color:#475569;gap:10px}
+.placeholder-view svg{width:40px;height:40px;opacity:.3}
+.placeholder-view p{font-size:13px}
+
+/* Demo banner */
+.demo-banner{background:rgba(59,130,246,.1);border-bottom:1px solid rgba(59,130,246,.2);padding:5px 24px;font-size:11px;color:#93c5fd;display:flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="logo-text">
+      <span class="logo-name">Summit Roofing</span>
+      <span class="logo-sub">OPS Dashboard</span>
+    </div>
+  </div>
+
+  <nav>
+    <div class="nav-item active" onclick="showView('dashboard')">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" onclick="showView('scorecard')">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      Scorecard
+    </div>
+    <div class="nav-item" onclick="showView('rocks')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="1.75"/><circle cx="12" cy="12" r="4" stroke-width="1.75"/><line x1="12" y1="3" x2="12" y2="8" stroke-linecap="round"/><line x1="12" y1="16" x2="12" y2="21" stroke-linecap="round"/><line x1="3" y1="12" x2="8" y2="12" stroke-linecap="round"/><line x1="16" y1="12" x2="21" y2="12" stroke-linecap="round"/></svg>
+      Rocks
+    </div>
+    <div class="nav-item" onclick="showView('issues')">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+      Issues
+    </div>
+    <div class="nav-item" onclick="showView('todos')">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      To-Dos
+    </div>
+    <div class="nav-item" onclick="showView('vto')">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      V/TO
+    </div>
+    <div class="nav-item" onclick="showView('acct')">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      Accountability
+    </div>
+    <div class="nav-item" onclick="showView('meetings')">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      Meetings
+    </div>
+  </nav>
+
+  <div class="sidebar-user">
+    <div class="user-info">
+      <div class="user-avatar">DP</div>
+      <div>
+        <div class="user-name">Dan Patterson</div>
+        <div class="user-role">Leadership</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main content -->
+<div class="main">
+  <div class="demo-banner">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+    Demo environment — populated with sample roofing company data
+  </div>
+  <div class="header">
+    <div class="header-title" id="header-title">Dashboard</div>
+    <div class="header-actions" id="header-actions"></div>
+  </div>
+
+  <div class="content" id="main-content"></div>
+</div>
+
+</div>
+
+<!-- Metric modal -->
+<div class="modal-overlay" id="metric-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-sub" id="modal-sub"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="chart-wrap"><canvas id="metric-chart" height="180"></canvas></div>
+      <table class="history-table" id="modal-history"></table>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Data ─────────────────────────────────────────────────────────────────────
+
+const WEEKS = (() => {
+  const weeks = []
+  const today = new Date('2026-05-11')
+  for (let i = 12; i >= 0; i--) {
+    const d = new Date(today)
+    d.setDate(d.getDate() - i * 7)
+    // normalize to Monday
+    const day = d.getDay()
+    const diff = day === 0 ? -6 : 1 - day
+    d.setDate(d.getDate() + diff)
+    weeks.push(d.toISOString().split('T')[0])
+  }
+  return weeks
+})()
+
+const CURRENT_WEEK = WEEKS[WEEKS.length - 1]
+
+function shortDate(iso) {
+  const [,m,d] = iso.split('-')
+  return `${parseInt(m)}/${parseInt(d)}`
+}
+
+function fmt$(n) { return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n) }
+function fmtPct(n) { return (n*100).toFixed(1)+'%' }
+function fmtNum(n) { return Number.isInteger(n) ? String(n) : n.toFixed(1) }
+
+function fmtVal(v, fmt) {
+  if (v === null || v === undefined) return '—'
+  if (fmt === 'currency') return fmt$(v)
+  if (fmt === 'percent') return fmtPct(v)
+  return fmtNum(v)
+}
+
+// Scorecard metrics with 13 weeks of data
+const METRICS = [
+  {
+    name: 'Weekly Revenue', team: 'leadership', fmt: 'currency', goal: 165000, lower: false,
+    actuals: [142000,158000,171000,148000,163000,178000,152000,167000,182000,159000,174000,168000,172000]
+  },
+  {
+    name: 'Gross Margin %', team: 'leadership', fmt: 'percent', goal: 0.42, lower: false,
+    actuals: [0.39,0.41,0.43,0.38,0.42,0.44,0.40,0.42,0.45,0.41,0.43,0.41,0.42]
+  },
+  {
+    name: 'Net Margin %', team: 'leadership', fmt: 'percent', goal: 0.08, lower: false,
+    actuals: [0.06,0.07,0.09,0.05,0.08,0.10,0.07,0.08,0.09,0.07,0.09,0.07,0.08]
+  },
+  {
+    name: 'AR > 30 Days', team: 'leadership', fmt: 'currency', goal: 45000, lower: true,
+    actuals: [52000,49000,47000,55000,48000,43000,51000,46000,42000,50000,44000,48000,46000]
+  },
+  {
+    name: 'Cash on Hand', team: 'leadership', fmt: 'currency', goal: 250000, lower: false,
+    actuals: [218000,225000,241000,232000,258000,267000,249000,261000,278000,254000,269000,263000,271000]
+  },
+  {
+    name: 'Leads (Week)', team: 'sales', fmt: 'number', goal: 25, lower: false,
+    actuals: [21,24,27,19,26,28,22,25,29,23,27,24,26]
+  },
+  {
+    name: 'Close Rate', team: 'sales', fmt: 'percent', goal: 0.38, lower: false,
+    actuals: [0.34,0.36,0.39,0.31,0.37,0.41,0.35,0.38,0.42,0.36,0.40,0.37,0.39]
+  },
+  {
+    name: 'Avg Job Size', team: 'sales', fmt: 'currency', goal: 12500, lower: false,
+    actuals: [11200,11800,12900,10800,12400,13200,11600,12500,13600,12100,13000,12300,12700]
+  },
+  {
+    name: 'Revenue Sold', team: 'sales', fmt: 'currency', goal: 175000, lower: false,
+    actuals: [148000,162000,179000,141000,171000,188000,155000,172000,193000,163000,181000,170000,178000]
+  },
+  {
+    name: 'Jobs Completed', team: 'production', fmt: 'number', goal: 14, lower: false,
+    actuals: [11,13,15,10,14,16,12,14,17,13,15,14,14]
+  },
+  {
+    name: 'Callbacks', team: 'production', fmt: 'number', goal: 2, lower: true,
+    actuals: [3,2,1,4,2,1,3,2,1,2,1,2,2]
+  },
+  {
+    name: 'Days to Install', team: 'production', fmt: 'number', goal: 5, lower: true,
+    actuals: [6,5,4,7,5,4,6,5,4,5,4,5,5]
+  },
+  {
+    name: 'Install Efficiency', team: 'production', fmt: 'percent', goal: 0.85, lower: false,
+    actuals: [0.79,0.82,0.87,0.76,0.84,0.89,0.81,0.85,0.91,0.83,0.88,0.85,0.86]
+  }
+]
+
+// Build data record per metric
+METRICS.forEach(m => {
+  m.data = {}
+  WEEKS.forEach((w, i) => {
+    const actual = m.actuals[i]
+    let on_track = null
+    if (actual !== null) {
+      on_track = m.lower ? actual <= m.goal : actual >= m.goal
+    }
+    m.data[w] = { actual, on_track }
+  })
+})
+
+const ROCKS = [
+  { title: 'Build estimating SOP + training guide', team: 'sales', owner: 'Jake M.', status: 'not_started', pct: 0, due: 'Jun 30' },
+  { title: 'Hire second install crew (posting live)', team: 'production', owner: 'Carlos R.', status: 'not_started', pct: 10, due: 'Jun 30' },
+  { title: 'Implement job costing in ServiceTitan', team: 'leadership', owner: 'Sarah T.', status: 'on_track', pct: 65, due: 'Jun 30' },
+  { title: 'Launch referral + review request program', team: 'sales', owner: 'Jake M.', status: 'on_track', pct: 55, due: 'Jun 30' },
+  { title: 'PM certification for 2 foremen', team: 'production', owner: 'Carlos R.', status: 'on_track', pct: 80, due: 'Jun 30' },
+  { title: 'Close $2.1M in Q2 revenue', team: 'leadership', owner: 'Dan P.', status: 'off_track', pct: 38, due: 'Jun 30' },
+  { title: 'Reduce callbacks to <2/week avg', team: 'production', owner: 'Carlos R.', status: 'off_track', pct: 45, due: 'Jun 30' },
+  { title: 'Set up weekly ops reporting automation', team: 'leadership', owner: 'Sarah T.', status: 'done', pct: 100, due: 'Apr 30' },
+  { title: 'Onboard 3 new crew members', team: 'production', owner: 'Carlos R.', status: 'done', pct: 100, due: 'Apr 15' },
+  { title: 'Rebuild estimate-to-close workflow', team: 'sales', owner: 'Jake M.', status: 'done', pct: 100, due: 'Apr 30' },
+]
+
+const ISSUES = [
+  { title: 'ServiceTitan not syncing with QBO — 3 days behind', priority: 'high', status: 'open' },
+  { title: '3 insurance supplements pending, unworked 14+ days', priority: 'high', status: 'open' },
+  { title: 'Material costs up 12% — pricing sheet not updated', priority: 'medium', status: 'open' },
+  { title: 'Estimator double-booking site visits on Tuesdays', priority: 'medium', status: 'in_progress' },
+  { title: 'Crew truck #3 needs alignment — pulling right on highway', priority: 'low', status: 'open' },
+]
+
+const TODOS = [
+  { title: 'Send revised pricing to 4 pending estimates', owner: 'Jake M.', due: 'Mon 5/11', overdue: true },
+  { title: 'Follow up Hartley claim w/ adjuster', owner: 'Dan P.', due: 'Tue 5/12', overdue: false },
+  { title: 'QBO reconciliation — April close', owner: 'Sarah T.', due: 'Wed 5/13', overdue: false },
+  { title: 'Schedule Q2 all-hands review', owner: 'Dan P.', due: 'Thu 5/14', overdue: false },
+  { title: 'Pull weekly P&L for owner review', owner: 'Sarah T.', due: 'Fri 5/15', overdue: false },
+  { title: 'Review 3 new hire applications', owner: 'Carlos R.', due: 'Fri 5/15', overdue: false },
+  { title: 'Order material for Brennan job start Mon 5/18', owner: 'Carlos R.', due: 'Fri 5/15', overdue: false },
+]
+
+// ── Views ────────────────────────────────────────────────────────────────────
+
+let currentTeam = 'all'
+let activeChart = null
+
+function showView(view) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'))
+  const idx = ['dashboard','scorecard','rocks','issues','todos','vto','acct','meetings'].indexOf(view)
+  document.querySelectorAll('.nav-item')[idx]?.classList.add('active')
+
+  const titles = {dashboard:'Dashboard',scorecard:'Scorecard',rocks:'Rocks',issues:'Issues',todos:'To-Dos',vto:'V/TO',acct:'Accountability',meetings:'Meetings'}
+  document.getElementById('header-title').textContent = titles[view] || view
+  document.getElementById('header-actions').innerHTML = ''
+
+  const c = document.getElementById('main-content')
+  if (view === 'dashboard') renderDashboard(c)
+  else if (view === 'scorecard') renderScorecard(c)
+  else if (view === 'rocks') renderRocks(c)
+  else if (view === 'issues') renderIssues(c)
+  else if (view === 'todos') renderTodos(c)
+  else renderPlaceholder(c, view, titles[view])
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+
+function renderDashboard(c) {
+  const openRocks = ROCKS.filter(r => r.status !== 'done').length
+  const openIssues = ISSUES.filter(i => i.status === 'open').length
+  const dueTodos = TODOS.length
+
+  c.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-icon c-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div>
+        <div class="stat-label">Open Rocks</div>
+        <div class="stat-value c-blue">${openRocks}</div>
+        <div class="stat-sub">Q2 2026 · 3 off track</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon c-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
+        <div class="stat-label">Open Issues</div>
+        <div class="stat-value c-red">${openIssues}</div>
+        <div class="stat-sub">currently open</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon c-yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <div class="stat-label">To-Dos This Week</div>
+        <div class="stat-value c-yellow">${dueTodos}</div>
+        <div class="stat-sub">1 overdue</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon c-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+        <div class="stat-label">Next Meeting</div>
+        <div class="stat-value c-green" style="font-size:18px;padding-top:4px">Tue 5/12</div>
+        <div class="stat-sub">Leadership L10</div>
+      </div>
+    </div>
+
+    <div class="qbo-tile">
+      <div class="qbo-header">
+        <div class="qbo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <div>
+          <div class="qbo-title">QuickBooks — YTD 2026</div>
+          <div class="qbo-sub">Jan 1 – May 11</div>
+        </div>
+      </div>
+      <div class="qbo-grid">
+        <div class="qbo-item"><label>YTD Revenue</label><span class="c-green">$2,847,000</span></div>
+        <div class="qbo-item"><label>Gross Profit</label><span class="c-green">$1,186,000</span></div>
+        <div class="qbo-item"><label>Net Income</label><span class="c-green">$221,000</span></div>
+        <div class="qbo-item"><label>AR Balance</label><span style="color:#f1f5f9">$312,000</span></div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Issues</div>
+          <a class="card-link" onclick="showView('issues')">View all</a>
+        </div>
+        <div class="card-body">
+          ${ISSUES.slice(0,5).map(i => `
+            <div class="row-item">
+              <span class="badge badge-${i.priority === 'high' ? 'red' : i.priority === 'medium' ? 'yellow' : 'slate'}">${i.priority}</span>
+              <span class="row-text">${i.title}</span>
+              <span class="badge badge-${i.status === 'open' ? 'red' : i.status === 'in_progress' ? 'blue' : 'green'}">${i.status.replace('_',' ')}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">This Week's To-Dos</div>
+          <a class="card-link" onclick="showView('todos')">View all</a>
+        </div>
+        <div class="card-body">
+          ${TODOS.map(t => `
+            <div class="row-item">
+              <div style="width:14px;height:14px;border-radius:4px;border:1px solid #475569;flex-shrink:0"></div>
+              <span class="row-text" style="${t.overdue ? 'color:#f87171' : ''}">${t.title}</span>
+              <span class="row-sub" style="${t.overdue ? 'color:#f87171' : ''}">${t.due}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `
+}
+
+// ── Scorecard ─────────────────────────────────────────────────────────────────
+
+function renderScorecard(c) {
+  document.getElementById('header-actions').innerHTML = `<button class="btn btn-secondary" onclick="alert('Week creation requires live database')">New Week</button><button class="btn btn-primary" onclick="alert('Entry creation requires live database')">+ Add Entry</button>`
+
+  const filtered = currentTeam === 'all' ? METRICS : METRICS.filter(m => m.team === currentTeam)
+
+  c.innerHTML = `
+    <div class="sc-controls">
+      <div class="team-filter">
+        <div class="tf-btn ${currentTeam==='all'?'active':''}" onclick="setTeam('all')">All Teams</div>
+        <div class="tf-btn ${currentTeam==='leadership'?'active':''}" onclick="setTeam('leadership')">Leadership</div>
+        <div class="tf-btn ${currentTeam==='sales'?'active':''}" onclick="setTeam('sales')">Sales</div>
+        <div class="tf-btn ${currentTeam==='production'?'active':''}" onclick="setTeam('production')">Production</div>
+      </div>
+      <div class="legend">
+        <span><span class="dot" style="background:#4ade80"></span>On Track</span>
+        <span><span class="dot" style="background:#f87171"></span>Off Track</span>
+        <span><span class="dot" style="background:#475569"></span>No Data</span>
+        <span style="font-size:10px;color:#334155">Click any row for 13-week trend</span>
+      </div>
+    </div>
+    <div class="sc-table-wrap">
+      <table class="sc-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Goal</th>
+            ${WEEKS.map(w => `<th class="${w===CURRENT_WEEK?'cur':''}">${w===CURRENT_WEEK?`<div style="display:flex;flex-direction:column;align-items:center"><span>${shortDate(w)}</span><span style="font-size:9px;color:#3b82f6;font-weight:400">this wk</span></div>`:shortDate(w)}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${filtered.map(m => `
+            <tr onclick="openMetricModal('${m.name}')">
+              <td>
+                <div class="metric-name">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                  ${m.name}
+                  <span class="metric-team">${currentTeam==='all'?m.team:''}</span>
+                </div>
+              </td>
+              <td style="text-align:right;color:#64748b;font-size:11px">${fmtVal(m.goal, m.fmt)}</td>
+              ${WEEKS.map(w => {
+                const e = m.data[w]
+                const isCur = w === CURRENT_WEEK
+                const cls = e.actual === null ? 'no' : e.on_track ? 'on' : 'off'
+                return `<td class="${cls}${isCur?' cur':''}">${e.actual !== null ? fmtVal(e.actual, m.fmt) : '<span style="color:#334155">—</span>'}</td>`
+              }).join('')}
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `
+}
+
+function setTeam(t) {
+  currentTeam = t
+  const c = document.getElementById('main-content')
+  renderScorecard(c)
+}
+
+// ── Rocks ─────────────────────────────────────────────────────────────────────
+
+function renderRocks(c) {
+  document.getElementById('header-actions').innerHTML = `<button class="btn btn-primary" onclick="alert('Rock creation requires live database')">+ Add Rock</button>`
+
+  const columns = [
+    { key: 'not_started', label: 'Not Started', bc: 'bc-slate' },
+    { key: 'on_track', label: 'On Track', bc: 'bc-green' },
+    { key: 'off_track', label: 'Off Track', bc: 'bc-yellow' },
+    { key: 'done', label: 'Done', bc: 'bc-blue' },
+  ]
+
+  const progClass = { on_track: 'green', off_track: 'yellow', done: 'blue', not_started: 'slate' }
+
+  c.innerHTML = `
+    <div class="rocks-filters">
+      <div class="team-filter">
+        <div class="tf-btn active" onclick="">All Teams</div>
+        <div class="tf-btn" onclick="">Leadership</div>
+        <div class="tf-btn" onclick="">Sales</div>
+        <div class="tf-btn" onclick="">Production</div>
+      </div>
+      <select style="background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:11px;padding:5px 10px;border-radius:8px">
+        <option>Q2 2026</option>
+        <option>Q1 2026</option>
+      </select>
+    </div>
+    <div class="rocks-grid">
+      ${columns.map(col => {
+        const cards = ROCKS.filter(r => r.status === col.key)
+        return `
+          <div>
+            <div class="col-header">
+              <span class="col-label">${col.label}</span>
+              <span class="col-count">${cards.length}</span>
+            </div>
+            ${cards.length === 0 ? '<div class="empty-col">No rocks</div>' : ''}
+            ${cards.map(r => `
+              <div class="rock-card ${col.bc}">
+                <div class="rock-title">${r.title}</div>
+                <div class="rock-meta">
+                  <span>${r.owner}</span>
+                  <span>${r.due}</span>
+                </div>
+                <span class="badge badge-${col.key==='on_track'?'green':col.key==='off_track'?'yellow':col.key==='done'?'blue':'slate'}" style="font-size:9px">${col.label}</span>
+                <div class="rock-progress">
+                  <div class="rock-prog-label"><span>Progress</span><span>${r.pct}%</span></div>
+                  <div class="prog-bar"><div class="prog-fill ${progClass[r.status]}" style="width:${r.pct}%"></div></div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `
+      }).join('')}
+    </div>
+  `
+}
+
+// ── Issues ────────────────────────────────────────────────────────────────────
+
+function renderIssues(c) {
+  document.getElementById('header-actions').innerHTML = `<button class="btn btn-primary" onclick="alert('Issue creation requires live database')">+ Add Issue</button>`
+  c.innerHTML = `
+    <div class="card">
+      <div class="card-header"><div class="card-title">All Issues</div><span style="font-size:11px;color:#64748b">${ISSUES.length} total</span></div>
+      <div class="card-body">
+        ${ISSUES.map(i => `
+          <div class="row-item" style="padding:12px 18px">
+            <span class="badge badge-${i.priority === 'high' ? 'red' : i.priority === 'medium' ? 'yellow' : 'slate'}" style="min-width:50px;justify-content:center">${i.priority}</span>
+            <span class="row-text" style="font-size:13px">${i.title}</span>
+            <span class="badge badge-${i.status === 'open' ? 'red' : i.status === 'in_progress' ? 'blue' : 'green'}">${i.status.replace('_',' ')}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `
+}
+
+// ── Todos ─────────────────────────────────────────────────────────────────────
+
+function renderTodos(c) {
+  document.getElementById('header-actions').innerHTML = `<button class="btn btn-primary" onclick="alert('To-do creation requires live database')">+ Add To-Do</button>`
+  c.innerHTML = `
+    <div class="card">
+      <div class="card-header"><div class="card-title">This Week's To-Dos</div><span style="font-size:11px;color:#64748b">${TODOS.length} items</span></div>
+      <div class="card-body">
+        ${TODOS.map(t => `
+          <div class="row-item" style="padding:12px 18px">
+            <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid ${t.overdue?'#f87171':'#475569'};flex-shrink:0"></div>
+            <span class="row-text" style="font-size:13px;${t.overdue?'color:#f87171':''}">${t.title}</span>
+            <span style="font-size:11px;color:#64748b;flex-shrink:0;margin-right:10px">${t.owner}</span>
+            <span class="badge badge-${t.overdue?'red':'slate'}" style="min-width:64px;justify-content:center">${t.due}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `
+}
+
+// ── Placeholder ───────────────────────────────────────────────────────────────
+
+function renderPlaceholder(c, key, label) {
+  c.innerHTML = `
+    <div class="placeholder-view">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path stroke-linecap="round" d="M8 12h8M8 8h8M8 16h5"/></svg>
+      <p>${label} view available in live environment</p>
+    </div>
+  `
+}
+
+// ── Metric Modal ──────────────────────────────────────────────────────────────
+
+function openMetricModal(name) {
+  const m = METRICS.find(x => x.name === name)
+  if (!m) return
+
+  document.getElementById('modal-title').textContent = m.name
+  document.getElementById('modal-sub').textContent = `Goal: ${fmtVal(m.goal, m.fmt)} · 13-week trend · ${m.team}`
+
+  // Chart
+  if (activeChart) { activeChart.destroy(); activeChart = null }
+  const ctx = document.getElementById('metric-chart').getContext('2d')
+  const labels = WEEKS.map(shortDate)
+  const actuals = WEEKS.map(w => m.data[w].actual)
+  const onTracks = WEEKS.map(w => m.data[w].on_track)
+  const isArea = m.fmt === 'percent' || m.name.toLowerCase().includes('ytd') || m.name.toLowerCase().includes('cash')
+
+  if (isArea) {
+    activeChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          data: actuals,
+          borderColor: '#22d3ee',
+          backgroundColor: 'rgba(34,211,238,.12)',
+          pointBackgroundColor: onTracks.map(t => t === null ? '#64748b' : t ? '#22c55e' : '#ef4444'),
+          pointBorderColor: '#0f172a',
+          pointBorderWidth: 1.5,
+          pointRadius: 5,
+          fill: true,
+          tension: 0.3,
+          spanGaps: false
+        },{
+          data: Array(WEEKS.length).fill(m.goal),
+          borderColor: 'rgba(59,130,246,.5)',
+          borderDash: [4,4],
+          pointRadius: 0,
+          fill: false
+        }]
+      },
+      options: chartOpts(m.fmt)
+    })
+  } else {
+    activeChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          data: actuals,
+          backgroundColor: onTracks.map((t,i) => {
+            const isCur = WEEKS[i] === CURRENT_WEEK
+            const alpha = isCur ? 1 : 0.7
+            if (t === null) return `rgba(71,85,105,${alpha})`
+            return t ? `rgba(34,197,94,${alpha})` : `rgba(239,68,68,${alpha})`
+          }),
+          borderRadius: 3,
+          maxBarThickness: 32
+        },{
+          data: Array(WEEKS.length).fill(m.goal),
+          type: 'line',
+          borderColor: 'rgba(59,130,246,.6)',
+          borderDash: [4,4],
+          pointRadius: 0,
+          fill: false
+        }]
+      },
+      options: chartOpts(m.fmt)
+    })
+  }
+
+  // History table
+  const rows = [...WEEKS].reverse().map(w => {
+    const e = m.data[w]
+    const dotColor = e.on_track === null ? '#64748b' : e.on_track ? '#4ade80' : '#f87171'
+    return `<tr>
+      <td style="display:flex;align-items:center;gap:8px">
+        <span style="width:7px;height:7px;border-radius:50%;background:${dotColor};display:inline-block;flex-shrink:0"></span>
+        ${new Date(w+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+      </td>
+      <td style="text-align:right;font-weight:700;color:${e.on_track===null?'#94a3b8':e.on_track?'#4ade80':'#f87171'}">${e.actual !== null ? fmtVal(e.actual, m.fmt) : '—'}</td>
+      <td style="text-align:right;color:#64748b">${fmtVal(m.goal, m.fmt)}</td>
+    </tr>`
+  }).join('')
+  document.getElementById('modal-history').innerHTML = `
+    <thead><tr>
+      <th>Week</th><th style="text-align:right">Actual</th><th style="text-align:right">Goal</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  `
+
+  document.getElementById('metric-modal').classList.add('open')
+}
+
+function chartOpts(fmt) {
+  const tickFmt = v => {
+    if (fmt === 'currency') return v >= 1000 ? `$${(v/1000).toFixed(0)}k` : `$${v}`
+    if (fmt === 'percent') return (v*100).toFixed(0)+'%'
+    return v
+  }
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      backgroundColor: '#0f172a',
+      borderColor: '#334155',
+      borderWidth: 1,
+      titleColor: '#94a3b8',
+      bodyColor: '#f1f5f9',
+      callbacks: {
+        label: ctx => fmtVal(ctx.raw, fmt)
+      }
+    }},
+    scales: {
+      x: { grid: { color: '#1e293b' }, ticks: { color: '#64748b', font: { size: 10 } } },
+      y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b', font: { size: 10 }, callback: tickFmt } }
+    }
+  }
+}
+
+function closeModal() {
+  document.getElementById('metric-modal').classList.remove('open')
+  if (activeChart) { activeChart.destroy(); activeChart = null }
+}
+
+document.getElementById('metric-modal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal()
+})
+
+// Boot
+showView('dashboard')
+</script>
+</body>
+</html>

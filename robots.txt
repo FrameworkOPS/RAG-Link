@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /eula.html
+Disallow: /privacy.html

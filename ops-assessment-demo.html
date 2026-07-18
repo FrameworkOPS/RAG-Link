@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPS Assessment — Example Deliverable | Framework OPS</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#090d17;color:#f1f5f9;font-size:14px;line-height:1.6}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#0f1623}::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:3px}
+.wrap{max-width:900px;margin:0 auto;padding:32px 24px 80px}
+
+/* Header */
+.doc-header{background:linear-gradient(135deg,#0f1e36 0%,#0a1628 100%);border:1px solid #1e3a5f;border-radius:16px;padding:36px 40px;margin-bottom:28px;position:relative;overflow:hidden}
+.doc-header::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(16,185,129,.12) 0%,transparent 70%);pointer-events:none}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-dot{width:10px;height:10px;background:#10B981;border-radius:50%;box-shadow:0 0 8px rgba(16,185,129,.6)}
+.brand-name{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#10B981;letter-spacing:.08em;text-transform:uppercase}
+.doc-badge{font-family:'JetBrains Mono',monospace;font-size:10px;background:rgba(16,185,129,.12);color:#10B981;border:1px solid rgba(16,185,129,.25);padding:4px 10px;border-radius:4px;letter-spacing:.06em}
+.doc-title{font-size:28px;font-weight:800;color:#f1f5f9;letter-spacing:-.02em;margin-bottom:6px}
+.doc-sub{font-size:14px;color:#64748b;margin-bottom:20px}
+.meta-row{display:flex;gap:24px;flex-wrap:wrap}
+.meta-item{display:flex;flex-direction:column;gap:2px}
+.meta-label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#475569;font-family:'JetBrains Mono',monospace}
+.meta-value{font-size:13px;font-weight:600;color:#94a3b8}
+
+/* Nav tabs */
+.nav-tabs{display:flex;gap:6px;margin-bottom:24px;overflow-x:auto;padding-bottom:2px}
+.tab{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #1e3a5f;background:#0f1623;color:#64748b;white-space:nowrap;transition:all .15s;user-select:none}
+.tab.active{background:rgba(16,185,129,.12);color:#10B981;border-color:rgba(16,185,129,.3)}
+.tab:hover:not(.active){background:#1e293b;color:#94a3b8}
+
+/* Sections */
+.section{display:none}.section.active{display:block}
+
+/* Score summary */
+.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.score-card{background:#0f1623;border:1px solid #1e3a5f;border-radius:12px;padding:16px;text-align:center}
+.score-label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#475569;margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+.score-ring{width:64px;height:64px;margin:0 auto 8px;position:relative}
+.score-ring svg{transform:rotate(-90deg)}
+.score-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800}
+.score-grade{font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace}
+
+/* Problem matrix */
+.matrix{width:100%;border-collapse:collapse;margin-bottom:24px}
+.matrix th{padding:9px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#475569;border-bottom:1px solid #1e3a5f;background:#0f1623;font-family:'JetBrains Mono',monospace}
+.matrix td{padding:11px 14px;font-size:12px;border-bottom:1px solid rgba(30,58,95,.4);vertical-align:top}
+.matrix tr:last-child td{border-bottom:none}
+.matrix tr:hover td{background:rgba(16,185,129,.03)}
+.sev{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+.sev-critical{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+.sev-high{background:rgba(251,146,60,.15);color:#fb923c;border:1px solid rgba(251,146,60,.25)}
+.sev-med{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.25)}
+.sev-low{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.25)}
+.cost-tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#f87171}
+
+/* Quick wins */
+.qw-list{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.qw-item{background:#0f1623;border:1px solid #1e3a5f;border-radius:10px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+.qw-num{width:28px;height:28px;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#10B981;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.qw-body{flex:1}
+.qw-title{font-size:13px;font-weight:700;color:#f1f5f9;margin-bottom:4px}
+.qw-desc{font-size:12px;color:#64748b;margin-bottom:8px}
+.qw-meta{display:flex;gap:10px;flex-wrap:wrap}
+.qw-tag{font-size:10px;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:600}
+.tag-effort{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
+.tag-impact{background:rgba(16,185,129,.1);color:#10B981;border:1px solid rgba(16,185,129,.2)}
+.tag-owner{background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2)}
+
+/* Roadmap */
+.roadmap{display:flex;flex-direction:column;gap:16px}
+.phase{background:#0f1623;border:1px solid #1e3a5f;border-radius:12px;overflow:hidden}
+.phase-header{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(16,185,129,.05);border-bottom:1px solid #1e3a5f}
+.phase-num{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;color:#10B981;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);padding:3px 8px;border-radius:4px}
+.phase-title{font-size:13px;font-weight:700;color:#f1f5f9}
+.phase-window{font-size:11px;color:#64748b;margin-left:auto;font-family:'JetBrains Mono',monospace}
+.phase-items{padding:14px 18px;display:flex;flex-direction:column;gap:8px}
+.phase-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#94a3b8}
+.phase-item::before{content:'→';color:#10B981;font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* Financials */
+.fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.fin-card{background:#0f1623;border:1px solid #1e3a5f;border-radius:12px;padding:18px}
+.fin-card-title{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#475569;font-family:'JetBrains Mono',monospace;margin-bottom:12px}
+.fin-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(30,58,95,.4);font-size:12px}
+.fin-row:last-child{border-bottom:none;font-weight:700;color:#f1f5f9;font-size:13px}
+.fin-label{color:#64748b}
+.fin-val{font-family:'JetBrains Mono',monospace;font-weight:600}
+.fin-green{color:#34d399}
+.fin-red{color:#f87171}
+.fin-white{color:#f1f5f9}
+.alert-box{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:12px;color:#94a3b8}
+.alert-box strong{color:#fbbf24}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="doc-header">
+  <div class="header-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">Framework OPS</div></div>
+    <div class="doc-badge">EXAMPLE DELIVERABLE</div>
+  </div>
+  <div class="doc-title">OPS Assessment</div>
+  <div class="doc-sub">Operational diagnostic — Summit Roofing & Gutters</div>
+  <div class="meta-row">
+    <div class="meta-item"><div class="meta-label">Company</div><div class="meta-value">Summit Roofing & Gutters</div></div>
+    <div class="meta-item"><div class="meta-label">Revenue</div><div class="meta-value">$6.2M TTM</div></div>
+    <div class="meta-item"><div class="meta-label">Headcount</div><div class="meta-value">22 employees</div></div>
+    <div class="meta-item"><div class="meta-label">Delivered</div><div class="meta-value">May 2026</div></div>
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <div class="tab active" onclick="show('scores')">Overall Scores</div>
+  <div class="tab" onclick="show('problems')">Problem Matrix</div>
+  <div class="tab" onclick="show('quickwins')">Quick Wins</div>
+  <div class="tab" onclick="show('roadmap')">90-Day Roadmap</div>
+  <div class="tab" onclick="show('financials')">Financial Snapshot</div>
+</div>
+
+<!-- SCORES -->
+<div class="section active" id="scores">
+  <div class="score-grid">
+    <div class="score-card">
+      <div class="score-label">Finance</div>
+      <div class="score-ring">
+        <svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#1e3a5f" stroke-width="6"/><circle cx="32" cy="32" r="26" fill="none" stroke="#f87171" stroke-width="6" stroke-dasharray="163.36" stroke-dashoffset="98" stroke-linecap="round"/></svg>
+        <div class="score-num" style="color:#f87171">40</div>
+      </div>
+      <div class="score-grade" style="color:#f87171">NEEDS WORK</div>
+    </div>
+    <div class="score-card">
+      <div class="score-label">Operations</div>
+      <div class="score-ring">
+        <svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#1e3a5f" stroke-width="6"/><circle cx="32" cy="32" r="26" fill="none" stroke="#fbbf24" stroke-width="6" stroke-dasharray="163.36" stroke-dashoffset="65" stroke-linecap="round"/></svg>
+        <div class="score-num" style="color:#fbbf24">60</div>
+      </div>
+      <div class="score-grade" style="color:#fbbf24">DEVELOPING</div>
+    </div>
+    <div class="score-card">
+      <div class="score-label">People</div>
+      <div class="score-ring">
+        <svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#1e3a5f" stroke-width="6"/><circle cx="32" cy="32" r="26" fill="none" stroke="#fbbf24" stroke-width="6" stroke-dasharray="163.36" stroke-dashoffset="49" stroke-linecap="round"/></svg>
+        <div class="score-num" style="color:#fbbf24">70</div>
+      </div>
+      <div class="score-grade" style="color:#fbbf24">DEVELOPING</div>
+    </div>
+    <div class="score-card">
+      <div class="score-label">Technology</div>
+      <div class="score-ring">
+        <svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#1e3a5f" stroke-width="6"/><circle cx="32" cy="32" r="26" fill="none" stroke="#f87171" stroke-width="6" stroke-dasharray="163.36" stroke-dashoffset="114" stroke-linecap="round"/></svg>
+        <div class="score-num" style="color:#f87171">30</div>
+      </div>
+      <div class="score-grade" style="color:#f87171">NEEDS WORK</div>
+    </div>
+  </div>
+
+  <div class="alert-box">
+    <strong>Diagnostic Summary:</strong> Summit Roofing is running on operator instinct, not systems. Revenue has grown 40% in two years but gross margin has compressed from 47% to 41% — the gap lives in untracked job costs and unbilled change orders. The owner is approving every estimate and can't take a week off. Technology is underutilized across the board. The business has the revenue to fix this; it needs a sequenced plan and someone to hold it accountable.
+  </div>
+
+  <div style="background:#0f1623;border:1px solid #1e3a5f;border-radius:12px;padding:20px">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#475569;font-family:'JetBrains Mono',monospace;margin-bottom:14px">Top 5 Priority Problems Identified</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px"><span class="sev sev-critical">CRITICAL</span><span style="color:#f1f5f9">No job costing — gross margin is a guess, not a measurement</span><span class="cost-tag" style="margin-left:auto">~$186K/yr</span></div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px"><span class="sev sev-critical">CRITICAL</span><span style="color:#f1f5f9">Owner approval required on every estimate over $5K</span><span class="cost-tag" style="margin-left:auto">~$140K/yr</span></div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px"><span class="sev sev-high">HIGH</span><span style="color:#f1f5f9">No weekly cash flow visibility — running blind on 30-day DSO</span><span class="cost-tag" style="margin-left:auto">~$80K/yr</span></div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px"><span class="sev sev-high">HIGH</span><span style="color:#f1f5f9">ServiceTitan configured for scheduling only — not billing or reporting</span><span class="cost-tag" style="margin-left:auto">~$60K/yr</span></div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px"><span class="sev sev-med">MEDIUM</span><span style="color:#f1f5f9">No documented dispatch or job handoff process — tribal knowledge only</span><span class="cost-tag" style="margin-left:auto">~$35K/yr</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEMS -->
+<div class="section" id="problems">
+  <table class="matrix">
+    <thead><tr><th>Problem</th><th>Area</th><th>Severity</th><th>Est. Annual Cost</th><th>Root Cause</th></tr></thead>
+    <tbody>
+      <tr><td style="color:#f1f5f9;font-weight:600">No job costing in place</td><td style="color:#64748b">Finance</td><td><span class="sev sev-critical">CRITICAL</span></td><td><span class="cost-tag">$186,000</span></td><td style="color:#64748b">ServiceTitan job templates not built; no labor + material tracking per job</td></tr>
+      <tr><td style="color:#f1f5f9;font-weight:600">Owner bottleneck on estimates</td><td style="color:#64748b">Operations</td><td><span class="sev sev-critical">CRITICAL</span></td><td><span class="cost-tag">$140,000</span></td><td style="color:#64748b">No estimating SOP, no defined authority matrix, no trained estimator</td></tr>
+      <tr><td style="color:#f1f5f9;font-weight:600">No rolling cash flow model</td><td style="color:#64748b">Finance</td><td><span class="sev sev-high">HIGH</span></td><td><span class="cost-tag">$80,000</span></td><td style="color:#64748b">QBO data exists but no weekly pull; owner making draw decisions blind</td></tr>
+      <tr><td style="color:#f1f5f9;font-weight:600">ServiceTitan underutilized</td><td style="color:#64748b">Technology</td><td><span class="sev sev-high">HIGH</span></td><td><span class="cost-tag">$60,000</span></td><td style="color:#64748b">Paying $1,800/mo for scheduling; not using billing, reporting, or automations</td></tr>
+      <tr><td style="color:#f1f5f9;font-weight:600">No dispatch / job handoff SOP</td><td style="color:#64748b">Operations</td><td><span class="sev sev-med">MEDIUM</span></td><td><span class="cost-tag">$35,000</span></td><td style="color:#64748b">Process lives in one dispatcher's head; callback rate 3.2/week vs industry 1.2</td></tr>
+      <tr><td style="color:#f1f5f9;font-weight:600">No lead follow-up automation</td><td style="color:#64748b">Technology</td><td><span class="sev sev-med">MEDIUM</span></td><td><span class="cost-tag">$28,000</span></td><td style="color:#64748b">Web leads going to email inbox; avg first response >4 hours; losing 15% of leads</td></tr>
+      <tr><td style="color:#f1f5f9;font-weight:600">No review request process</td><td style="color:#64748b">Operations</td><td><span class="sev sev-low">LOW</span></td><td><span class="cost-tag">$18,000</span></td><td style="color:#64748b">Google rating 4.1 (47 reviews) vs top competitor 4.8 (212 reviews)</td></tr>
+    </tbody>
+  </table>
+  <div class="alert-box"><strong>Total estimated annual cost of current gaps: $547,000</strong> — These are conservative estimates based on benchmark data for roofing companies at $6M revenue. Actual impact depends on implementation speed.</div>
+</div>
+
+<!-- QUICK WINS -->
+<div class="section" id="quickwins">
+  <div style="font-size:12px;color:#64748b;margin-bottom:16px">Items below can be completed within 30 days with minimal outside help. Sequenced by impact-to-effort ratio.</div>
+  <div class="qw-list">
+    <div class="qw-item">
+      <div class="qw-num">1</div>
+      <div class="qw-body">
+        <div class="qw-title">Turn on ServiceTitan job costing templates</div>
+        <div class="qw-desc">Build 4 job templates (shingle, metal, flat, repair) with labor hours, material estimates, and target GM%. Costs $0 — already in your subscription. First week of data reveals your real margin by job type.</div>
+        <div class="qw-meta"><span class="qw-tag tag-effort">Effort: 6 hrs</span><span class="qw-tag tag-impact">Impact: HIGH</span><span class="qw-tag tag-owner">Owner: Office Manager</span></div>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-num">2</div>
+      <div class="qw-body">
+        <div class="qw-title">Build a 13-week rolling cash flow in Google Sheets</div>
+        <div class="qw-desc">Pull AR aging from QBO weekly. Map projected inflows against payroll dates and supplier draws. Owner reviews every Monday — takes 15 minutes. Eliminates the "how much do we have?" phone call from the field.</div>
+        <div class="qw-meta"><span class="qw-tag tag-effort">Effort: 4 hrs to build</span><span class="qw-tag tag-impact">Impact: HIGH</span><span class="qw-tag tag-owner">Owner: Controller / Bookkeeper</span></div>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-num">3</div>
+      <div class="qw-body">
+        <div class="qw-title">Automate web-to-lead response in under 5 minutes</div>
+        <div class="qw-desc">Set up a Zapier trigger: new form submission → immediate SMS to prospect + task to estimator with name, number, and job type. Response time drops from 4+ hours to under 2 minutes. Est. close rate improvement: 8–12%.</div>
+        <div class="qw-meta"><span class="qw-tag tag-effort">Effort: 3 hrs</span><span class="qw-tag tag-impact">Impact: MEDIUM-HIGH</span><span class="qw-tag tag-owner">Owner: Office Admin</span></div>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-num">4</div>
+      <div class="qw-body">
+        <div class="qw-title">Define estimate authority matrix — remove owner from <$15K</div>
+        <div class="qw-desc">Write a one-page authority matrix: estimates under $15K are sent by the estimator without owner review. $15K–$50K requires a 24-hr owner review window. Over $50K, owner reviews before send. Frees ~8 hrs/week of owner time immediately.</div>
+        <div class="qw-meta"><span class="qw-tag tag-effort">Effort: 2 hrs</span><span class="qw-tag tag-impact">Impact: HIGH</span><span class="qw-tag tag-owner">Owner: Owner + Estimator</span></div>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-num">5</div>
+      <div class="qw-body">
+        <div class="qw-title">Add review request to job completion workflow in ServiceTitan</div>
+        <div class="qw-desc">Trigger a Google Review request SMS automatically when job status moves to "Complete" in ServiceTitan. Target 2 reviews/week. At current close rate, 52 new reviews in 6 months — rating moves from 4.1 to ~4.6.</div>
+        <div class="qw-meta"><span class="qw-tag tag-effort">Effort: 2 hrs</span><span class="qw-tag tag-impact">Impact: MEDIUM</span><span class="qw-tag tag-owner">Owner: Dispatcher / Office Admin</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROADMAP -->
+<div class="section" id="roadmap">
+  <div style="font-size:12px;color:#64748b;margin-bottom:16px">90-day sequenced action plan. Each phase builds on the last — do not skip ahead.</div>
+  <div class="roadmap">
+    <div class="phase">
+      <div class="phase-header"><span class="phase-num">PHASE 1</span><span class="phase-title">Financial Visibility</span><span class="phase-window">Days 1–30</span></div>
+      <div class="phase-items">
+        <div class="phase-item">Build 4 ServiceTitan job costing templates; train dispatcher and office manager on entry process</div>
+        <div class="phase-item">Build 13-week rolling cash flow model in Google Sheets; establish Monday review cadence with owner</div>
+        <div class="phase-item">Pull April + May P&L from QBO; reconcile against ServiceTitan job revenue to identify billing gaps</div>
+        <div class="phase-item">Define gross margin floor by job type (shingle ≥44%, metal ≥48%, repairs ≥52%)</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-header"><span class="phase-num">PHASE 2</span><span class="phase-title">Delegation + Process</span><span class="phase-window">Days 31–60</span></div>
+      <div class="phase-items">
+        <div class="phase-item">Write and deploy estimate authority matrix; train estimator; remove owner from sub-$15K approvals</div>
+        <div class="phase-item">Document dispatch SOP and job handoff checklist; one-week shadowing with dispatcher to capture tribal knowledge</div>
+        <div class="phase-item">Set up web-to-lead automation (Zapier → SMS + ST task); test with live leads for two weeks</div>
+        <div class="phase-item">Build job completion review request trigger in ServiceTitan; monitor for 4 weeks</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-header"><span class="phase-num">PHASE 3</span><span class="phase-title">Accountability + Reporting</span><span class="phase-window">Days 61–90</span></div>
+      <div class="phase-items">
+        <div class="phase-item">Stand up weekly leadership scorecard: revenue, GM%, close rate, callbacks, cash — reviewed every Monday</div>
+        <div class="phase-item">Run first monthly job costing review: actual vs. target margin by job type; identify top 3 margin leaks</div>
+        <div class="phase-item">Automate weekly P&L summary pull from QBO → owner email every Friday by 8am</div>
+        <div class="phase-item">90-day checkpoint: re-score all four diagnostic categories; confirm retainer scope or transition plan</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FINANCIALS -->
+<div class="section" id="financials">
+  <div class="fin-grid">
+    <div class="fin-card">
+      <div class="fin-card-title">Current State (TTM)</div>
+      <div class="fin-row"><span class="fin-label">Revenue</span><span class="fin-val fin-white">$6,200,000</span></div>
+      <div class="fin-row"><span class="fin-label">Est. Gross Margin</span><span class="fin-val fin-red">41.2%</span></div>
+      <div class="fin-row"><span class="fin-label">Est. Gross Profit</span><span class="fin-val fin-white">$2,554,400</span></div>
+      <div class="fin-row"><span class="fin-label">Est. Net Margin</span><span class="fin-val fin-red">6.8%</span></div>
+      <div class="fin-row"><span class="fin-label">Est. Net Income</span><span class="fin-val fin-white">$421,600</span></div>
+      <div class="fin-row"><span class="fin-label">DSO</span><span class="fin-val fin-red">28 days</span></div>
+    </div>
+    <div class="fin-card">
+      <div class="fin-card-title">Benchmark Target (90 days)</div>
+      <div class="fin-row"><span class="fin-label">Revenue</span><span class="fin-val fin-white">$6,200,000</span></div>
+      <div class="fin-row"><span class="fin-label">Target Gross Margin</span><span class="fin-val fin-green">44.5%</span></div>
+      <div class="fin-row"><span class="fin-label">Target Gross Profit</span><span class="fin-val fin-green">$2,759,000</span></div>
+      <div class="fin-row"><span class="fin-label">Target Net Margin</span><span class="fin-val fin-green">9.0%</span></div>
+      <div class="fin-row"><span class="fin-label">Target Net Income</span><span class="fin-val fin-green">$558,000</span></div>
+      <div class="fin-row"><span class="fin-label">Target DSO</span><span class="fin-val fin-green">18 days</span></div>
+    </div>
+  </div>
+  <div class="alert-box"><strong>Conservative value creation estimate: $136,400/year</strong> in gross profit improvement (3.3% GM lift × $6.2M revenue) plus $136K in freed cash from DSO reduction (10-day improvement × $6.2M ÷ 365 × 8). This does not include owner time recovered or revenue growth enabled by removing the estimate bottleneck. Projections assume 65% implementation of recommended changes within 90 days.</div>
+  <div style="background:#0f1623;border:1px solid #1e3a5f;border-radius:12px;padding:18px">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#475569;font-family:'JetBrains Mono',monospace;margin-bottom:12px">Retainer ROI Check — Active Tier ($4,000/mo)</div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
+      <div style="display:flex;justify-content:space-between"><span style="color:#64748b">Monthly retainer investment</span><span style="font-family:'JetBrains Mono',monospace;color:#f1f5f9">$4,000</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:#64748b">Retainer as % of monthly gross profit</span><span style="font-family:'JetBrains Mono',monospace;color:#fbbf24">1.9%</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:#64748b">Conservative value creation (monthly)</span><span style="font-family:'JetBrains Mono',monospace;color:#34d399">~$11,400</span></div>
+      <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid #1e3a5f;font-weight:700"><span style="color:#f1f5f9">Conservative 90-day ROI</span><span style="font-family:'JetBrains Mono',monospace;color:#34d399">~2.9x</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

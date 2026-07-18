@@ -14,7 +14,8 @@ from app.ingestion.github_client import GitHubClient
 
 logger = logging.getLogger(__name__)
 
-EMBED_BATCH_SIZE = 64   # Voyage AI allows up to 128 per request
+EMBED_BATCH_SIZE = 16        # Conservative for Voyage free tier
+EMBED_SLEEP_SECONDS = 22     # Stay under the ~3 req/min free-tier rate limit
 
 
 def _supabase():
@@ -94,8 +95,8 @@ async def run_ingestion(
             indexed += len(batch)
             _update_job(indexed_chunks=indexed)
             logger.info("Indexed %d/%d chunks for %s", indexed, len(all_chunks), repo)
-            # Small delay to avoid hammering the Voyage API
-            await asyncio.sleep(0.25)
+            # Pace requests to stay under the Voyage rate limit
+            await asyncio.sleep(EMBED_SLEEP_SECONDS)
 
         # 5. Mark repo as indexed
         db.table("repositories").upsert(
