@@ -1,4 +1,4 @@
-"""Voyage AI embedding client — voyage-code-2 (1536-dim)."""
+"""Voyage AI embedding client for the canonical Voyage-3 corpus."""
 
 import logging
 from typing import Literal
@@ -17,7 +17,7 @@ VOYAGE_API_URL = "https://api.voyageai.com/v1/embeddings"
 
 
 class VoyageClient:
-    def __init__(self, api_key: str, model: str = "voyage-code-2"):
+    def __init__(self, api_key: str, model: str = "voyage-3"):
         self._api_key = api_key
         self._model = model
 

@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 
 from app.embeddings.voyage import VoyageClient
 from app.generation.claude import stream_answer
-from app.retrieval.vector_store import SearchResult, similarity_search
+from app.retrieval.kb_store import KbSearchResult, search_kb
 from app.config import settings
 from app.api.auth import require_api_key
 
@@ -33,23 +33,23 @@ class SourceDoc(BaseModel):
     source_type: str
     path: str | None
     title: str | None
-    url: str
+    url: str | None
     similarity: float
 
 
-def _to_source(r: SearchResult) -> SourceDoc:
+def _to_source(r: KbSearchResult) -> SourceDoc:
     return SourceDoc(
         id=r.id,
-        repo=r.repo,
-        source_type=r.source_type,
-        path=r.path,
+        repo=r.metadata.get("repo") or r.source,
+        source_type=r.source,
+        path=r.metadata.get("path"),
         title=r.title,
         url=r.url,
         similarity=round(r.similarity, 4),
     )
 
 
-async def _sse_stream(query: str, results: list[SearchResult]):
+async def _sse_stream(query: str, results: list[KbSearchResult]):
     """Yields Server-Sent Events: first sources, then streamed answer tokens."""
     # Send sources as first event
     sources = [_to_source(r).model_dump() for r in results]
@@ -68,12 +68,12 @@ async def query_rag(req: QueryRequest):
     voyage = VoyageClient(settings.voyage_api_key, settings.voyage_model)
     embedding = await voyage.embed_query(req.query)
 
-    results = await similarity_search(
-        query_embedding=embedding,
-        match_count=req.match_count,
-        match_threshold=req.threshold,
-        filter_repo=req.repo,
-        filter_types=req.source_types,
+    results = await search_kb(
+        embedding,
+        limit=req.match_count,
+        threshold=req.threshold,
+        sources=req.source_types,
+        tenant_id="skyright",
     )
 
     return StreamingResponse(

@@ -4,7 +4,8 @@ from fastmcp import FastMCP
 
 from app.config import settings
 from app.embeddings.voyage import VoyageClient
-from app.retrieval.vector_store import get_repositories, similarity_search
+from app.retrieval.kb_store import search_kb
+from app.retrieval.vector_store import get_repositories
 
 mcp = FastMCP(name="RAG-Link")
 
@@ -32,19 +33,20 @@ async def search_rag_link(
     voyage = VoyageClient(settings.voyage_api_key, settings.voyage_model)
     embedding = await voyage.embed_query(query)
 
-    results = await similarity_search(
-        query_embedding=embedding,
-        match_count=max(1, min(match_count, 20)),
-        match_threshold=settings.retrieval_threshold,
-        filter_repo=repo,
-        filter_types=source_types,
+    sources = source_types
+    results = await search_kb(
+        embedding,
+        limit=max(1, min(match_count, 20)),
+        threshold=settings.retrieval_threshold,
+        sources=sources,
+        tenant_id="skyright",
     )
 
     return [
         {
-            "repo": r.repo,
-            "source_type": r.source_type,
-            "path": r.path,
+            "repo": r.metadata.get("repo") or r.source,
+            "source_type": r.source,
+            "path": r.metadata.get("path"),
             "title": r.title,
             "url": r.url,
             "content": r.content[:3000],

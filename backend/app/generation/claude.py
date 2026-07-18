@@ -6,7 +6,7 @@ from collections.abc import AsyncGenerator
 import anthropic
 
 from app.config import settings
-from app.retrieval.vector_store import SearchResult
+from app.retrieval.kb_store import KbSearchResult
 
 logger = logging.getLogger(__name__)
 
@@ -22,16 +22,16 @@ Guidelines:
 - Prioritize recent information when sources conflict."""
 
 
-def _format_context(results: list[SearchResult]) -> str:
+def _format_context(results: list[KbSearchResult]) -> str:
     if not results:
         return "No relevant documents found."
 
     parts: list[str] = []
     for i, r in enumerate(results, 1):
-        label = r.path or r.title or r.source_type
+        label = r.metadata.get("path") or r.title or r.source
         parts.append(
-            f"[{i}] **{r.source_type.upper()}** — `{label}` (similarity: {r.similarity:.2f})\n"
-            f"Source: {r.url}\n\n"
+            f"[{i}] **{r.source.upper()}** — `{label}` (similarity: {r.similarity:.2f})\n"
+            f"Source: {r.url or 'not provided'}\n\n"
             f"```\n{r.content[:3000]}\n```"
         )
     return "\n\n---\n\n".join(parts)
@@ -39,7 +39,7 @@ def _format_context(results: list[SearchResult]) -> str:
 
 async def stream_answer(
     query: str,
-    context: list[SearchResult],
+    context: list[KbSearchResult],
 ) -> AsyncGenerator[str, None]:
     client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
     formatted_context = _format_context(context)
@@ -61,7 +61,7 @@ async def stream_answer(
 
 async def answer(
     query: str,
-    context: list[SearchResult],
+    context: list[KbSearchResult],
 ) -> str:
     """Non-streaming variant for webhook or batch use."""
     client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
