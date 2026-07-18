@@ -50,8 +50,15 @@ class RagRun:
         error_message: str | None = None,
     ) -> None:
         elapsed_ms = round((perf_counter() - self.started) * 1000)
+        persisted_status = {
+            "completed": "success",
+            "failed": "error",
+            "success": "success",
+            "error": "error",
+            "skipped": "skipped",
+        }.get(status, status)
         update = {
-            "status": status,
+            "status": persisted_status,
             "run_finished_at": datetime.now(UTC).isoformat(),
             "summary": f"{self.record_type} {status} in {elapsed_ms}ms",
             "outputs": {
@@ -75,4 +82,3 @@ class RagRun:
                     **update,
                 }
             ).execute()
-
