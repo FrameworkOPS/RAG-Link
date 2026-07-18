@@ -23,6 +23,7 @@ class Settings(BaseSettings):
 
     # App
     frontend_url: str = "http://localhost:3000"
+    api_key: str
     max_chunks_per_file: int = 50
     chunk_size: int = 1500        # chars
     chunk_overlap: int = 200      # chars
