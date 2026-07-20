@@ -201,3 +201,12 @@ For any content draft: use the **marketing:draft-content** skill if heavy lift, 
 | What automation matters first? | `knowledge-base/playbooks/automation-playbook.md` |
 | How do I onboard a new client? | `knowledge-base/business/onboarding-checklist.md` |
 | How is client work structured in ClickUp? | `knowledge-base/business/clickup-client-scaffold.md` |
+
+## Framework OPS brand system
+
+Treat `DESIGN_SYSTEM.md` and `design/brand/brand-system.json` as core product
+knowledge. Apply them to every branded or interactive surface. The July 2026
+UI/UX handoff governs v1.1 implementation corrections and supersedes
+conflicting v1.0 interaction rules. Use the checked-in semantic tokens; do not
+invent visual values in components. Do not claim `ui-verified` until responsive,
+WCAG 2.2 AA, state, microcopy, and AI-trust requirements have been tested.
